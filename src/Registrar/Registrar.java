@@ -10,24 +10,17 @@ import java.rmi.registry.Registry;
  */
 
 public class Registrar {
-    public void execute() {
+    public static void main(String[] args) {
         try {
             // create on port 2100
             Registry registry = LocateRegistry.createRegistry(2100);
             // create a new service named RegistrarService
             registry.rebind("RegistrarService", new EnrollmentInterfaceImpl());
-
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
         System.out.println("Registrar is ready");
-    }
-
-
-    public static void main(String[] args) {
-        Registrar registrar = new Registrar();
-        registrar.execute();
     }
 }
