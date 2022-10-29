@@ -1,3 +1,2 @@
-#./pom.xml
-#./Corona_ContactRegistration.iml
-#*.iml
+pom.xml
+Corona_ContactRegistration.iml
