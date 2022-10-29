@@ -4,6 +4,7 @@ package Registrar;
 import Interfaces.EnrollmentInterface;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -67,6 +68,24 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
                 nymArray.add(nym_cf_dayi);
             }
 
+
+
+/*
+            // Maak encryptie algoritme
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, sKey);
+            // Encrypt
+           // byte[] cipherText = cipher.doFinal(bytesPerson1);
+            System.out.println("Encrypted data: "+Arrays.toString(cipherText));
+
+            // Maak decrypte algoritme
+            cipher.init(Cipher.DECRYPT_MODE, sKey);
+            // Decrypt
+            byte[] plainText = cipher.doFinal(cipherText);
+            System.out.println("Decrypted data: "+Arrays.toString(plainText));
+            System.out.println();
+
+ */
 
         }
         catch (Exception e) { e.printStackTrace(); }
