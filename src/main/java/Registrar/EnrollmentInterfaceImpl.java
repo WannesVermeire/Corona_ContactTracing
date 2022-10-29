@@ -1,10 +1,8 @@
 package Registrar;
 
-import Facility.Facility;
 import Interfaces.EnrollmentInterface;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +11,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -46,7 +43,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
             byte[] CFArray = CF.getBytes(StandardCharsets.UTF_8);
             byte[] dayArray;
 
-            for (int i=0; i<nrOfDays; i++){
+            for (int i=0; i<nrOfDays; i++) {
                 dayArray = day.toString().getBytes(StandardCharsets.UTF_8);
                 byte[] temp = ArrayUtils.addAll(keyArray, CFArray);
                 byte[] data = ArrayUtils.addAll(temp, dayArray);
