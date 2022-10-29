@@ -5,6 +5,6 @@
 This project is an assignment for the course Distributed Systems 2.
 
 ## Contributers
-Wout Deleu \n
-Toon Eeraerts \n
-Wannes Vermeiren \n
+Wout Deleu <br />
+Toon Eeraerts <br />
+Wannes Vermeiren <br />
