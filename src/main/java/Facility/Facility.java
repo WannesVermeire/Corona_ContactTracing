@@ -1,32 +1,78 @@
 package Facility;
 
 
-public class Facility {
+import javax.crypto.SecretKey;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Random;
 
-    private int businessNr;
+public class Facility implements Serializable {
+
+    private int id; // unique business number
     private String name;
     private String address;
     private String phoneNr;
+    private List<SecretKey> keyArray;
+    private List<byte[]> nymArray;
+    private byte[] random;
 
-    public Facility(int businessNr, String name, String address, String phoneNr) {
-        this.businessNr = businessNr;
+    public Facility(int id, String name, String address, String phoneNr) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNr = phoneNr;
+        random = new byte[20];
+        new Random().nextBytes(random);
     }
 
-    public int getBusinessNr() {return businessNr; }
-    public String getName() { return name; }
+    public String getCF() { return id+name+address+phoneNr; }
+
+    public int getId() { return id; }
+    public String getName() {
+        return name;
+    }
     public String getAddress() {
         return address;
     }
     public String getPhoneNr() {
         return phoneNr;
     }
+    public List<SecretKey> getKeyArray() {
+        return keyArray;
+    }
+    public List<byte[]> getNymArray() {
+        return nymArray;
+    }
+    public byte[] getRandom() { return random; }
 
-    public String getCF() {
-        return businessNr+name+address+phoneNr;
+    public void setId(int id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public void setPhoneNr(String phoneNr) {
+        this.phoneNr = phoneNr;
+    }
+    public void setKeyArray(List<SecretKey> keyArray) {
+        this.keyArray = keyArray;
+    }
+    public void setNymArray(List<byte[]> nymArray) {
+        this.nymArray = nymArray;
     }
 
-
+    @Override
+    public String toString() {
+        return "Facility{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNr='" + phoneNr + '\'' +
+                ", keyArray=" + keyArray +
+                ", nymArray=" + nymArray +
+                '}';
+    }
 }

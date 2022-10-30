@@ -1,6 +1,7 @@
 package Registrar;
 
 
+import Facility.Facility;
 import Interfaces.EnrollmentInterface;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -21,75 +22,83 @@ import java.util.List;
 
 public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements EnrollmentInterface {
 
-    public EnrollmentInterfaceImpl() throws RemoteException {}
+    private RegistrarDB registrarDB;
+
+    public EnrollmentInterfaceImpl(RegistrarDB registrarDB) throws RemoteException {
+        this.registrarDB = registrarDB;
+    }
 
 
     /** Phase 1.1: Enrollment owner **/
-    public void registerFacility(String CF) {
-        List<byte[]> dayArray = new ArrayList<>();
+    // Generate secret key s_CF_dayi for each day of this month
+    public void registerFacility(Facility facility) {
+
+        registrarDB.addFacility(facility);
+
         LocalDate today = LocalDate.now();
         int nrOfDays = today.getMonth().length(LocalDate.EPOCH.isLeapYear());
         LocalDate firstDay = today.withDayOfMonth(1);
         LocalDate day = firstDay;
-        for (int i=0; i<nrOfDays; i++) {
-            dayArray.add(day.toString().getBytes(StandardCharsets.UTF_8));
-            day.plusDays(1);
-        }
 
         List<SecretKey> keyArray = new ArrayList<>();
-        List<byte[]> nymArray = new ArrayList<>();
 
         try {
             // Generate master secret key s
             KeyGenerator keyGen = KeyGenerator.getInstance("AES");
             SecretKey s = keyGen.generateKey();
 
-            // Generate secret key s_CF_dayi for each day of this month
-            byte[] CFBytes = CF.getBytes(StandardCharsets.UTF_8);
+            byte[] CFBytes = facility.getCF().getBytes(StandardCharsets.UTF_8);
             char[] keyChars = Base64.getEncoder().encodeToString(s.getEncoded()).toCharArray();
 
             // TODO weet niet of dit de ideale oplossing is als KDF
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             for (int i=0; i<nrOfDays; i++) {
                 // use s as password, CF and day as salt
-                byte[] salt = ArrayUtils.addAll(CFBytes, dayArray.get(i));
-                PBEKeySpec keySpec = new PBEKeySpec(keyChars, salt, 5);
+                byte[] dayBytes = day.toString().getBytes(StandardCharsets.UTF_8);
+                byte[] salt = ArrayUtils.addAll(CFBytes, dayBytes);
+                PBEKeySpec keySpec = new PBEKeySpec(keyChars, salt, 5, 10);
                 SecretKey s_cf_dayi = skf.generateSecret(keySpec);
                 keyArray.add(s_cf_dayi);
+                day = day.plusDays(1);
             }
 
-            // Generate day-specific pseudonym nym_CF_dayi for each day of this month
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            for (int i=0; i<nrOfDays; i++){
-                byte[] keyBytes = keyArray.get(i).getEncoded();
-                byte[] temp = ArrayUtils.addAll(keyBytes, CFBytes);
-                byte[] data = ArrayUtils.addAll(temp, dayArray.get(i));
-                byte[] nym_cf_dayi = digest.digest(data);
-                nymArray.add(nym_cf_dayi);
-            }
-
-
-
-/*
-            // Maak encryptie algoritme
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, sKey);
-            // Encrypt
-           // byte[] cipherText = cipher.doFinal(bytesPerson1);
-            System.out.println("Encrypted data: "+Arrays.toString(cipherText));
-
-            // Maak decrypte algoritme
-            cipher.init(Cipher.DECRYPT_MODE, sKey);
-            // Decrypt
-            byte[] plainText = cipher.doFinal(cipherText);
-            System.out.println("Decrypted data: "+Arrays.toString(plainText));
-            System.out.println();
-
- */
+            facility.setKeyArray(keyArray);
+            System.out.println(keyArray);
 
         }
         catch (Exception e) { e.printStackTrace(); }
 
+    }
+
+    // Generate day-specific pseudonym nym_CF_dayi for each day of this month
+    public List<byte[]> getNymArray(int id) {
+
+        Facility facility = registrarDB.findFacilityById(id);
+
+        List<byte[]> nymArray = new ArrayList<>();
+        List<SecretKey> keyArray = facility.getKeyArray();
+        byte[] CFBytes = facility.getCF().getBytes(StandardCharsets.UTF_8);
+
+        LocalDate today = LocalDate.now();
+        int nrOfDays = today.getMonth().length(LocalDate.EPOCH.isLeapYear());
+        LocalDate firstDay = today.withDayOfMonth(1);
+        LocalDate day = firstDay;
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            for (int i = 0; i < nrOfDays; i++) {
+                byte[] dayBytes = day.toString().getBytes(StandardCharsets.UTF_8);
+                byte[] keyBytes = keyArray.get(i).getEncoded();
+                byte[] temp = ArrayUtils.addAll(keyBytes, CFBytes);
+                byte[] data = ArrayUtils.addAll(temp, dayBytes);
+                byte[] nym_cf_dayi = digest.digest(data);
+                nymArray.add(nym_cf_dayi);
+                day = day.plusDays(1);
+            }
+        }
+        catch (Exception e) { e.printStackTrace(); }
+
+        return nymArray;
     }
 
 
