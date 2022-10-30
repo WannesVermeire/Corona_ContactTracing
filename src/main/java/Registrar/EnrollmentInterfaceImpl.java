@@ -3,6 +3,7 @@ package Registrar;
 
 import Facility.Facility;
 import Interfaces.EnrollmentInterface;
+import Visitor.Visitor;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.crypto.Cipher;
@@ -100,6 +101,12 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
         return nymArray;
     }
+
+    public void registerVisitor(Visitor visitor) {
+        registrarDB.addVisitor(visitor);
+    }
+
+
 
 
 
