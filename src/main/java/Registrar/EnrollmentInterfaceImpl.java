@@ -6,7 +6,6 @@ import Interfaces.EnrollmentInterface;
 import Visitor.Visitor;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -14,9 +13,10 @@ import javax.crypto.spec.PBEKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.MessageDigest;
+import java.security.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -104,6 +104,52 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
     public void registerVisitor(Visitor visitor) {
         registrarDB.addVisitor(visitor);
+        List<byte[]> tokens = new ArrayList<>();
+        List<byte[]> controle = new ArrayList<>();
+
+        byte[] today = LocalDate.now().toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            // TODO: wat wil sign_RC zeggen? Keymanagement?
+            Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
+            keyGen.initialize(1024, random);
+            KeyPair pair = keyGen.generateKeyPair();
+
+            PrivateKey privateKey = pair.getPrivate();
+            PublicKey publicKey = pair.getPublic();
+
+            dsa.initSign(privateKey);
+
+            byte[] signed;
+            // TODO is dit wat bedoelt wordt met die random.... ik vrees er wat voor...
+            for (int i=0; i<48; i++) {
+                // Wannes manier...
+                // byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), today);
+                // dsa.update(data);
+                // TODO
+                // Doordat de random al in het keypair zit, denk ik niet dat het noodzakelijk is om deze hierin nog eens te steken...
+                // Dus kan/moet het volgens mij zo...
+                // Heb vorige laten staan om alternatief aan te tonen...
+                dsa.update(today);
+                tokens.add(dsa.sign());
+            }
+
+            // ***** Controle om aan te tonen dat mijn methode werkt ******
+            dsa.initVerify(publicKey);
+            byte[] previous = null;
+            for(byte[] d : tokens) {
+                dsa.update(today);
+                if(dsa.verify(d) && !Arrays.equals(d, previous)) System.out.println("Very Nice");
+                else if(Arrays.equals(d, previous)) System.out.println("Redeneerfout");
+                else System.out.println("programmeerfout");
+            }
+            // ***** Controle om aan te tonen dat mijn methode werkt ******
+
+            visitor.setTokens(tokens);
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
 

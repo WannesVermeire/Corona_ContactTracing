@@ -24,6 +24,9 @@ public class BarOwnerClient {
     public static void main(String[] args) {
 
         /** Phase 1.1: Enrollment **/
+        //TODO: is het de bedoelign dat de BarOwner zijn eigen id kiest? Is het niet de bedoeling dat hij ene krijgt @Wannes
+        // wnr ge et leest moedet maar sturen op discord jong
+        // Mvg, Wout
         Facility facility = new Facility(1234, "Hamann", "Vantegemstraat 3, 9230 Wetteren", "+32 9 333 77 77");
 
         // Register to Registrar server

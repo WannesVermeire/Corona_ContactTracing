@@ -25,6 +25,7 @@ public class Facility implements Serializable {
         new Random().nextBytes(random);
     }
 
+    // Gives back unique identifier CF
     public String getCF() { return id+name+address+phoneNr; }
 
     public int getId() { return id; }
