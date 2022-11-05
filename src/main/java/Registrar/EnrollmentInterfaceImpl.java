@@ -109,7 +109,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
         byte[] today = LocalDate.now().toString().getBytes(StandardCharsets.UTF_8);
         try {
-            // TODO: wat wil sign_RC zeggen? Keymanagement?
+            // TODO: wat wil sign_RC zeggen? Keymaénagement?
             Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
