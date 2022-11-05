@@ -67,13 +67,22 @@ public class Facility implements Serializable {
 
     @Override
     public String toString() {
-        return "Facility{" +
+        String s = "facility{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNr='" + phoneNr + '\'' +
                 ", keyArray=" + keyArray +
-                ", nymArray=" + nymArray +
-                '}';
+//                ", nymArray=" + nymArray + "}";
+                ", nymArray_size=" + nymArray.size() +
+                ", nymArray=[";
+        for(byte[] arr : nymArray) {
+            for(int i=0; i< arr.length; i++) {
+                s+=arr[i];
+            }
+            s+=',';
+        }
+        s += "]}";
+        return s;
     }
 }

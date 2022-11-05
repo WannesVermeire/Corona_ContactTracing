@@ -15,11 +15,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-
+import java.util.*;
 
 public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements EnrollmentInterface {
 
@@ -102,14 +98,14 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         return nymArray;
     }
 
+    /** 1.2 + 1.3 Enroll visitor + tokens **/
     public void registerVisitor(Visitor visitor) {
         registrarDB.addVisitor(visitor);
         List<byte[]> tokens = new ArrayList<>();
-        List<byte[]> controle = new ArrayList<>();
 
         byte[] today = LocalDate.now().toString().getBytes(StandardCharsets.UTF_8);
         try {
-            // TODO: wat wil sign_RC zeggen? Keymaénagement?
+            // TODO: wat wil sign_RC zeggen? Keymanagement?
             Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
@@ -124,7 +120,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
             byte[] signed;
             // TODO is dit wat bedoelt wordt met die random.... ik vrees er wat voor...
-            for (int i=0; i<48; i++) {
+            for (int i = 0; i < 48; i++) {
                 // Wannes manier...
                 // byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), today);
                 // dsa.update(data);
@@ -136,30 +132,28 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
                 tokens.add(dsa.sign());
             }
 
-            // ***** Controle om aan te tonen dat mijn methode werkt ******
+            /** Controle om aan te tonen dat mijn methode werkt **/
             dsa.initVerify(publicKey);
             byte[] previous = null;
-            for(byte[] d : tokens) {
+            for (byte[] d : tokens) {
                 dsa.update(today);
-                if(dsa.verify(d) && !Arrays.equals(d, previous)) System.out.println("Very Nice");
-                else if(Arrays.equals(d, previous)) System.out.println("Redeneerfout");
+                if (dsa.verify(d) && !Arrays.equals(d, previous)) System.out.println("Very Nice");
+                else if (Arrays.equals(d, previous)) System.out.println("Redeneerfout");
                 else System.out.println("programmeerfout");
             }
-            // ***** Controle om aan te tonen dat mijn methode werkt ******
+            /** Controle om aan te tonen dat mijn methode werkt **/
 
             visitor.setTokens(tokens);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
+    /** 2.1 Visit facility **/
+    @Override
+    public void sendCapsule(byte[] token) {
+        // TODO : tot hier geraakt....
 
-
-
-
-
-
-
-
-
+    }
 
 }

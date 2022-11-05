@@ -15,6 +15,7 @@ public interface EnrollmentInterface extends Remote {
 
     void registerVisitor(Visitor visitor) throws RemoteException, IllegalStateException;
 
+    void sendCapsule(byte[] token);
 
-
+//    void visitFacility_scan(Visitor v, String qr_scanned);
 }

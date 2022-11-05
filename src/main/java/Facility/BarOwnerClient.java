@@ -66,7 +66,7 @@ public class BarOwnerClient {
             String CFString = facility.getCF();
             String hashString = Base64.getEncoder().encodeToString(hash);
 
-            String barcodeText = randomString+CFString+hashString;
+            String barcodeText = randomString+";"+CFString+";"+hashString;
 
             // TODO ter info voor decode
 //            byte[] decode = Base64.getDecoder().decode(s);
@@ -84,13 +84,6 @@ public class BarOwnerClient {
             } catch (Exception e) { e.printStackTrace(); }
 
         }
-
-
-
-
-
-
-
 
     }
 }
