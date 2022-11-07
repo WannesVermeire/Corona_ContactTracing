@@ -72,6 +72,7 @@ public class VisitorClient {
         System.out.println("Hash: "+ H);
         System.out.println("Current date & time: "+ currentTime);
         // todo: save and determine for how long this will be saved
+        return null;
     }
     public static String readQRcode(String file) throws FileNotFoundException, IOException, NotFoundException {
         FileInputStream fileInputStream = new FileInputStream(file);
