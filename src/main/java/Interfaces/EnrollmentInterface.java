@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface EnrollmentInterface extends Remote {
+    //Hernoemen naar registrar interface??
 
     void registerFacility(Facility facility) throws RemoteException;
 
@@ -15,7 +16,7 @@ public interface EnrollmentInterface extends Remote {
 
     void registerVisitor(Visitor visitor) throws RemoteException, IllegalStateException;
 
-    void sendCapsule(byte[] token);
+    //void sendCapsule(byte[] token);
 
 //    void visitFacility_scan(Visitor v, String qr_scanned);
 }

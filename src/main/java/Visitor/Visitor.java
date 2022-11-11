@@ -28,7 +28,7 @@ public class Visitor implements Serializable {
     public void addVisit(String [] log, int day) {
         visits.put(day, log);
     }
-    public byte[] getToken(int day) {
+    public byte[] getTokens(int day) {
         return tokens.get(day);
     }
 

@@ -1,6 +1,7 @@
 package Visitor;
 
 import Interfaces.EnrollmentInterface;
+import Interfaces.MixingProxyInterface;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.NotFoundException;
 
@@ -10,6 +11,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.io.FileInputStream;
@@ -21,9 +23,10 @@ import com.google.zxing.common.HybridBinarizer;
 
 
 public class VisitorClient {
+
     public static void main(String[] args) throws NotFoundException, IOException {
         Visitor visitor = new Visitor("Wannes", "+32 456 30 81 66");
-
+        ArrayList<facilityScan> visits = new ArrayList<facilityScan>();
         try {
             // fire to localhost port 2100
             Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
@@ -36,19 +39,30 @@ public class VisitorClient {
 
             System.out.println("Succesfully registered to the system");
 
-            String H = scanQR(visitor);
+            // visitor scans a QR code
+            facilityScan fs = scanQR(visitor);
+            // todo: Determine for how long this will be saved (incubation period)
+            visits.add(fs);
 
+            // search for MixingProxyServer
+            Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+            MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
 
             // todo: time intervals... Die snap ik nie goe (Denk dat we ook nog gaan moeten kijken om de incubation time achtig bij te houden)
             int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
             // todo: Ik twijfel nog doordeze functie aan mijn implementatie van de tokens...
             // De twijfel : bij user enrollement - moet ek voor elke dag van de maand nen set vna 48 tokens voorzien? of worden deze per dag uitgedeeld...
             // Dus zou kunnen dat daar nog nen fout in zit...
-            impl.sendCapsule(visitor.getToken(day));
+            // todo: secure connection with server authentication
+            //byte[] tokens = visitor.getTokens(day); //NullpointerException
+            //int time_interval = (((int)fs.getScanDate().charAt(11)*10 + (int)fs.getScanDate().charAt(12))*2 + (int)fs.getScanDate().charAt(14)/3);
+            //System.out.println(time_interval);
+            mpi.sendCapsule(/*time_interval + user token + fs.getH*/);
+
         }
         catch (Exception e) { e.printStackTrace(); }
     }
-    public static String scanQR(Visitor visitor) throws NotFoundException, IOException {
+    public static facilityScan scanQR(Visitor visitor) throws NotFoundException, IOException {
         // Read QR
         // For now: just dummy procedure where it selects current day
         int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -71,8 +85,7 @@ public class VisitorClient {
         System.out.println("Unique Identifier: "+ CF);
         System.out.println("Hash: "+ H);
         System.out.println("Current date & time: "+ currentTime);
-        // todo: save and determine for how long this will be saved
-        return null;
+        return new facilityScan(R_i, CF, H, currentTime);
     }
     public static String readQRcode(String file) throws FileNotFoundException, IOException, NotFoundException {
         FileInputStream fileInputStream = new FileInputStream(file);

@@ -5,7 +5,7 @@ import Visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//Saves every facility & visitor registered
 public class RegistrarDB {
 
     private List<Facility> facilities;
@@ -38,7 +38,4 @@ public class RegistrarDB {
 
         return res;
     }
-
-
-
 }

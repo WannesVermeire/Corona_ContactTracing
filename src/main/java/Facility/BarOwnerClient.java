@@ -65,7 +65,7 @@ public class BarOwnerClient {
             String hashString = Base64.getEncoder().encodeToString(hash);
 
             String barcodeText = randomString+";"+CFString+";"+hashString;
-
+            System.out.println(barcodeText);
             // TODO ter info voor decode
 //            byte[] decode = Base64.getDecoder().decode(s);
 
@@ -80,6 +80,8 @@ public class BarOwnerClient {
                 ImageIO.write(bufferedImage, "jpg", outputfile);
 
             } catch (Exception e) { e.printStackTrace(); }
+
+
 
         }
 

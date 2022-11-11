@@ -16,7 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.time.LocalDate;
 import java.util.*;
-
+//Interface which facilities and visitors can use to enroll in the registrar
 public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements EnrollmentInterface {
 
     private RegistrarDB registrarDB;
@@ -101,6 +101,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     /** 1.2 + 1.3 Enroll visitor + tokens **/
     public void registerVisitor(Visitor visitor) {
         registrarDB.addVisitor(visitor);
+        //TODO Aparte methodes?
         List<byte[]> tokens = new ArrayList<>();
 
         byte[] today = LocalDate.now().toString().getBytes(StandardCharsets.UTF_8);
@@ -150,10 +151,9 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     }
 
     /** 2.1 Visit facility **/
-    @Override
+    /*@Override
     public void sendCapsule(byte[] token) {
         // TODO : tot hier geraakt....
 
-    }
-
+    }*/
 }
