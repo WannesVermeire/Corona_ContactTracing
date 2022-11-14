@@ -1,0 +1,19 @@
+1. EnrollmentInterfaceImpl : Encryptie gewijs... Wat is het nut van de randomstring die zit in de QR???
+    lijn 62-65
+2. EnrollmentInterfaceImpl :  Random getal bij encryption user
+        lijn 125...
+   Generatie tokens users?
+        -> 1x voor alle dagen in een maand
+        of 1x per maand (en zo adhv de speciefieke dagen)
+            Bij opvragen: checken als nieuwe dag => indien ja, nieuwe genereren
+        lijn 125
+        -> Random bijhouden?
+   Extra list: booleans om te checken welke al gebruikt zijn...
+
+3. VisitorClient : Scan QR exparation date, nu heb ik deze gwn random gekomen
+    Expiration implementeren
+
+
+Volgende om te doen
+    5.2.2
+        sendCapsule

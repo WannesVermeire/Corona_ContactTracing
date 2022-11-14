@@ -22,8 +22,10 @@ public class RegistrarDB {
     }
     public void addVisitor(Visitor visitor) {
         for (Visitor v : visitors) {
-            if (v.getPhone().equals(visitor.getPhone()))
-                throw new IllegalStateException("Visitor with this phone nr already exists");
+            // todo: uncomment
+            // now it is commented out for testing purposes
+            /*if (v.getPhone().equals(visitor.getPhone()))
+                throw new IllegalStateException("Visitor with this phone nr already exists");*/
         }
         visitors.add(visitor);
     }

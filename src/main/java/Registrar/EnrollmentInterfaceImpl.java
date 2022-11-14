@@ -18,6 +18,11 @@ import java.time.LocalDate;
 import java.util.*;
 //Interface which facilities and visitors can use to enroll in the registrar
 public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements EnrollmentInterface {
+    private final int INCUBATION_DAYS = 10;
+
+    public int getINCUBATION_DAYS() {
+        return INCUBATION_DAYS;
+    }
 
     private RegistrarDB registrarDB;
 
@@ -99,10 +104,9 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     }
 
     /** 1.2 + 1.3 Enroll visitor + tokens **/
-    public void registerVisitor(Visitor visitor) {
+    public Visitor registerVisitor(Visitor visitor) {
         registrarDB.addVisitor(visitor);
         //TODO Aparte methodes?
-        List<byte[]> tokens = new ArrayList<>();
 
         byte[] today = LocalDate.now().toString().getBytes(StandardCharsets.UTF_8);
         try {
@@ -113,47 +117,42 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
             keyGen.initialize(1024, random);
             KeyPair pair = keyGen.generateKeyPair();
+            visitor.setKeys(pair);
 
             PrivateKey privateKey = pair.getPrivate();
-            PublicKey publicKey = pair.getPublic();
 
             dsa.initSign(privateKey);
 
-            byte[] signed;
+            List<byte[]>[] tokenList = new List[31];
+            List<byte[]> tokenListPerDay;
             // TODO is dit wat bedoelt wordt met die random.... ik vrees er wat voor...
-            for (int i = 0; i < 48; i++) {
-                // Wannes manier...
-                // byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), today);
-                // dsa.update(data);
-                // TODO
-                // Doordat de random al in het keypair zit, denk ik niet dat het noodzakelijk is om deze hierin nog eens te steken...
-                // Dus kan/moet het volgens mij zo...
-                // Heb vorige laten staan om alternatief aan te tonen...
-                dsa.update(today);
-                tokens.add(dsa.sign());
-            }
+            for(int j=0; j<30; j++) {
+                tokenListPerDay = new ArrayList<>();
+                for (int i = 0; i < 48; i++) {
+                    /* Wannes manier...*/
+                    byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), (byte) (j+1));
+                    dsa.update(data);
+                    tokenListPerDay.add(dsa.sign());
+                    /*  TODO
+                    Doordat de random al in het keypair zit, denk ik niet dat het noodzakelijk is om deze hierin nog eens te steken...
+                    Dus kan/moet het volgens mij zo...
+                    Heb vorige laten staan om alternatief aan te tonen...
 
-            /** Controle om aan te tonen dat mijn methode werkt **/
-            dsa.initVerify(publicKey);
-            byte[] previous = null;
-            for (byte[] d : tokens) {
-                dsa.update(today);
-                if (dsa.verify(d) && !Arrays.equals(d, previous)) System.out.println("Very Nice");
-                else if (Arrays.equals(d, previous)) System.out.println("Redeneerfout");
-                else System.out.println("programmeerfout");
-            }
-            /** Controle om aan te tonen dat mijn methode werkt **/
+                    dsa.update(today) */
 
-            visitor.setTokens(tokens);
+                }
+                tokenList[j] = tokenListPerDay;
+            }
+            int day = 0;
+            for(List<byte[]> list : tokenList) {
+                System.out.println("day:" + day);
+                day++;
+            }
+            visitor.setTokens(tokenList);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return visitor;
     }
 
-    /** 2.1 Visit facility **/
-    /*@Override
-    public void sendCapsule(byte[] token) {
-        // TODO : tot hier geraakt....
-
-    }*/
 }

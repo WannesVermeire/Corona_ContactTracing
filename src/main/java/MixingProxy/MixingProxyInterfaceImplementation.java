@@ -8,7 +8,9 @@ import java.rmi.server.UnicastRemoteObject;
 public class MixingProxyInterfaceImplementation extends UnicastRemoteObject implements MixingProxyInterface {
     public MixingProxyInterfaceImplementation() throws RemoteException{}
 
-    public void sendCapsule(){
-
-    };
+    /** 2.1 Visit facility **/
+    @Override
+    public void sendCapsule(byte[] token) {
+        // TODO : tot hier geraakt....
+    }
 }
