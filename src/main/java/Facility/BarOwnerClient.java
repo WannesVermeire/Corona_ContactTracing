@@ -24,9 +24,7 @@ public class BarOwnerClient {
     public static void main(String[] args) {
 
         /** Phase 1.1: Enrollment **/
-        //TODO: is het de bedoelign dat de BarOwner zijn eigen id kiest? Is het niet de bedoeling dat hij ene krijgt @Wannes
-        // wnr ge et leest moedet maar sturen op discord jong
-        // Mvg, Wout
+        // todo : id niet manueel niet kiezen, automatisch laten toevoegen
         Facility facility = new Facility(1234, "Hamann", "Vantegemstraat 3, 9230 Wetteren", "+32 9 333 77 77");
 
         // Register to Registrar server
@@ -67,7 +65,7 @@ public class BarOwnerClient {
             String hashString = Base64.getEncoder().encodeToString(hash);
 
             String barcodeText = randomString+";"+CFString+";"+hashString;
-
+            System.out.println(barcodeText);
             // TODO ter info voor decode
 //            byte[] decode = Base64.getDecoder().decode(s);
 
@@ -82,6 +80,8 @@ public class BarOwnerClient {
                 ImageIO.write(bufferedImage, "jpg", outputfile);
 
             } catch (Exception e) { e.printStackTrace(); }
+
+
 
         }
 

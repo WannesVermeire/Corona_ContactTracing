@@ -1,6 +1,7 @@
 package Visitor;
 
 import Interfaces.EnrollmentInterface;
+import Interfaces.MixingProxyInterface;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.NotFoundException;
 
@@ -8,11 +9,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.io.FileInputStream;
+import java.util.List;
 import javax.imageio.ImageIO;
 
 import com.google.zxing.MultiFormatReader;
@@ -21,38 +22,56 @@ import com.google.zxing.common.HybridBinarizer;
 
 
 public class VisitorClient {
+
     public static void main(String[] args) throws NotFoundException, IOException {
         Visitor visitor = new Visitor("Wannes", "+32 456 30 81 66");
-
+        int incubation;
+        ArrayList<FacilityScanData> visits = new ArrayList<FacilityScanData>();
         try {
             // fire to localhost port 2100
             Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
 
             // search for RegistrarService
             EnrollmentInterface impl = (EnrollmentInterface) myRegistry.lookup("RegistrarService");
+            incubation = impl.getINCUBATION_DAYS();
 
             // call server methods
-            impl.registerVisitor(visitor);
+            visitor = impl.registerVisitor(visitor);
 
             System.out.println("Succesfully registered to the system");
 
-            String H = scanQR(visitor);
+            /** 2.1: scanQR **/
+            // visitor scans a QR code
+            FacilityScanData fs = scanQR(visitor);
+            // todo: Determine for how long this will be saved (incubation period)
+            visits.add(fs);
 
+            // search for MixingProxyServer
+            Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+            MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
 
-            // todo: time intervals... Die snap ik nie goe (Denk dat we ook nog gaan moeten kijken om de incubation time achtig bij te houden)
             int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            // todo: Ik twijfel nog doordeze functie aan mijn implementatie van de tokens...
-            // De twijfel : bij user enrollement - moet ek voor elke dag van de maand nen set vna 48 tokens voorzien? of worden deze per dag uitgedeeld...
-            // Dus zou kunnen dat daar nog nen fout in zit...
-            impl.sendCapsule(visitor.getToken(day));
+            // todo: secure connection with server authentication
+            List<byte[]> tokens = visitor.getTokens(day);
+
+            System.out.println(fs.getScanDay());
+            int time_interval = fs.getScanDay();
+            //System.out.println(time_interval);
+
+            /** 2.2 : sendCapsule **/
+//            mpi.sendCapsule(/*time_interval + user token + fs.getH*/);
         }
         catch (Exception e) { e.printStackTrace(); }
     }
-    public static String scanQR(Visitor visitor) throws NotFoundException, IOException {
+    public static FacilityScanData scanQR(Visitor visitor) throws NotFoundException, IOException {
         // Read QR
         // For now: just dummy procedure where it selects current day
         int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        String filename = "QRCodes/QRCode_day" + 3 + ".jpg";
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int minute = Calendar.getInstance().get(Calendar.MINUTE);
+        String filename = "QRCodes/QRCode_day" + dayOfMonth + ".jpg";
         String[] qr = readQRcode(filename).split(";");
         // random number
         String R_i = qr[0];
@@ -60,9 +79,6 @@ public class VisitorClient {
         String CF = qr[1];
         // Hash
         String H = qr[2];
-        // Get Current time
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String currentTime = dtf.format(LocalDateTime.now());
         // Store locally
         // todo: is het oke om als key te nemen, day of month?
         visitor.addVisit(new String[]{R_i, CF}, dayOfMonth);
@@ -70,8 +86,8 @@ public class VisitorClient {
         System.out.println("Random number: "+R_i);
         System.out.println("Unique Identifier: "+ CF);
         System.out.println("Hash: "+ H);
-        System.out.println("Current date & time: "+ currentTime);
-        // todo: save and determine for how long this will be saved
+        System.out.println("Current date: "+ dayOfMonth + "-" + month + ":" + hour + ":" + minute);
+        return new FacilityScanData(R_i, CF, H, dayOfMonth, month, year, hour, minute);
     }
     public static String readQRcode(String file) throws FileNotFoundException, IOException, NotFoundException {
         FileInputStream fileInputStream = new FileInputStream(file);

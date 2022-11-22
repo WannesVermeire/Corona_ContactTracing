@@ -8,14 +8,15 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface EnrollmentInterface extends Remote {
+    //todo Hernoemen naar registrar interface??
 
     void registerFacility(Facility facility) throws RemoteException;
 
     List<byte[]> getNymArray(int id) throws RemoteException;
 
-    void registerVisitor(Visitor visitor) throws RemoteException, IllegalStateException;
+    Visitor registerVisitor(Visitor visitor) throws RemoteException, IllegalStateException;
 
-    void sendCapsule(byte[] token);
+    int getINCUBATION_DAYS() throws RemoteException;
 
 //    void visitFacility_scan(Visitor v, String qr_scanned);
 }
