@@ -1,24 +1,18 @@
 package Visitor;
 
+import java.util.Calendar;
+
 public class FacilityScanData {
     private String R_i;
     private String CF;
     private String H;
-    private int scanDay;
-    private int scanMonth;
-    private int scanYear;
-    private int scanHour;
-    private int scanMin;
+    private Calendar current_dateTime;
 
-    public FacilityScanData(String R_i, String CF, String H, int scanDay, int scanMonth, int scanYear, int scanHour, int scanMin) {
+    public FacilityScanData(String R_i, String CF, String H, Calendar current_dateTime) {
         this.R_i = R_i;
         this.CF = CF;
         this.H = H;
-        this.scanDay = scanDay;
-        this.scanMonth = scanMonth;
-        this.scanYear = scanYear;
-        this.scanHour = scanHour;
-        this.scanMin = scanMin;
+        this.current_dateTime = current_dateTime;
     }
 
     public String getR_i() {
@@ -33,7 +27,7 @@ public class FacilityScanData {
         return H;
     }
 
-    public int getScanDay() {
-        return scanDay;
+    public Calendar getScanDay() {
+        return current_dateTime;
     }
 }
