@@ -121,7 +121,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
             PrivateKey privateKey = pair.getPrivate();
 
-            dsa.initSign(privateKey);
+            dsa.initSign(pair.getPrivate());
 
             List<byte[]>[] tokenList = new List[31];
             List<byte[]> tokenListPerDay;
@@ -130,7 +130,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
                 tokenListPerDay = new ArrayList<>();
                 for (int i = 0; i < 48; i++) {
                     /* Wannes manier...*/
-                    byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), (byte) (j+1));
+                    byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), (byte) ';', (byte) (j+1));
                     dsa.update(data);
                     tokenListPerDay.add(dsa.sign());
                     /*  TODO
@@ -142,11 +142,6 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
                 }
                 tokenList[j] = tokenListPerDay;
-            }
-            int day = 0;
-            for(List<byte[]> list : tokenList) {
-                System.out.println("day:" + day);
-                day++;
             }
             visitor.setTokens(tokenList);
         } catch (Exception e) {

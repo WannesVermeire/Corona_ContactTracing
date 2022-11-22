@@ -8,7 +8,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface EnrollmentInterface extends Remote {
-    //todo Hernoemen naar registrar interface??
 
     void registerFacility(Facility facility) throws RemoteException;
 

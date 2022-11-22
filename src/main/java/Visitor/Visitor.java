@@ -44,4 +44,8 @@ public class Visitor implements Serializable {
         privateKey = pair.getPrivate();
     }
 
+    public PublicKey getPublicKey () {
+        return publicKey;
+    }
+
 }
