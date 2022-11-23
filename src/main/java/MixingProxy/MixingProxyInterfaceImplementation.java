@@ -30,7 +30,7 @@ public class MixingProxyInterfaceImplementation extends UnicastRemoteObject impl
         System.out.println("Token : " + new String(capsule.getToken(), StandardCharsets.UTF_8));
         if(dsa.verify(token)) {
             if(true) {
-                if(impl.isTokenUsed(capsule.getToken())) {
+                if(!impl.isTokenUsed(capsule.getToken())) {
                     System.out.println("Great Succes");
                 }
                 else throw new Exception("Token is already used");

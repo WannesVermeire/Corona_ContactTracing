@@ -60,7 +60,7 @@ public class VisitorClient {
 
             /** 2.2 : sendCapsule **/
             Capsule capsule = new Capsule(current_dateTime, tokens.get(0), fs.getH());
-            mpi.sendCapsule(visitor, capsule, capsule.getToken());
+            mpi.sendCapsule(visitor, capsule, tokens.get(0));
             tokens.remove(0);
         }
         catch (Exception e) { e.printStackTrace(); }
