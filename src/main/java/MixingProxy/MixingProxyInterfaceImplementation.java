@@ -26,13 +26,13 @@ public class MixingProxyInterfaceImplementation extends UnicastRemoteObject impl
 
     /** 2.1 Visit facility **/
     @Override
-    public void sendCapsule(Visitor v , int timeInterval, byte[] token, String H) throws Exception {
+    public void sendCapsule(Visitor v , Capsule c) throws Exception {
         Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
         dsa.initVerify(v.getPublicKey());
         // 3 checks: signature, day, not yet used
-        if(dsa.verify(token)) {
+        if(dsa.verify(c.getToken())) {
             if(true) {
-                if(!impl.isTokenUsed(token)) {
+                if(!impl.isTokenUsed(c.getToken())) {
                     System.out.println("Great Succes");
                 }
                 else throw new Exception("Token is already used");

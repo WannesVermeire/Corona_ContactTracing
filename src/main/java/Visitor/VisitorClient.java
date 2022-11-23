@@ -64,16 +64,15 @@ public class VisitorClient {
             List<byte[]> tokens = visitor.getTokens(today); //NullpointerException
             byte[] token = tokens.get(currentTimeInterval);
             // todo: secure connection with server authentication
-            mpi.sendCapsule(visitor, currentTimeInterval, token, fs.getH());
             //List<byte[]> tokens = new ArrayList<>(visitor.getTokens(day));
 
             //Calendar current_dateTime = fs.getScanDay();*/
             //System.out.println(time_interval);
 
             /** 2.2 : sendCapsule **/
-            /*Capsule capsule = new Capsule(current_dateTime, tokens.get(0), fs.getH());
-            mpi.sendCapsule(visitor, capsule, tokens.get(0));
-            tokens.remove(0);*/
+            Capsule capsule = new Capsule(currentTimeInterval, token, fs.getH());
+            mpi.sendCapsule(visitor, capsule);
+            tokens.remove(0);
         }
         catch (Exception e) { e.printStackTrace(); }
     }

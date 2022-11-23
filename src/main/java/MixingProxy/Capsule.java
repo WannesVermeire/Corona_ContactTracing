@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 public class Capsule implements Serializable {
-    private Calendar currrent_dateTime;
+    private int timeInterval;
     private byte[] token;
     private String H;
 
-    public Calendar getCurrrent_dateTime() {
-        return currrent_dateTime;
+    public int getCurrrent_dateTime() {
+        return timeInterval;
     }
 
     public byte[] getToken() {
@@ -20,8 +20,8 @@ public class Capsule implements Serializable {
         return H;
     }
 
-    public Capsule(Calendar currrent_dateTime, byte[] token, String h) {
-        this.currrent_dateTime = currrent_dateTime;
+    public Capsule(int timeInterval, byte[] token, String h) {
+        this.timeInterval = timeInterval;
         this.token = token;
         H = h;
     }
