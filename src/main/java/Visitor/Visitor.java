@@ -14,7 +14,7 @@ public class Visitor implements Serializable {
     private String name;
     private String phone;
     private List<byte[]>[] tokens = new List[31];
-    private Map<Integer, String[]> visits;
+    private Map<String, String[]> visits;
 
     PrivateKey privateKey;
     PublicKey publicKey;
@@ -32,8 +32,8 @@ public class Visitor implements Serializable {
     public void setTokens(List<byte[]>[] tokens) {
         this.tokens = (tokens);
     }
-    public void addVisit(String [] log, int day) {
-        visits.put(day, log);
+    public void addVisit(String [] log) {
+        visits.put(log[3],log);
     }
     public List<byte[]> getTokens(int day) {
         return tokens[day-1];

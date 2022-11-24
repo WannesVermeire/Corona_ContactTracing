@@ -13,5 +13,5 @@ import java.util.Calendar;
 
 public interface MixingProxyInterface extends Remote {
 
-    void sendCapsule(Visitor visitor, Capsule capsule, byte[] token) throws Exception;
+    void sendCapsule(Visitor v , Capsule c) throws Exception;
 }

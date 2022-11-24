@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -26,17 +28,19 @@ public class VisitorClient {
 
     public static void main(String[] args) throws NotFoundException, IOException {
         Visitor visitor = new Visitor("Wannes", "+32 456 30 81 66");
+        int saveDuration; // Depends on the governmental directives and incubation time
         int incubation;
-        ArrayList<FacilityScanData> visits = new ArrayList<>();
+        ArrayList<FacilityScanData> visits = new ArrayList<>(); //Stores 3 values(R_i,CF,H) exposed by the QR code for each facility visit
         try {
-            // fire to localhost port 2100
+            // https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/hello/hello-world.html
+            // myRegistry is a reference (stub) for the registry that is running on port 2100 a.k.a. the Registrar
             Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
 
-            // search for RegistrarService
+            // Obtain the stub for the remote object with name "RegistrarService" a.k.a. the EnrollmentInterfaceImpl
             EnrollmentInterface impl = (EnrollmentInterface) myRegistry.lookup("RegistrarService");
             incubation = impl.getINCUBATION_DAYS();
 
-            // call server methods
+            // Register visitor to the registrar and get a set of signed tokens
             visitor = impl.registerVisitor(visitor);
 
             System.out.println("Succesfully registered to the system");
@@ -44,23 +48,30 @@ public class VisitorClient {
             /** 2.1: scanQR **/
             // visitor scans a QR code
             FacilityScanData fs = scanQR(visitor);
-            // todo: Determine for how long this will be saved (incubation period)
+            // simplify saveDuration by setting it to the incubation time
+            saveDuration = incubation;
             visits.add(fs);
 
-            // search for MixingProxyServer
+            // mixingProxyRegistry is a reference (stub) for the registry that is running on port 2200 a.k.a. the MixingProxy
             Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+            // Obtain the stub for the remote object with name "MixingProxyService" a.k.a. the MixingProxyInterfaceImplementation
             MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
 
-            int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            // For this implementation we choose half an hour for the time intervals(24h/48)
+            // For each time interval there's a unique token per day
+            int currentTimeInterval = 2*((fs.getScanTime().charAt(11)-48)*10 + fs.getScanTime().charAt(12)-48) + (fs.getScanTime().charAt(14)-48)/3;
+            int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            List<byte[]> tokens = visitor.getTokens(today); //NullpointerException
+            byte[] token = tokens.get(currentTimeInterval);
             // todo: secure connection with server authentication
-            List<byte[]> tokens = new ArrayList<>(visitor.getTokens(day));
+            //List<byte[]> tokens = new ArrayList<>(visitor.getTokens(day));
 
-            Calendar current_dateTime = fs.getScanDay();
+            //Calendar current_dateTime = fs.getScanDay();*/
             //System.out.println(time_interval);
 
             /** 2.2 : sendCapsule **/
-            Capsule capsule = new Capsule(current_dateTime, tokens.get(0), fs.getH());
-            mpi.sendCapsule(visitor, capsule, capsule.getToken());
+            Capsule capsule = new Capsule(currentTimeInterval, token, fs.getH());
+            mpi.sendCapsule(visitor, capsule);
             tokens.remove(0);
         }
         catch (Exception e) { e.printStackTrace(); }
@@ -77,14 +88,17 @@ public class VisitorClient {
         String CF = qr[1];
         // Hash
         String H = qr[2];
-        // Store locally
-        // todo: is het oke om als key te nemen, day of month?
-        visitor.addVisit(new String[]{R_i, CF}, Calendar.DAY_OF_MONTH);
+        // Get Current time
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String currentTime = dtf.format(LocalDateTime.now());
+        // todo: Store locally
+        visitor.addVisit(new String[]{R_i, CF, H, currentTime});
         // Print result log
         System.out.println("Random number: "+R_i);
         System.out.println("Unique Identifier: "+ CF);
         System.out.println("Hash: "+ H);
-        return new FacilityScanData(R_i, CF, H, current_dateTime);
+        System.out.println("Entry time: " + currentTime);
+        return new FacilityScanData(R_i, CF, H, currentTime);
     }
     public static String readQRcode(String file) throws FileNotFoundException, IOException, NotFoundException {
         FileInputStream fileInputStream = new FileInputStream(file);

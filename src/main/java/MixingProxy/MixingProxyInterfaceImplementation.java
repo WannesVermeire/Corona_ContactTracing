@@ -17,20 +17,22 @@ import java.util.Calendar;
 
 public class MixingProxyInterfaceImplementation extends UnicastRemoteObject implements MixingProxyInterface {
     MatchingServiceInterface impl;
-    public MixingProxyInterfaceImplementation(MatchingServiceInterface impl) throws RemoteException, NotBoundException {
-        this.impl = impl;
+    public MixingProxyInterfaceImplementation() throws RemoteException, NotBoundException {
+        // matchingRegistry is a reference (stub) for the registry that is running on port 2300 a.k.a. the MatchingService
+        Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
+        // Obtain the stub for the remote object with name "MatchingService" a.k.a. the MatchingServiceInterfaceImplementation
+        this.impl = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
     }
 
     /** 2.1 Visit facility **/
     @Override
-    public void sendCapsule(Visitor visitor, Capsule capsule, byte[] token) throws Exception {
+    public void sendCapsule(Visitor v , Capsule c) throws Exception {
         Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
-        dsa.initVerify(visitor.getPublicKey());
+        dsa.initVerify(v.getPublicKey());
         // 3 checks: signature, day, not yet used
-        System.out.println("Token : " + new String(capsule.getToken(), StandardCharsets.UTF_8));
-        if(dsa.verify(token)) {
+        if(dsa.verify(c.getToken())) {
             if(true) {
-                if(impl.isTokenUsed(capsule.getToken())) {
+                if(!impl.isTokenUsed(c.getToken())) {
                     System.out.println("Great Succes");
                 }
                 else throw new Exception("Token is already used");
