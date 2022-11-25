@@ -1,34 +1,64 @@
 package Facility;
 
 
+import Services.Methods;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
 import javax.crypto.SecretKey;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Random;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.time.LocalDate;
+import java.util.*;
+
+import static Services.Methods.*;
 
 public class Facility implements Serializable {
 
-    private int id; // unique business number
+    private String id; // unique business number
     private String name;
     private String address;
     private String phoneNr;
     private List<SecretKey> keyArray;
     private List<byte[]> nymArray;
-    private byte[] random;
+    private int[] randoms;
+    private PublicKey publicKey;
+    private PrivateKey privateKey;
 
-    public Facility(int id, String name, String address, String phoneNr) {
+    public Facility(String name, String address, String phoneNr) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.address = address;
+        this.phoneNr = phoneNr;
+        KeyPair keyPair = getKeyPair();
+        publicKey = keyPair.getPublic();
+        privateKey = keyPair.getPrivate();
+    }
+
+    public Facility(String id, String name, String address, String phoneNr, PublicKey publicKey) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNr = phoneNr;
-        random = new byte[20];
-        new Random().nextBytes(random);
+        this.publicKey = publicKey;
     }
 
     // Gives back unique identifier CF
-    public String getCF() { return id+name+address+phoneNr; }
-
-    public int getId() { return id; }
+    public String getCF() {
+        String[] data = {id, name, address, phoneNr};
+        return Methods.joinStrings(data);
+    }
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
+    public String getId() { return id; }
     public String getName() {
         return name;
     }
@@ -44,9 +74,9 @@ public class Facility implements Serializable {
     public List<byte[]> getNymArray() {
         return nymArray;
     }
-    public byte[] getRandom() { return random; }
+    public int[] getRandom() { return randoms; }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
     public void setName(String name) {
@@ -65,24 +95,69 @@ public class Facility implements Serializable {
         this.nymArray = nymArray;
     }
 
+    public byte[] generateCFSignature() {
+        byte[] data = stringToBytes(getCF());
+        return getSignature(data, privateKey);
+    }
+
+    public void generateRandoms() {
+        // Get the nrOfDays of month
+        LocalDate today = LocalDate.now();
+        int nrOfDays = today.getMonth().length(LocalDate.EPOCH.isLeapYear());
+        Random rand = new Random();
+        randoms = new int[nrOfDays];
+        int Ri = 0;
+        for (int i=0; i<nrOfDays; i++) {
+            Ri = rand.nextInt(Integer.MAX_VALUE);
+            randoms[i] = Ri;
+        }
+    }
+
+    public void calculateQRCodes() {
+        String CF = getCF();
+        for (int i=0; i<nymArray.size(); i++) {
+            String Ri = Integer.toString(randoms[i]);
+            String nym_CF_dayi = bytesToString(nymArray.get(i));
+
+            // Create hash of R_i and nym_CF_dayi
+            String[] data = {Ri, nym_CF_dayi};
+            String dataString = joinStrings(data);
+            byte[] hash = hash(dataString);
+
+            // Create content of QR code
+            String hashString = bytesToString(hash);
+            String[] data2 = {Ri, CF, hashString};
+            String barcodeText = joinStrings(data2);
+
+            // Create QR code
+            String filename = "QRCodes/QRCode_day"+(i+1)+".jpg";
+            try {
+                QRCodeWriter barcodeWriter = new QRCodeWriter();
+                BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
+
+                BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+                File outputfile = new File(filename);
+                ImageIO.write(bufferedImage, "jpg", outputfile);
+
+            }
+            catch (Exception e) { e.printStackTrace(); }
+        }
+    }
+
+
     @Override
     public String toString() {
-        String s = "facility{" +
-                "id=" + id +
+        String nymarray = "";
+        if(nymArray!=null)
+            for (byte[] arr : nymArray)
+                nymarray+= Arrays.toString(arr)+",";
+
+        return "facility{" +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNr='" + phoneNr + '\'' +
                 ", keyArray=" + keyArray +
-//                ", nymArray=" + nymArray + "}";
-                ", nymArray_size=" + nymArray.size() +
-                ", nymArray=[";
-        for(byte[] arr : nymArray) {
-            for(int i=0; i< arr.length; i++) {
-                s+=arr[i];
-            }
-            s+=',';
-        }
-        s += "]}";
-        return s;
+                ", nymArray=" + nymarray + "}";
     }
 }

@@ -28,10 +28,10 @@ public class RegistrarDB {
         visitors.add(visitor);
     }
 
-    public Facility findFacilityById(int id) {
+    public Facility findFacilityById(String id) {
         Facility res = null;
         for (Facility f : facilities)
-            if (f.getId()==id) {
+            if (f.getId().equals(id)) {
                 res = f;
                 break;
             }

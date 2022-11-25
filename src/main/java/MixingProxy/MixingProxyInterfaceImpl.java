@@ -2,22 +2,18 @@ package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
-import MatchingService.MatchingService;
-import MatchingService.MatchingServiceInterfaceImplementation;
 import Visitor.Visitor;
 
-import java.nio.charset.StandardCharsets;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
-import java.util.Calendar;
 
-public class MixingProxyInterfaceImplementation extends UnicastRemoteObject implements MixingProxyInterface {
+public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements MixingProxyInterface {
     MatchingServiceInterface impl;
-    public MixingProxyInterfaceImplementation() throws RemoteException, NotBoundException {
+    public MixingProxyInterfaceImpl() throws RemoteException, NotBoundException {
         // matchingRegistry is a reference (stub) for the registry that is running on port 2300 a.k.a. the MatchingService
         Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
         // Obtain the stub for the remote object with name "MatchingService" a.k.a. the MatchingServiceInterfaceImplementation
