@@ -10,8 +10,8 @@ public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject 
         this.matchingServiceDB = matchingServiceDB;
     }
     private MatchingServiceDB matchingServiceDB;
-    @Override
-    public boolean isTokenUsed(byte[] token)  {
-        return matchingServiceDB.hasCapsule(token);
-    }
+//    @Override
+//    public boolean isTokenUsed(byte[] token)  {
+//        return matchingServiceDB.hasCapsule(token);
+//    }
 }

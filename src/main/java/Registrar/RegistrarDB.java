@@ -3,18 +3,26 @@ package Registrar;
 import Facility.Facility;
 import Visitor.Visitor;
 
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+
+import static Services.Methods.getKeyPair;
+
 //Saves every facility & visitor registered
 public class RegistrarDB {
 
     private List<Facility> facilities;
     private List<Visitor> visitors;
+    private static KeyPair keyPair;
 
 
     public RegistrarDB() {
         facilities = new ArrayList<>();
         visitors = new ArrayList<>();
+        keyPair = getKeyPair();
     }
 
     public void addFacility(Facility facility) {
@@ -38,4 +46,12 @@ public class RegistrarDB {
 
         return res;
     }
+
+    public PublicKey getPublicKey () {
+        return keyPair.getPublic();
+    }
+    public PrivateKey getPrivate () {
+        return keyPair.getPrivate();
+    }
+
 }

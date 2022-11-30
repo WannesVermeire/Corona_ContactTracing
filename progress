@@ -2,7 +2,7 @@
     lijn 62-65
 2. EnrollmentInterfaceImpl :  Random getal bij encryption user
         lijn 125...
-   Generatie tokens users?
+   Generatie signedTokens users?
         -> 1x voor alle dagen in een maand
         of 1x per maand (en zo adhv de speciefieke dagen)
             Bij opvragen: checken als nieuwe dag => indien ja, nieuwe genereren

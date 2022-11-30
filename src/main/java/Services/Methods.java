@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Methods {
 
-    /*********************************************** Crypto functions ***********************************************/
-
+    /*********************************************** CRYPTO FUNCTIONS ***********************************************/
     // Returns a hash of the data contained in the string
     public static byte[] hash(String data) {
         byte[] hash = null;
@@ -95,11 +94,12 @@ public class Methods {
         catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) { e.printStackTrace(); }
         return valid;
     }
+    /*********************************************** CRYPTO FUNCTIONS ***********************************************/
 
 
 
-    /*********************************************** Conversions ***********************************************/
 
+    /*********************************************** CONVERSIONS ***********************************************/
     // Join strings seperated by a ";"
     public static String joinStrings(String[] data) {
         String res = "";
@@ -147,6 +147,6 @@ public class Methods {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return LocalDate.parse(date, formatter);
     }
-
+    /*********************************************** CONVERSIONS ***********************************************/
 
 }

@@ -62,32 +62,10 @@ public class Facility implements Serializable {
     public String getName() {
         return name;
     }
-    public String getAddress() {
-        return address;
-    }
-    public String getPhoneNr() {
-        return phoneNr;
-    }
     public List<SecretKey> getKeyArray() {
         return keyArray;
     }
-    public List<byte[]> getNymArray() {
-        return nymArray;
-    }
-    public int[] getRandom() { return randoms; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    public void setPhoneNr(String phoneNr) {
-        this.phoneNr = phoneNr;
-    }
     public void setKeyArray(List<SecretKey> keyArray) {
         this.keyArray = keyArray;
     }
@@ -151,13 +129,17 @@ public class Facility implements Serializable {
         if(nymArray!=null)
             for (byte[] arr : nymArray)
                 nymarray+= Arrays.toString(arr)+",";
+        String keyarr = "";
+        if(keyArray!=null)
+            for (SecretKey arr : keyArray)
+                keyarr+= arr.toString()+",";
 
         return "facility{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNr='" + phoneNr + '\'' +
-                ", keyArray=" + keyArray +
+                ", keyArray=" + keyarr +
                 ", nymArray=" + nymarray + "}";
     }
 }

@@ -4,11 +4,9 @@ package Registrar;
 import Facility.Facility;
 import Interfaces.EnrollmentInterface;
 import Visitor.Visitor;
-import org.apache.commons.lang3.ArrayUtils;
 
 import static Services.Methods.*;
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
@@ -29,8 +27,8 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     public int getINCUBATION_DAYS() { return INCUBATION_DAYS; }
 
 
-    /** Phase 1.1: Catering facility enrollment **/
 
+    /**************************************** FACILITIES ****************************************/
     // Verify signature on CF and add to database if correct
     public void registerFacility(String CF, PublicKey publicKey, byte[] signature) {
         Facility facility;
@@ -50,7 +48,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     }
 
     // Generate secret key s_CF_dayi for each day of this month
-    public List<SecretKey> getKeyArray(String id) {
+    public List<SecretKey> getKeyArray(String id)  {
         List<SecretKey> keyArray = new ArrayList<>();
         Facility facility = registrarDB.findFacilityById(id);
 
@@ -100,52 +98,49 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         return nymArray;
 
     }
+    /**************************************** FACILITIES ****************************************/
 
-    /** 1.2 + 1.3 Enroll visitor + retrieve tokens **/
+
+    /**************************************** VISITOR ****************************************/
     public Visitor registerVisitor(Visitor visitor) {
         registrarDB.addVisitor(visitor);
-        //TODO Aparte methodes?
-
-        byte[] today = LocalDate.now().toString().getBytes(StandardCharsets.UTF_8);
-        try {
-            // TODO: wat wil sign_RC zeggen? Keymanagement?
-            Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
-
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
-            keyGen.initialize(1024, random);
-            KeyPair pair = keyGen.generateKeyPair();
-            visitor.setKeys(pair);
-
-            PrivateKey privateKey = pair.getPrivate();
-
-            dsa.initSign(pair.getPrivate());
-
-            List<byte[]>[] tokenList = new List[31];
-            List<byte[]> tokenListPerDay;
-            // TODO is dit wat bedoelt wordt met die random.... ik vrees er wat voor...
-            for(int j=0; j<30; j++) {
-                tokenListPerDay = new ArrayList<>();
-                for (int i = 0; i < 48; i++) {
-                    /* Wannes manier...*/
-                    byte[] data = ArrayUtils.addAll(Long.toString(random.nextLong()).getBytes(StandardCharsets.UTF_8), (byte) ';', (byte) (j+1));
-                    dsa.update(data);
-                    tokenListPerDay.add(dsa.sign());
-                    /*  TODO
-                    Doordat de random al in het keypair zit, denk ik niet dat het noodzakelijk is om deze hierin nog eens te steken...
-                    Dus kan/moet het volgens mij zo...
-                    Heb vorige laten staan om alternatief aan te tonen...
-
-                    dsa.update(today) */
-
-                }
-                tokenList[j] = tokenListPerDay;
-            }
-            visitor.setTokens(tokenList);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        generateTokens(visitor);
         return visitor;
     }
 
+    private void generateTokens(Visitor visitor) {
+        try {
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+            PrivateKey key = registrarDB.getPrivate();
+            List<byte[]>[] signedtokenList = new List[31];
+            List<byte[]> signedtokenListPerDay;
+
+            List<byte[]>[] unsignedtokenList = new List[31];
+            List<byte[]> unsignedtokenListPerDay;
+
+            LocalDate date = LocalDate.now();
+            for(int j=0; j<31; j++) {
+                signedtokenListPerDay = new ArrayList<>();
+                unsignedtokenListPerDay = new ArrayList<>();
+                for (int i = 0; i < 48; i++) {
+                    String[] dataStrings = new String[]{Long.toString(random.nextLong()), dateToString(date)};
+                    String dataString = joinStrings(dataStrings);
+                    byte[] data = stringToBytes(dataString);
+                    signedtokenListPerDay.add(getSignature(data, key));
+                    unsignedtokenListPerDay.add(data);
+                    date.plusDays(1);
+                }
+                signedtokenList[j] = signedtokenListPerDay;
+                unsignedtokenList[j] = unsignedtokenListPerDay;
+
+                visitor.setSignedTokens(signedtokenList);
+                visitor.setUnsignedTokens(unsignedtokenList);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**************************************** VISITOR ****************************************/
 }

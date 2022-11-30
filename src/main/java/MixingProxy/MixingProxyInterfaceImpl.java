@@ -11,6 +11,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 
+import static Services.Methods.checkSignature;
+
 public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements MixingProxyInterface {
     MatchingServiceInterface impl;
     public MixingProxyInterfaceImpl() throws RemoteException, NotBoundException {
@@ -22,13 +24,12 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
 
     /** 2.1 Visit facility **/
     @Override
-    public void sendCapsule(Visitor v , Capsule c) throws Exception {
-        Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
-        dsa.initVerify(v.getPublicKey());
+    public void sendCapsule(PublicKey publicKey, String scanTime, byte[] signedToken, byte[] unsignedToken, byte[] hash) throws Exception {
         // 3 checks: signature, day, not yet used
-        if(dsa.verify(c.getToken())) {
+        if(checkSignature(unsignedToken, signedToken, publicKey)) {
             if(true) {
-                if(!impl.isTokenUsed(c.getToken())) {
+//                if(!impl.isTokenUsed(c.getToken())) {
+                if((true)) {
                     System.out.println("Great Succes");
                 }
                 else throw new Exception("Token is already used");
