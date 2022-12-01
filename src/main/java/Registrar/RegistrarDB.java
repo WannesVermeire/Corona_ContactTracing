@@ -7,26 +7,28 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static Services.Methods.getKeyPair;
 
 //Saves every facility & visitor registered
 public class RegistrarDB {
 
-    private List<Facility> facilities;
+    private Map<String, Facility> facilities;
     private List<Visitor> visitors;
     private static KeyPair keyPair;
 
 
     public RegistrarDB() {
-        facilities = new ArrayList<>();
+        facilities = new HashMap<String, Facility>();
         visitors = new ArrayList<>();
         keyPair = getKeyPair();
     }
 
     public void addFacility(Facility facility) {
-        facilities.add(facility);
+        facilities.put(facility.getCF(), facility);
     }
     public void addVisitor(Visitor visitor) {
         for (Visitor v : visitors) {
@@ -37,14 +39,11 @@ public class RegistrarDB {
     }
 
     public Facility findFacilityById(String id) {
-        Facility res = null;
-        for (Facility f : facilities)
+        for (Facility f : facilities.values())
             if (f.getId().equals(id)) {
-                res = f;
-                break;
+                return f;
             }
-
-        return res;
+        return null;
     }
 
     public PublicKey getPublicKey () {

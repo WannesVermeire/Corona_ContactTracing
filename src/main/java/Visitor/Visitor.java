@@ -20,6 +20,7 @@ public class Visitor implements Serializable {
     private Map<String, String[]> visits;
 
     SignedTokenList tokens;
+    ArrayList<byte[]>[] usedTokens;
     private KeyPair keyPair;
 
     public Visitor(String name, String phone) {
@@ -27,6 +28,7 @@ public class Visitor implements Serializable {
         this.phone = phone;
         visits = new HashMap();
         this.keyPair = getKeyPair();
+        usedTokens =  null;
     }
 
     public String getName() { return name; }
@@ -70,7 +72,23 @@ public class Visitor implements Serializable {
     }
 
     public ArrayList<byte[]> getAndRemoveToken(int today) {
-        return tokens.getAndRemoveSignatureToken(today);
+        ArrayList<byte[]> currentTokens = tokens.getAndRemoveSignatureToken(today);
+
+        // Update usedTokens
+        if(usedTokens == null) {
+            usedTokens = new ArrayList[1];
+            usedTokens[0] = currentTokens;
+        }
+        else {
+            ArrayList<byte[]> [] newList = new ArrayList[usedTokens.length+1];
+            for(int i=0; i< usedTokens.length; i++) {
+                newList[i] = usedTokens[i];
+            }
+            newList[usedTokens.length] = currentTokens;
+            usedTokens = newList;
+        }
+
+        return currentTokens;
     }
 
     public void removeExpirdeVisits(int INCUBATION_DAYS) {
