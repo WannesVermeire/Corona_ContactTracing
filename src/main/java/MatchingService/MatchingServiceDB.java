@@ -1,18 +1,21 @@
 package MatchingService;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Services.Methods.bytesToString;
+
 public class MatchingServiceDB {
-//    Map<String, Capsule> capsluleMap = new HashMap<>();
+    Map<String, String> capsuleMap = new HashMap<>();
 
     public MatchingServiceDB() {}
 
-//    public void addCapsule(byte[] token, Capsule capsule) {
-//        capsluleMap.put(new String(token, StandardCharsets.UTF_8), capsule);
-//    }
-//    public boolean hasCapsule(byte [] token) {
-//        return capsluleMap.containsKey(new String(token, StandardCharsets.UTF_8));
-//    }
+    public void addCapsule(byte[] token, String capsule) {
+        capsuleMap.put(bytesToString(token), capsule);
+    }
+    public boolean hasCapsule(byte [] token) {
+        return capsuleMap.containsKey(bytesToString(token));
+    }
+
+
 }

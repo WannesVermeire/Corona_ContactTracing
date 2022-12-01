@@ -8,5 +8,7 @@ import java.util.ArrayList;
 
 public interface MixingProxyInterface extends Remote {
 
-    void sendCapsule(Visitor visitor, PublicKey publicKey, String scanTime, ArrayList<byte[]> tokenPair, byte[] hashValue) throws Exception;
+    ArrayList<byte[]> verifyAndSignCapsule(Visitor visitor, PublicKey publicKey, String scanTime, ArrayList<byte[]> tokenPair, byte[] hashValue) throws Exception;
+    PublicKey getPublicKey();
+    ArrayList<byte[]> signCapsule(String capsule);
 }

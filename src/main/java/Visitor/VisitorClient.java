@@ -28,7 +28,6 @@ public class VisitorClient {
         Visitor visitor = new Visitor("Wannes", "+32 456 30 81 66");
         int saveDuration; // Depends on the governmental directives and incubation time
         int incubation;
-        ArrayList<FacilityScanData> visits = new ArrayList<>(); //Stores 3 values(R_i,CF,H) exposed by the QR code for each facility visit
         try {
             // https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/hello/hello-world.html
             // myRegistry is a reference (stub) for the registry that is running on port 2100 a.k.a. the Registrar
@@ -52,7 +51,8 @@ public class VisitorClient {
             FacilityScanData fs = visitor.scanQR();
             // simplify saveDuration by setting it to the incubation time
             saveDuration = incubation;
-            visits.add(fs);
+
+
 
             // mixingProxyRegistry is a reference (stub) for the registry that is running on port 2200 a.k.a. the MixingProxy
             Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
@@ -63,7 +63,7 @@ public class VisitorClient {
             // For each time interval there's a unique token per day
 
             int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            mpi.sendCapsule(visitor, impl.getPublicKey(), fs.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(fs.getH()));
+            ArrayList<byte[]> verifiedTokens = mpi.verifyAndSignCapsule(visitor, impl.getPublicKey(), fs.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(fs.getH()));
             /*********************************** VISITING FACILITY *************************************/
 
         } catch (Exception e) { e.printStackTrace(); }

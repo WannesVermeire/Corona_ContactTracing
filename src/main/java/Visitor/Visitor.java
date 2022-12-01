@@ -10,14 +10,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static Services.Methods.getKeyPair;
+import static Services.Methods.*;
 
 public class Visitor implements Serializable {
 
     private String name;
     private String phone;
 
-    // Value: {R_i, CF, Hash}
     private Map<String, String[]> visits;
 
     SignedTokenList tokens;
@@ -38,6 +37,7 @@ public class Visitor implements Serializable {
         this.tokens = tokens;
     }
     public void addVisit(String [] log) {
+        System.out.println("test :" + log[3]);
         visits.put(log[3],log);
     }
 
@@ -59,8 +59,7 @@ public class Visitor implements Serializable {
             // Hash
             String H = qr[2];
             // Get Current time
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            String currentTime = dtf.format(LocalDateTime.now());
+            String currentTime = timeStampToString(LocalDateTime.now());
             addVisit(new String[]{R_i, CF, H, currentTime});
             // Print result log
             System.out.println("Random number: "+R_i);
@@ -72,5 +71,18 @@ public class Visitor implements Serializable {
 
     public ArrayList<byte[]> getAndRemoveToken(int today) {
         return tokens.getAndRemoveSignatureToken(today);
+    }
+
+    public void removeExpirdeVisits(int INCUBATION_DAYS) {
+        int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        ArrayList<String> toRemove = new ArrayList<>();
+        for(String date : visits.keySet()) {
+            if(today > stringToDate(date).getDayOfMonth() + INCUBATION_DAYS) {
+                toRemove.add(date);
+            }
+        }
+        for(String date : toRemove) {
+            visits.remove(date);
+        }
     }
 }

@@ -6,5 +6,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface MatchingServiceInterface extends Remote {
-//    boolean isTokenUsed(byte[] token) throws RemoteException;;
+    boolean containsToken(byte[] token) throws RemoteException;
+    void addCapsule(byte[] token, String joinStrings);
 }
