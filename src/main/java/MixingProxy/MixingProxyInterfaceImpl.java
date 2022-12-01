@@ -53,7 +53,7 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     }
 
     private boolean verifyTokenDay(String scanTime, byte[] bytes) {
-        int currentDay = stringToDate(scanTime).getDayOfMonth();
+        int currentDay = stringToTimeStamp(scanTime).getDayOfMonth();
         String tokenDay_String = separateString(bytesToString(bytes))[1];
         int tokenDay = stringToDate(tokenDay_String).getDayOfMonth();
         return currentDay == tokenDay;

@@ -16,7 +16,7 @@ public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject 
         return matchingServiceDB.hasCapsule(token);
     }
     @Override
-    public void addCapsule(byte[] token, String capsule) {
+    public void addCapsule(byte[] token, String capsule) throws RemoteException {
         matchingServiceDB.addCapsule(token, capsule);
     }
 

@@ -30,4 +30,8 @@ public class MixingProxyDB {
         return localCacheTokens.containsKey(bytesToString(token));
     }
 
+    public void flushCache() {
+        // todo
+    }
+
 }
