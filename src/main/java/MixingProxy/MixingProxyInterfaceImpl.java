@@ -10,6 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
+import java.util.ArrayList;
 
 import static Services.Methods.checkSignature;
 
@@ -24,9 +25,9 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
 
     /** 2.1 Visit facility **/
     @Override
-    public void sendCapsule(PublicKey publicKey, String scanTime, byte[] signedToken, byte[] unsignedToken, byte[] hash) throws Exception {
+    public void sendCapsule(Visitor visitor, PublicKey publicKey, String scanTime, ArrayList<byte[]> tokenPair, byte[] hashValue) throws Exception {
         // 3 checks: signature, day, not yet used
-        if(checkSignature(unsignedToken, signedToken, publicKey)) {
+        if(checkSignature(tokenPair, publicKey)) {
             if(true) {
 //                if(!impl.isTokenUsed(c.getToken())) {
                 if((true)) {

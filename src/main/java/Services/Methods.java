@@ -10,6 +10,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Methods {
 
@@ -64,7 +66,7 @@ public class Methods {
     }
 
     // Creates a signature based on the input data and a private key
-    public static byte[] getSignature(byte[] data, PrivateKey privateKey) {
+    public static ArrayList<byte[]> getSignature(byte[] data, PrivateKey privateKey) {
         byte[] signature = null;
         try {
             // Create and initialize signature object
@@ -76,11 +78,11 @@ public class Methods {
             signature = signEngine.sign();
         }
         catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) { e.printStackTrace(); }
-        return signature;
+        return new ArrayList<>(Arrays.asList(data, signature));
     }
 
     // Creates a signature based on the input data and a private key
-    public static boolean checkSignature(byte[]data, byte[] signature, PublicKey publicKey) {
+    public static boolean checkSignature(ArrayList<byte[]> pair, PublicKey publicKey) {
         boolean valid = false;
         try {
             // Create and initialize signature object
@@ -88,15 +90,13 @@ public class Methods {
             signEngine.initVerify(publicKey);
 
             // Check signature
-            signEngine.update(data);
-            valid = signEngine.verify(signature);
+            signEngine.update(pair.get(0));
+            valid = signEngine.verify(pair.get(1));
         }
         catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) { e.printStackTrace(); }
         return valid;
     }
     /*********************************************** CRYPTO FUNCTIONS ***********************************************/
-
-
 
 
     /*********************************************** CONVERSIONS ***********************************************/

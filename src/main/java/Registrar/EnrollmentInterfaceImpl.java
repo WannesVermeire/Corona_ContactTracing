@@ -3,6 +3,7 @@ package Registrar;
 
 import Facility.Facility;
 import Interfaces.EnrollmentInterface;
+import Visitor.SignedTokenList;
 import Visitor.Visitor;
 
 import static Services.Methods.*;
@@ -26,15 +27,17 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
 
     public int getINCUBATION_DAYS() { return INCUBATION_DAYS; }
 
+    @Override
+    public PublicKey getPublicKey() throws RemoteException {
+        return registrarDB.getPublicKey();
+    }
 
 
     /**************************************** FACILITIES ****************************************/
     // Verify signature on CF and add to database if correct
-    public void registerFacility(String CF, PublicKey publicKey, byte[] signature) {
+    public void registerFacility(String CF, ArrayList<byte[]> signaturePair, PublicKey publicKey) {
         Facility facility;
-        byte[] data = stringToBytes(CF);
-        boolean valid = checkSignature(data, signature, publicKey);
-
+        boolean valid = checkSignature(signaturePair, publicKey);
         if (valid) {
             String[] CFcontent = separateString(CF);
             facility = new Facility(CFcontent[0], CFcontent[1], CFcontent[2], CFcontent[3], publicKey);
@@ -126,15 +129,15 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
                     String[] dataStrings = new String[]{Long.toString(random.nextLong()), dateToString(date)};
                     String dataString = joinStrings(dataStrings);
                     byte[] data = stringToBytes(dataString);
-                    signedtokenListPerDay.add(getSignature(data, key));
                     unsignedtokenListPerDay.add(data);
+                    signedtokenListPerDay.add(getSignature(data, key).get(1));
                     date.plusDays(1);
                 }
                 signedtokenList[j] = signedtokenListPerDay;
                 unsignedtokenList[j] = unsignedtokenListPerDay;
 
-                visitor.setSignedTokens(signedtokenList);
-                visitor.setUnsignedTokens(unsignedtokenList);
+                visitor.setTokens(new SignedTokenList(signedtokenList, unsignedtokenList));
+
             }
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);

@@ -8,10 +8,7 @@ import java.io.Serializable;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static Services.Methods.getKeyPair;
 
@@ -19,11 +16,11 @@ public class Visitor implements Serializable {
 
     private String name;
     private String phone;
-    private List<byte[]>[] signedTokens = new List[31];
-    private List<byte[]>[] unsignedTokens = new List[31];
+
     // Value: {R_i, CF, Hash}
     private Map<String, String[]> visits;
 
+    SignedTokenList tokens;
     private KeyPair keyPair;
 
     public Visitor(String name, String phone) {
@@ -37,17 +34,11 @@ public class Visitor implements Serializable {
     public String getPhone() {
         return phone;
     }
-    public void setSignedTokens(List<byte[]>[] signedTokens) {
-        this.signedTokens = (signedTokens);
-    }
-    public void setUnsignedTokens(List<byte[]>[] unsignedTokens) {
-        this.unsignedTokens = (unsignedTokens);
+    public void setTokens(SignedTokenList tokens) {
+        this.tokens = tokens;
     }
     public void addVisit(String [] log) {
         visits.put(log[3],log);
-    }
-    public List<byte[]> getTokens(int day) {
-        return signedTokens[day-1];
     }
 
 
@@ -79,18 +70,7 @@ public class Visitor implements Serializable {
             return new FacilityScanData(R_i, CF, H, currentTime);
     }
 
-    public byte[] getAndRemoveSignedToken(int today) {
-        List<byte[]> tokensToday = signedTokens[today-1];
-        byte[] ret_tokens = tokensToday.get(0);
-        tokensToday.remove(0);
-        signedTokens[today-1] = tokensToday;
-        return ret_tokens;
-    }
-    public byte[] getAndRemoveUnsignedToken(int today) {
-        List<byte[]> tokensToday = unsignedTokens[today-1];
-        byte[] ret_tokens = tokensToday.get(0);
-        tokensToday.remove(0);
-        unsignedTokens[today-1] = tokensToday;
-        return ret_tokens;
+    public ArrayList<byte[]> getAndRemoveToken(int today) {
+        return tokens.getAndRemoveSignatureToken(today);
     }
 }

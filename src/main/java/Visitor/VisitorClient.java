@@ -63,11 +63,7 @@ public class VisitorClient {
             // For each time interval there's a unique token per day
 
             int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            // SendCapsule
-            if(checkSignature(visitor.getAndRemoveUnsignedToken(today), visitor.getAndRemoveSignedToken(today), visitor.getPublicKey()))
-                System.out.println(" fuck yeah");
-            else System.out.println("fucking hell");
-            mpi.sendCapsule(visitor.getPublicKey(), fs.getScanTime(), visitor.getAndRemoveSignedToken(today), visitor.getAndRemoveUnsignedToken(today), stringToBytes(fs.getH()));
+            mpi.sendCapsule(visitor, impl.getPublicKey(), fs.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(fs.getH()));
             /*********************************** VISITING FACILITY *************************************/
 
         } catch (Exception e) { e.printStackTrace(); }

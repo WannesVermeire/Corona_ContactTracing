@@ -5,6 +5,7 @@ import Interfaces.EnrollmentInterface;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
+import java.util.ArrayList;
 
 
 public class BarOwnerClient {
@@ -22,9 +23,9 @@ public class BarOwnerClient {
             // call server methods
             String CF = facility.getCF();
             PublicKey publicKey = facility.getPublicKey();
-            byte[] signature = facility.generateCFSignature();
+            ArrayList<byte[]> signaturePair = facility.generateCFSignature();
 
-            impl.registerFacility(CF, publicKey, signature);
+            impl.registerFacility(CF, signaturePair, publicKey);
             facility.setKeyArray(impl.getKeyArray(facility.getId()));
             facility.setNymArray(impl.getNymArray(facility.getId()));
 

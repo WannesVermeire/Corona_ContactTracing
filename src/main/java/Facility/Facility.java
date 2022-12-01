@@ -73,7 +73,7 @@ public class Facility implements Serializable {
         this.nymArray = nymArray;
     }
 
-    public byte[] generateCFSignature() {
+    public ArrayList<byte[]> generateCFSignature() {
         byte[] data = stringToBytes(getCF());
         return getSignature(data, privateKey);
     }
