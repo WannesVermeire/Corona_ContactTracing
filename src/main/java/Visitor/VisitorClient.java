@@ -48,7 +48,7 @@ public class VisitorClient {
 
             /*********************************** VISITING FACILITY *************************************/
             // visitor scans a QR code
-            FacilityScanData fs = visitor.scanQR();
+            FacilityScanData facilityScanData = visitor.scanQR();
             // simplify saveDuration by setting it to the incubation time
             saveDuration = incubation;
 
@@ -63,7 +63,7 @@ public class VisitorClient {
             // For each time interval there's a unique token per day
 
             int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            ArrayList<byte[]> verifiedTokens = mpi.verifyAndSignCapsule(visitor, impl.getPublicKey(), fs.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(fs.getH()));
+            ArrayList<byte[]> verifiedTokens = mpi.verifyAndSignCapsule(visitor, impl.getPublicKey(), facilityScanData.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(facilityScanData.getH()));
             /*********************************** VISITING FACILITY *************************************/
 
         } catch (Exception e) { e.printStackTrace(); }

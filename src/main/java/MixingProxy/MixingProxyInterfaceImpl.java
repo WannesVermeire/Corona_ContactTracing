@@ -5,12 +5,14 @@ import Interfaces.MixingProxyInterface;
 import Visitor.Visitor;
 
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static Services.Methods.*;
 
@@ -25,7 +27,6 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         this.mixingProxyDB = new MixingProxyDB();
     }
 
-    /** 2.1 Visit facility **/
     @Override
     public ArrayList<byte[]> verifyAndSignCapsule(Visitor visitor, PublicKey publicKey, String scanTime, ArrayList<byte[]> tokenPair, byte[] hashValue) throws Exception {
         // 3 checks: signature, day, not yet used
@@ -37,6 +38,9 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
                     String[] capsuleArr = new String[] {bytesToString(token), scanTime, bytesToString(hashValue)};
                     String capsule = joinStrings(capsuleArr);
                     mixingProxyDB.cacheCapsule(token, capsule);
+
+                    updateTimeStamp(bytesToString(token), bytesToString(hashValue), scanTime);
+
                     return signCapsule(capsule);
                 }
                 else {
@@ -64,5 +68,24 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     }
     public ArrayList<byte[]> signCapsule(String capsule) {
         return mixingProxyDB.signCapsule(capsule);
+    }
+
+    @Override
+    public void flushCache() throws RemoteException {
+        while(!mixingProxyDB.isEmptyCapsules()) {
+            String randomToken = mixingProxyDB.getRandomTokenCapsule();
+            impl.addCapsule(randomToken, mixingProxyDB.getCapsule(randomToken));
+            mixingProxyDB.removeToken(randomToken);
+        }
+        while(!mixingProxyDB.isEmptyTimeStamps()) {
+            String randomToken = mixingProxyDB.getRandomTokenTime();
+            impl.addTimeStamps(randomToken, mixingProxyDB.getTimeStamp(randomToken));
+            mixingProxyDB.removeTimeStamp(randomToken);
+        }
+    }
+
+    @Override
+    public void updateTimeStamp(String token, String hashValue, String timeStamp) throws RemoteException {
+        mixingProxyDB.updateTimeStamp(joinStrings(new String[]{token, hashValue}), timeStamp);
     }
 }
