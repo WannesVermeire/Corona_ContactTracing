@@ -1,6 +1,8 @@
 package Visitor;
 
+import Doctor.Doctor;
 import Interfaces.EnrollmentInterface;
+import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.NotFoundException;
@@ -67,6 +69,24 @@ public class VisitorClient {
             /*********************************** VISITING FACILITY *************************************/
 
         } catch (Exception e) { e.printStackTrace(); }
+
+
+        // Visitor gets infected and goes to a doctor
+        Doctor doctor = new Doctor("Eeraerts Toon");
+
+        // Doctor follows the procedure for when a visitor gets infected
+        ArrayList signedLogs = doctor.getSignedLogs(visitor);
+
+        try {
+            // matchingRegistry is a reference (stub) for the registry that is running on port 2300 a.k.a. the MatchingService
+            Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
+            // Obtain the stub for the remote object with name "MatchingService" a.k.a. the MatchingServiceInterfaceImplementation
+            MatchingServiceInterface msi = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
+
+            //Doctor sends the data to the matching service
+            msi.forwardSickPatientData(signedLogs);
+        }catch (Exception e) { e.printStackTrace(); }
+
 
 
     }

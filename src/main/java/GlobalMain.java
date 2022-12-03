@@ -1,6 +1,5 @@
 import Facility.BarOwnerClient;
 import MatchingService.MatchingService;
-import MatchingService.MatchingServiceDB;
 import MixingProxy.MixingProxy;
 import Registrar.Registrar;
 import Visitor.VisitorClient;
@@ -16,5 +15,6 @@ public class GlobalMain {
 
         BarOwnerClient.main(args);
         VisitorClient.main(args);
+
     }
 }

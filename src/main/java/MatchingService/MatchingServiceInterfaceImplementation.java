@@ -42,4 +42,9 @@ public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject 
         matchingServiceDB.addTimeStamps(randomToken, timeStamp);
     }
 
+    @Override
+    public void forwardSickPatientData(ArrayList signedLogs){
+
+    }
+
 }
