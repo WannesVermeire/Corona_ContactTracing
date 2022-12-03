@@ -12,5 +12,5 @@ public interface MatchingServiceInterface extends Remote {
     String getCapsule(String token) throws RemoteException;
     void clearDB(int INCUBATION_DAYS) throws RemoteException;
 
-    void addTimeStamps(String randomToken, String[] timeStamp);
+    void addTimeStamps(String randomToken, String[] timeStamp) throws RemoteException;
 }

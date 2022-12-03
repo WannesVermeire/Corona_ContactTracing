@@ -17,5 +17,4 @@ public class GlobalMain {
         BarOwnerClient.main(args);
         VisitorClient.main(args);
     }
-
 }

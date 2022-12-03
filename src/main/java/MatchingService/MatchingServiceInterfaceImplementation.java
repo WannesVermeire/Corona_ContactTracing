@@ -12,7 +12,7 @@ import static Services.Methods.stringToDate;
 public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject implements MatchingServiceInterface {
     private MatchingServiceDB matchingServiceDB;
 
-    public MatchingServiceInterfaceImplementation(MatchingServiceDB matchingServiceDB) throws RemoteException{
+    public MatchingServiceInterfaceImplementation(MatchingServiceDB matchingServiceDB) throws RemoteException {
         this.matchingServiceDB = matchingServiceDB;
     }
     @Override
