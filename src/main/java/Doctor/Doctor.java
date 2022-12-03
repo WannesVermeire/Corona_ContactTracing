@@ -4,6 +4,7 @@ import Visitor.Visitor;
 import Visitor.SignedTokenList;
 
 import javax.crypto.SecretKey;
+import java.security.Key;
 import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,9 @@ public class Doctor {
     public Doctor(String name) {
         this.name = name;
         this.keyPair = getKeyPair();
+    }
+    public Key getPublicKey (){
+        return keyPair.getPublic();
     }
 
     public ArrayList getSignedLogs(Visitor visitor){
