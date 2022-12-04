@@ -38,7 +38,8 @@ public class Doctor {
 
             //2: Get time intervals that were stored on the smarthphone
             String timeInterval = entry.getValue()[3];
-            String[] data = new String[] {bytesToString(token.get(0)),H,R_i, timeInterval};
+            String[] stringToken = separateString(bytesToString(token.get(0))); //String manipulations to fix the unfixable
+            String[] data = new String[] {stringToken[0],stringToken[1],H,R_i, timeInterval};
             String joinedData = joinStrings(data);
 
             //3: Sign the tokens + intervals

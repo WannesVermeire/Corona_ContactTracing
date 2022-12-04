@@ -114,6 +114,8 @@ public class Methods {
         return data.split(";");
     }
 
+    // Returns a byte array which represents the encoded string with the right encoding for signature
+    public static byte[] stringToBytesSignatureEncoding(String data){return data.getBytes(StandardCharsets.UTF_8);}
     // Returns a byte array which represents the encoded string
     public static byte[] stringToBytes(String data) {
         return data.getBytes(StandardCharsets.UTF_8);
