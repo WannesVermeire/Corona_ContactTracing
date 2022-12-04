@@ -2,6 +2,7 @@ package Visitor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SignedTokenList implements Serializable {
@@ -23,5 +24,13 @@ public class SignedTokenList implements Serializable {
         signatures[today-1].remove(0);
 
         return signaturePair;
+    }
+
+    @Override
+    public String toString() {
+        return "SignedTokenList{" +
+                "signatures=" + Arrays.toString(signatures) +
+                ", tokens=" + Arrays.toString(tokens) +
+                '}';
     }
 }

@@ -1,13 +1,16 @@
 package MatchingService;
 
+import Doctor.Doctor;
 import Interfaces.MatchingServiceInterface;
+import com.beust.ah.A;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static Services.Methods.stringToDate;
+import static Services.Methods.*;
 
 public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject implements MatchingServiceInterface {
     private MatchingServiceDB matchingServiceDB;
@@ -42,4 +45,13 @@ public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject 
         matchingServiceDB.addTimeStamps(randomToken, timeStamp);
     }
 
+    @Override
+    public void forwardSickPatientData(String[] signedLogs, PublicKey pubKey){
+        for(int i = 0; i <signedLogs.length; i++){
+            ArrayList<byte[]> pair = new ArrayList<>();
+            pair.add(stringToBytes(signedLogs[i*2]));
+            pair.add(stringToBytes(signedLogs[i*2+1]));
+            if(checkSignature(pair,pubKey)) System.out.println("Great succes");
+        }
+    }
 }

@@ -1,6 +1,8 @@
 package Visitor;
 
+import Doctor.Doctor;
 import Interfaces.EnrollmentInterface;
+import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.NotFoundException;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.io.FileInputStream;
+import java.util.Map;
 import javax.imageio.ImageIO;
 
 import com.google.zxing.MultiFormatReader;
@@ -66,7 +69,24 @@ public class VisitorClient {
             ArrayList<byte[]> verifiedTokens = mpi.verifyAndSignCapsule(visitor, impl.getPublicKey(), facilityScanData.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(facilityScanData.getH()));
             /*********************************** VISITING FACILITY *************************************/
 
-        } catch (Exception e) { e.printStackTrace(); }
+            /*********************************** REGISTERING INFECTED USER *************************************/
+
+            // matchingRegistry is a reference (stub) for the registry that is running on port 2300 a.k.a. the MatchingService
+            Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
+            // Obtain the stub for the remote object with name "MatchingService" a.k.a. the MatchingServiceInterfaceImplementation
+            MatchingServiceInterface msi = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
+
+            // Visitor gets infected and goes to a doctor
+            Doctor doctor = new Doctor("Eeraerts Toon");
+
+            // Doctor follows the procedure for when a visitor gets infected
+            String[] signedLogs = doctor.getSignedLogs(visitor);
+
+            //Doctor sends the data to the matching service
+            msi.forwardSickPatientData(signedLogs, doctor.getPublicKey());
+
+        }catch (Exception e) { e.printStackTrace(); }
+
 
 
     }

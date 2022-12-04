@@ -38,9 +38,21 @@ public class Visitor implements Serializable {
     public void setTokens(SignedTokenList tokens) {
         this.tokens = tokens;
     }
+
+    public SignedTokenList getTokens() {
+        return tokens;
+    }
+
+    public ArrayList<byte[]>[] getUsedTokens(){
+        return usedTokens;
+    }
+
     public void addVisit(String [] log) {
         System.out.println("test :" + log[3]);
         visits.put(log[3],log);
+    }
+    public Map<String, String[]> getVisits(){
+        return visits;
     }
 
 
@@ -87,11 +99,10 @@ public class Visitor implements Serializable {
             newList[usedTokens.length] = currentTokens;
             usedTokens = newList;
         }
-
         return currentTokens;
     }
 
-    public void removeExpirdeVisits(int INCUBATION_DAYS) {
+    public void removeExpiredVisits(int INCUBATION_DAYS) {
         int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         ArrayList<String> toRemove = new ArrayList<>();
         for(String date : visits.keySet()) {
