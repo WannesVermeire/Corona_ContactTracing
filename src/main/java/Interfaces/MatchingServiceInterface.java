@@ -1,9 +1,11 @@
 package Interfaces;
 
+import Doctor.Doctor;
 import Registrar.RegistrarDB;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public interface MatchingServiceInterface extends Remote {
@@ -14,5 +16,5 @@ public interface MatchingServiceInterface extends Remote {
     void clearDB(int INCUBATION_DAYS) throws RemoteException;
 
     void addTimeStamps(String randomToken, String[] timeStamp) throws RemoteException;
-    void forwardSickPatientData(ArrayList signedLogs);
+    void forwardSickPatientData(String[] signedLogs, PublicKey pubKey) throws RemoteException;
 }

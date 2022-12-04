@@ -6,6 +6,7 @@ import Visitor.SignedTokenList;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.security.KeyPair;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -20,15 +21,15 @@ public class Doctor {
         this.name = name;
         this.keyPair = getKeyPair();
     }
-    public Key getPublicKey (){
+    public PublicKey getPublicKey (){
         return keyPair.getPublic();
     }
 
-    public ArrayList getSignedLogs(Visitor visitor){
-        ArrayList signedLogs = new ArrayList();
+    public String[] getSignedLogs(Visitor visitor){
         //1: Get logs from the infected visitor (every token is simultaneously added with visits -> same index for visits and tokens)
         ArrayList<byte[]>[] tokens = visitor.getUsedTokens();
         Map<String, String[]> logs  = visitor.getVisits();
+        String[] signedLogs = new String[logs.size()*2];
         int i = 0;
         for (Map.Entry<String, String[]> entry : logs.entrySet()) {
             ArrayList<byte[]> token = tokens[i]; //Signed token Todo: is the data alone enough?
@@ -42,8 +43,11 @@ public class Doctor {
 
             //3: Sign the tokens + intervals
             ArrayList<byte[]> signature = getSignature(stringToBytes(joinedData),keyPair.getPrivate());
+            String signatureOriginal = bytesToString(signature.get(0));
+            String signatureNew = bytesToString(signature.get(1));
 
-            signedLogs.add(signature);
+            signedLogs[i*2] = signatureOriginal;
+            signedLogs[i*2 + 1] = signatureNew;
             i++;
         }
         return signedLogs;
