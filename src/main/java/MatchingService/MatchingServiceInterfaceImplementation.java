@@ -51,6 +51,7 @@ public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject 
             ArrayList<byte[]> pair = new ArrayList<>();
             pair.add(stringToBytes(signedLogs[i*2]));
             pair.add(stringToBytes(signedLogs[i*2+1]));
+            System.out.println(pair);
             if(checkSignature(pair,pubKey)) System.out.println("Great succes");
         }
     }
