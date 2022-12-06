@@ -4,8 +4,6 @@ import Interfaces.MatchingServiceInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import static Services.Methods.*;

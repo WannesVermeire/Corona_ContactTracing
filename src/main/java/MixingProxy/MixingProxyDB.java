@@ -1,6 +1,7 @@
 package MixingProxy;
 
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
 
@@ -8,7 +9,7 @@ import static Services.Methods.*;
 
 public class MixingProxyDB {
     private static KeyPair keyPair;
-    private static Map<String, String> localCacheTokens = new HashMap<String, String>();
+    private static Map<String, String> localCacheCapsule = new HashMap<String, String>(); //
     private static Map<String, String[]> localCacheTimeStamps = new HashMap<>();
     public MixingProxyDB() {
         keyPair = getKeyPair();
@@ -17,27 +18,28 @@ public class MixingProxyDB {
     public PublicKey getPublicKey() {
         return keyPair.getPublic();
     }
+    public PrivateKey getSecretKey() { return keyPair.getPrivate(); }
 
     public ArrayList<byte[]> signCapsule(String capsule) {
         return getSignature(stringToBytes(capsule), keyPair.getPrivate());
     }
 
     public void cacheCapsule(byte[] token, String capsule) {
-        localCacheTokens.put(bytesToString(token), capsule);
+        localCacheCapsule.put(bytesToString(token), capsule);
     }
-    public boolean containsToken(byte [] token) {
-        return localCacheTokens.containsKey(bytesToString(token));
+    public boolean containsCapsule(byte [] token) {
+        return localCacheCapsule.containsKey(bytesToString(token));
     }
 
     public boolean isEmptyCapsules() {
-        return localCacheTokens.isEmpty();
+        return localCacheCapsule.isEmpty();
     }
     public boolean isEmptyTimeStamps() {
         return localCacheTimeStamps.isEmpty();
     }
 
     public String getRandomTokenCapsule() {
-        List<String> keys = new ArrayList<>(localCacheTokens.keySet());
+        List<String> keys = new ArrayList<>(localCacheCapsule.keySet());
         int randomIndex = new Random().nextInt(keys.size());
         String randomKey = keys.get(randomIndex);
         return randomKey;
@@ -51,11 +53,11 @@ public class MixingProxyDB {
     }
 
     public String getCapsule(String token) {
-        return localCacheTokens.get(token);
+        return localCacheCapsule.get(token);
     }
 
     public void removeToken(String token) {
-        localCacheTokens.remove(token);
+        localCacheCapsule.remove(token);
     }
 
     public void updateTimeStamp(String tokenWithHash, String timeStamp) {
@@ -79,6 +81,7 @@ public class MixingProxyDB {
     }
 
     public void removeTimeStamp(String randomToken) {
-        localCacheTokens.remove(randomToken);
+        localCacheCapsule.remove(randomToken);
     }
+
 }
