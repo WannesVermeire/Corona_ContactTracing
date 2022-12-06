@@ -1,6 +1,5 @@
 package Facility;
 
-
 import Services.Methods;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -66,31 +65,30 @@ public class Facility implements Serializable {
         return keyArray;
     }
 
+    /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     public void setKeyArray(List<SecretKey> keyArray) {
         this.keyArray = keyArray;
     }
     public void setNymArray(List<byte[]> nymArray) {
         this.nymArray = nymArray;
     }
-
-    public ArrayList<byte[]> generateCFSignature() {
+    // Returns arraylist containing the original data and the signature
+    public ArrayList<byte[]> generateCFWithSignature() {
         byte[] data = stringToBytes(getCF());
         return getSignature(data, privateKey);
     }
-
     public void generateRandoms() {
         // Get the nrOfDays of month
         LocalDate today = LocalDate.now();
         int nrOfDays = today.getMonth().length(LocalDate.EPOCH.isLeapYear());
         Random rand = new Random();
         randoms = new int[nrOfDays];
-        int Ri = 0;
+        int Ri;
         for (int i=0; i<nrOfDays; i++) {
             Ri = rand.nextInt(Integer.MAX_VALUE);
             randoms[i] = Ri;
         }
     }
-
     public void calculateQRCodes() {
         String CF = getCF();
         for (int i=0; i<nymArray.size(); i++) {
@@ -121,7 +119,7 @@ public class Facility implements Serializable {
             catch (Exception e) { e.printStackTrace(); }
         }
     }
-
+    /************************************* 1.1 FACILITY ENROLLMENT *************************************/
 
     @Override
     public String toString() {
@@ -142,4 +140,5 @@ public class Facility implements Serializable {
                 ", keyArray=" + keyarr +
                 ", nymArray=" + nymarray + "}";
     }
+
 }

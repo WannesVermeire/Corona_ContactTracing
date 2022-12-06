@@ -32,21 +32,26 @@ public class VisitorClient {
         Visitor visitor = new Visitor("Wannes", "+32 456 30 81 66");
         int saveDuration; // Depends on the governmental directives and incubation time
         int incubation;
-        try {
-            // https://docs.oracle.com/javase/8/docs/technotes/guides/rmi/hello/hello-world.html
-            // myRegistry is a reference (stub) for the registry that is running on port 2100 a.k.a. the Registrar
-            Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
 
-            /*********************************** USER ENROLMENT *************************************/
-            // Obtain the stub for the remote object with name "RegistrarService" a.k.a. the EnrollmentInterfaceImpl
+        // Connect to Registrar server
+        try {
+            // fire to localhost port 2100
+            Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
+            // search for RegistrarService
             EnrollmentInterface impl = (EnrollmentInterface) myRegistry.lookup("RegistrarService");
+
+            /************************************* 1.2 USER ENROLLMENT *************************************/
             incubation = impl.getINCUBATION_DAYS();
 
-            // Register visitor to the registrar and get a set of signed tokens
-            visitor = impl.registerVisitor(visitor);
+            // Register visitor to the registrar
+            boolean registrationSuccessful = impl.registerVisitor(visitor.getName(), visitor.getPhoneNr());
+            if (registrationSuccessful) System.out.println("Visitor data after enrollment: "+visitor);
+            else System.out.println("Something went wrong during enrollment of: "+visitor);
 
-            System.out.println("Succesfully registered to the system");
-            /*********************************** USER ENROLMENT *************************************/
+            // Get a set of signed tokens
+            visitor.setTokens(impl.getSignedTokens(visitor.getPhoneNr()));
+            System.out.println("Visitor data after receiving tokens: "+visitor);
+            /************************************* 1.2 USER ENROLLMENT *************************************/
 
 
 
@@ -84,7 +89,7 @@ public class VisitorClient {
             String[] signedLogs = doctor.getSignedLogs(visitor);
 
             //Doctor sends the data to the matching service
-            msi.forwardSickPatientData(signedLogs, doctor.getPublicKey());
+//            msi.forwardSickPatientData(signedLogs, doctor.getPublicKey());
 
         }catch (Exception e) { e.printStackTrace(); }
 

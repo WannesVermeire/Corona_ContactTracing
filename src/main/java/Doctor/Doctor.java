@@ -1,14 +1,10 @@
 package Doctor;
 
 import Visitor.Visitor;
-import Visitor.SignedTokenList;
 
-import javax.crypto.SecretKey;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 import static Services.Methods.*;

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.security.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static Services.Methods.*;
@@ -15,31 +14,31 @@ import static Services.Methods.*;
 public class Visitor implements Serializable {
 
     private String name;
-    private String phone;
+    private String phoneNr;
 
     private Map<String, String[]> visits;
 
-    SignedTokenList tokens;
+    MonthSignedTokenList tokens;
     ArrayList<byte[]>[] usedTokens;
     private KeyPair keyPair;
 
     public Visitor(String name, String phone) {
         this.name = name;
-        this.phone = phone;
+        this.phoneNr = phone;
         visits = new HashMap();
         this.keyPair = getKeyPair();
         usedTokens =  null;
     }
 
     public String getName() { return name; }
-    public String getPhone() {
-        return phone;
+    public String getPhoneNr() {
+        return phoneNr;
     }
-    public void setTokens(SignedTokenList tokens) {
+    public void setTokens(MonthSignedTokenList tokens) {
         this.tokens = tokens;
     }
 
-    public SignedTokenList getTokens() {
+    public MonthSignedTokenList getTokens() {
         return tokens;
     }
 
@@ -113,5 +112,17 @@ public class Visitor implements Serializable {
         for(String date : toRemove) {
             visits.remove(date);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "name='" + name + '\'' +
+                ", phoneNr='" + phoneNr + '\'' +
+                ", visits=" + visits +
+                ", tokens=" + tokens +
+                ", usedTokens=" + Arrays.toString(usedTokens) +
+                ", keyPair=" + keyPair +
+                '}';
     }
 }

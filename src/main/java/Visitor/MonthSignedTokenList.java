@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SignedTokenList implements Serializable {
+public class MonthSignedTokenList implements Serializable {
     private List<byte[]>[] signatures;
     private List<byte[]>[] tokens;
 
-    public SignedTokenList(List<byte[]>[] signedTokens, List<byte[]>[] unsignedTokens) {
+    public MonthSignedTokenList(List<byte[]>[] signedTokens, List<byte[]>[] unsignedTokens) {
         this.signatures = signedTokens;
         this.tokens = unsignedTokens;
     }
+
     // returns a list with size 2: {unsignedData, signedData}
     public ArrayList<byte[]> getAndRemoveSignatureToken(int today) {
         ArrayList<byte[]> signaturePair = new ArrayList<>();

@@ -1,4 +1,4 @@
-import Facility.BarOwnerClient;
+import Facility.FacilityClient;
 import MatchingService.MatchingService;
 import MixingProxy.MixingProxy;
 import Registrar.Registrar;
@@ -13,7 +13,7 @@ public class GlobalMain {
         MatchingService.main(args);
         MixingProxy.main(args);
 
-        BarOwnerClient.main(args);
+        FacilityClient.main(args);
         VisitorClient.main(args);
 
     }
