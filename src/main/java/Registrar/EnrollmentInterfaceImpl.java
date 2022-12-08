@@ -19,10 +19,12 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     private final int INCUBATION_DAYS = 10;
     private SecretKey s;
     private RegistrarDB registrarDB;
+    private RegistrarGUI registrarGUI;
 
     public EnrollmentInterfaceImpl(SecretKey s, RegistrarDB registrarDB) throws RemoteException {
         this.s = s;
         this.registrarDB = registrarDB;
+        this.registrarGUI = new RegistrarGUI(registrarDB);
     }
 
     public int getINCUBATION_DAYS() { return INCUBATION_DAYS; }

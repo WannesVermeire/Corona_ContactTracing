@@ -27,6 +27,14 @@ public class RegistrarDB {
         keyPair = getKeyPair();
     }
 
+    public Map<String, Facility> getFacilities() {
+        return facilities;
+    }
+
+    public Map<String, Visitor> getVisitors() {
+        return visitors;
+    }
+
     /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     public Facility findFacilityById(String id) {
         for (Facility f : facilities.values())
