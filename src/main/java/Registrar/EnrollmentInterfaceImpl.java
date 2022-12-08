@@ -3,7 +3,7 @@ package Registrar;
 
 import Facility.Facility;
 import Interfaces.EnrollmentInterface;
-import Visitor.SignedTokenList;
+import Visitor.MonthSignedTokenList;
 import Visitor.Visitor;
 
 import static Services.Methods.*;
@@ -33,7 +33,7 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     }
 
 
-    /**************************************** FACILITIES ****************************************/
+    /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     // Verify signature on CF and add to database if correct
     public void registerFacility(String CF, ArrayList<byte[]> signaturePair, PublicKey publicKey) {
         Facility facility;
@@ -42,12 +42,11 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
             String[] CFcontent = separateString(CF);
             facility = new Facility(CFcontent[0], CFcontent[1], CFcontent[2], CFcontent[3], publicKey);
             registrarDB.addFacility(facility);
-            System.out.println("Added tot database.: "+facility);
+            System.out.println("Registrar added tot database: "+facility);
         }
         else {
             System.out.println("The provided CF was not from a reliable source.");
         }
-
     }
 
     // Generate secret key s_CF_dayi for each day of this month
@@ -101,49 +100,61 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         return nymArray;
 
     }
-    /**************************************** FACILITIES ****************************************/
+    /************************************* 1.1 FACILITY ENROLLMENT *************************************/
 
 
-    /**************************************** VISITOR ****************************************/
-    public Visitor registerVisitor(Visitor visitor) {
-        registrarDB.addVisitor(visitor);
-        generateTokens(visitor);
-        return visitor;
+    /************************************* 1.2 USER ENROLLMENT *************************************/
+    public boolean registerVisitor(String name, String phoneNr) {
+        if (registrarDB.visitorExists(phoneNr) == false) {
+            Visitor visitor = new Visitor(name, phoneNr);
+            registrarDB.addVisitor(visitor);
+            return true;
+        }
+        else {
+            System.out.println("Visitor with phoneNr: "+phoneNr+" already existed.");
+            return false;
+        }
     }
 
-    private void generateTokens(Visitor visitor) {
+    // Generates the tokens, adds them to the visitor in the registrarDB
+    // Als returns them to the visitor, so he can save them locally as well
+    public MonthSignedTokenList getSignedTokens(String phoneNr) {
+        Visitor visitor = registrarDB.findVisitorByPhoneNr(phoneNr);
+        MonthSignedTokenList monthSignedTokenList = null;
+
         try {
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
             PrivateKey key = registrarDB.getPrivate();
-            List<byte[]>[] signedtokenList = new List[31];
-            List<byte[]> signedtokenListPerDay;
+            List<byte[]>[] signedTokenList = new List[31];
+            List<byte[]> signedTokenListPerDay;
 
-            List<byte[]>[] unsignedtokenList = new List[31];
-            List<byte[]> unsignedtokenListPerDay;
+            List<byte[]>[] unsignedTokenList = new List[31];
+            List<byte[]> unsignedTokenListPerDay;
 
             LocalDate date = LocalDate.now();
             for(int j=0; j<31; j++) {
-                signedtokenListPerDay = new ArrayList<>();
-                unsignedtokenListPerDay = new ArrayList<>();
+                signedTokenListPerDay = new ArrayList<>();
+                unsignedTokenListPerDay = new ArrayList<>();
                 for (int i = 0; i < 48; i++) {
                     String[] dataStrings = new String[]{Long.toString(random.nextLong()), dateToString(date)};
                     String dataString = joinStrings(dataStrings);
                     byte[] data = stringToBytes(dataString);
-                    unsignedtokenListPerDay.add(data);
-                    signedtokenListPerDay.add(getSignature(data, key).get(1));
+                    unsignedTokenListPerDay.add(data);
+                    signedTokenListPerDay.add(getSignature(data, key).get(1));
                     date.plusDays(1);
                 }
-                signedtokenList[j] = signedtokenListPerDay;
-                unsignedtokenList[j] = unsignedtokenListPerDay;
+                signedTokenList[j] = signedTokenListPerDay;
+                unsignedTokenList[j] = unsignedTokenListPerDay;
 
-                visitor.setTokens(new SignedTokenList(signedtokenList, unsignedtokenList));
 
             }
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException(e);
-        }
+
+            monthSignedTokenList = new MonthSignedTokenList(signedTokenList, unsignedTokenList);
+
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {e.printStackTrace();}
+
+        visitor.setTokens(monthSignedTokenList);
+        return monthSignedTokenList;
     }
-    /**************************************** VISITOR ****************************************/
+    /************************************* 1.2 USER ENROLLMENT *************************************/
 }

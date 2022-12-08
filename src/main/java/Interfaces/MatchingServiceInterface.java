@@ -16,5 +16,5 @@ public interface MatchingServiceInterface extends Remote {
     void clearDB(int INCUBATION_DAYS) throws RemoteException;
 
     void addTimeStamps(String randomToken, String[] timeStamp) throws RemoteException;
-    void forwardSickPatientData(String[] signedLogs, PublicKey pubKey) throws RemoteException;
+//    void forwardSickPatientData(String[] signedLogs, PublicKey pubKey) throws RemoteException;
 }

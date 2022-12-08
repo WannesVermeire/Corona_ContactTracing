@@ -1,6 +1,6 @@
 package Interfaces;
 
-import Visitor.Visitor;
+import Visitor.MonthSignedTokenList;
 
 import javax.crypto.SecretKey;
 import java.rmi.Remote;
@@ -17,7 +17,9 @@ public interface EnrollmentInterface extends Remote {
 
     List<byte[]> getNymArray(String id) throws RemoteException;
 
-    Visitor registerVisitor(Visitor visitor) throws RemoteException, IllegalStateException;
+    boolean registerVisitor(String name, String phoneNr) throws RemoteException, IllegalStateException;
+
+    MonthSignedTokenList getSignedTokens(String phoneNr) throws RemoteException;
 
     int getINCUBATION_DAYS() throws RemoteException;
 

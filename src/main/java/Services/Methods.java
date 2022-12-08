@@ -66,6 +66,7 @@ public class Methods {
     }
 
     // Creates a signature based on the input data and a private key
+    // Returns both the original data and the signature
     public static ArrayList<byte[]> getSignature(byte[] data, PrivateKey privateKey) {
         byte[] signature = null;
         try {
@@ -81,7 +82,8 @@ public class Methods {
         return new ArrayList<>(Arrays.asList(data, signature));
     }
 
-    // Creates a signature based on the input data and a private key
+    // Verifies the data with the signature and the public key
+    // pair contains the original data and the signature
     public static boolean checkSignature(ArrayList<byte[]> pair, PublicKey publicKey) {
         boolean valid = false;
         try {
@@ -114,8 +116,6 @@ public class Methods {
         return data.split(";");
     }
 
-    // Returns a byte array which represents the encoded string with the right encoding for signature
-    public static byte[] stringToBytesSignatureEncoding(String data){return data.getBytes(StandardCharsets.UTF_8);}
     // Returns a byte array which represents the encoded string
     public static byte[] stringToBytes(String data) {
         return data.getBytes(StandardCharsets.UTF_8);
@@ -150,5 +150,6 @@ public class Methods {
         return LocalDate.parse(date, formatter);
     }
     /*********************************************** CONVERSIONS ***********************************************/
+
 
 }
