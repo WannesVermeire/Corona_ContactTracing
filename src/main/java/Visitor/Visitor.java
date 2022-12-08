@@ -9,6 +9,7 @@ import com.google.zxing.common.HybridBinarizer;
 
 import javax.imageio.ImageIO;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.*;
@@ -134,10 +135,29 @@ public class Visitor implements Serializable {
     /*********************************** 2. VISITING A FACILITY *************************************/
 
 
-
+    /******************************** 3. REGISTERING AN INFECTED USER *******************************/
     public Map<String, Visit> getVisits(){
         return visits;
     }
+
+
+
+    /******************************** 3. REGISTERING AN INFECTED USER *******************************/
+    public void exportVisits() {
+        try {
+            FileWriter myWriter = new FileWriter("src/main/java/Visitor/visitLogs.txt");
+            for (Visit v : visits.values()) {
+                String[] data = new String[]{v.getR_i(), v.getCF(), v.getH(), v.getScanTime()};
+                String visit = joinStrings(data);
+                myWriter.write(visit);
+            }
+            myWriter.close();
+            System.out.println("Visitor successfully wrote logs to the file.");
+        } catch (IOException e) {e.printStackTrace();}
+    }
+
+    /******************************** 3. REGISTERING AN INFECTED USER *******************************/
+
 
     @Override
     public String toString() {

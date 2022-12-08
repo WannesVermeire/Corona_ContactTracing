@@ -69,6 +69,10 @@ public class VisitorClient {
 
         /******************************** 3. REGISTERING INFECTED USER **********************************/
         try {
+            // Write visits to file
+            visitor.exportVisits();
+
+
             // fire to localhost port 2100
             Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
             // search for RegistrarService

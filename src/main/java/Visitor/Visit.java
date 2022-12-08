@@ -18,16 +18,23 @@ public class Visit implements Serializable {
     public String getR_i() {
         return R_i;
     }
-
     public String getCF() {
         return CF;
     }
-
     public String getH() {
         return H;
     }
-
     public String getScanTime() {
         return timeOfScan;
+    }
+
+    @Override
+    public String toString() {
+        return "Visit{" +
+                "R_i='" + R_i + '\'' +
+                ", CF='" + CF + '\'' +
+                ", Hash='" + H + '\'' +
+                ", timeOfScan='" + timeOfScan + '\'' +
+                '}';
     }
 }
