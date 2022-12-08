@@ -44,6 +44,9 @@ public class Visitor implements Serializable {
     public PublicKey getPublicKey () {
         return keyPair.getPublic();
     }
+    public Map<String, Visit> getVisits(){
+        return visits;
+    }
 
 
     /************************************* 1.2 USER ENROLLMENT *************************************/
@@ -97,8 +100,6 @@ public class Visitor implements Serializable {
     public void addVisit(Visit visit) {
         visits.put(visit.getCF(), visit);
     }
-
-
     public ArrayList<byte[]> getAndRemoveToken(int today) {
         ArrayList<byte[]> currentTokens = tokens.getAndRemoveSignatureToken(today);
 
@@ -133,13 +134,6 @@ public class Visitor implements Serializable {
         }
     }
     /*********************************** 2. VISITING A FACILITY *************************************/
-
-
-    /******************************** 3. REGISTERING AN INFECTED USER *******************************/
-    public Map<String, Visit> getVisits(){
-        return visits;
-    }
-
 
 
     /******************************** 3. REGISTERING AN INFECTED USER *******************************/

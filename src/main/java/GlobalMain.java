@@ -14,7 +14,7 @@ public class GlobalMain {
 
         FacilityClient.main(args);
         VisitorClient.main(args);
-        TimeUnit.SECONDS.sleep(2); // Anders logfile nog niet volledig geschreven
+        TimeUnit.SECONDS.sleep(5); // Anders logfile nog niet volledig geschreven
         DoctorClient.main(args);
 
     }
