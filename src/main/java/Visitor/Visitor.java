@@ -147,8 +147,7 @@ public class Visitor implements Serializable {
         try {
             FileWriter myWriter = new FileWriter("src/main/java/Visitor/visitLogs.txt");
             for (Visit v : visits.values()) {
-                String[] data = new String[]{v.getR_i(), v.getCF(), v.getH(), v.getScanTime()};
-                String visit = joinStrings(data);
+                String visit = v.getLogString();
                 myWriter.write(visit);
             }
             myWriter.close();
