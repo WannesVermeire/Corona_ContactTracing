@@ -4,9 +4,6 @@ import MatchingService.MatchingService;
 import MixingProxy.MixingProxy;
 import Registrar.Registrar;
 import Visitor.VisitorClient;
-import com.google.zxing.NotFoundException;
-
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class GlobalMain {
