@@ -68,25 +68,7 @@ public class VisitorClient {
 
 
         /******************************** 3. REGISTERING INFECTED USER **********************************/
-        try {
-            // Write visits to file
-            visitor.exportVisits();
-
-
-            // fire to localhost port 2100
-            Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
-            // search for RegistrarService
-            MatchingServiceInterface msi = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
-
-            // Visitor gets infected and goes to a doctor
-            Doctor doctor = new Doctor("Eeraerts Toon");
-
-            // Doctor follows the procedure for when a visitor gets infected
-            ArrayList<List<byte[]>> signedLogs = doctor.getSignedLogs(visitor);
-
-            //Doctor sends the data to the matching service
-//            msi.forwardSickPatientData(signedLogs, doctor.getPublicKey());
-        } catch (Exception e) { e.printStackTrace(); }
+        visitor.exportVisits();
         /******************************** 3. REGISTERING INFECTED USER **********************************/
 
     }

@@ -45,6 +45,8 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
             facility = new Facility(CFcontent[0], CFcontent[1], CFcontent[2], CFcontent[3], publicKey);
             registrarDB.addFacility(facility);
             System.out.println("Registrar added tot database: "+facility);
+
+            registrarGUI.updateFacilities();
         }
         else {
             System.out.println("The provided CF was not from a reliable source.");
@@ -110,6 +112,8 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         if (registrarDB.visitorExists(phoneNr) == false) {
             Visitor visitor = new Visitor(name, phoneNr);
             registrarDB.addVisitor(visitor);
+
+            registrarGUI.updateVisitors();
             return true;
         }
         else {
