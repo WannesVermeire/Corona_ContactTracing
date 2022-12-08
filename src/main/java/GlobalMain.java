@@ -17,5 +17,7 @@ public class GlobalMain {
         TimeUnit.SECONDS.sleep(5); // Anders logfile nog niet volledig geschreven
         DoctorClient.main(args);
 
+        MatchingService.getNyms();
+
     }
 }

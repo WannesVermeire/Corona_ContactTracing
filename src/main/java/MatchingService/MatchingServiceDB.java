@@ -14,6 +14,7 @@ public class MatchingServiceDB {
     Map<String, String> capsuleMap = new HashMap<>();
     Map<String, String[]> timeStamps = new HashMap<>();
     List<Visit> userLogs = new ArrayList<>();
+    List<byte[]> facilityNyms = new ArrayList<>();
 
     public MatchingServiceDB() {}
 
@@ -72,12 +73,15 @@ public class MatchingServiceDB {
                 byte[] data = logPair.get(0);
                 String dataString = bytesToString(data);
                 Visit visit = new Visit(dataString);
-                System.out.println("Log signature correct:" +visit);
+                System.out.println("Log signature correct:" + visit);
             }
         }
-
-
     }
+    public void addNym(List<byte[]> nyms) {
+        facilityNyms.addAll(nyms);
+        System.out.println("Nyms goed ontvangen door de matching service: "+facilityNyms);
+    }
+
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 

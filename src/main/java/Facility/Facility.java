@@ -64,6 +64,9 @@ public class Facility implements Serializable {
     public List<SecretKey> getKeyArray() {
         return keyArray;
     }
+    public List<byte[]> getNymArray() {
+        return nymArray;
+    }
 
     /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     public void setKeyArray(List<SecretKey> keyArray) {

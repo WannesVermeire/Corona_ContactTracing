@@ -163,4 +163,11 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         return monthSignedTokenList;
     }
     /************************************* 1.2 USER ENROLLMENT *************************************/
+
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+    public List<byte[]> getAllNym() {
+        return registrarDB.getAllNym();
+    }
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
 }
