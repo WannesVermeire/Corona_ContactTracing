@@ -82,7 +82,7 @@ public class RegistrarGUI extends JFrame{
         }
         dmVisitor.setDataVector(visitorsData,visitorsColumns);
         JTable visitorTable = new JTable(dmVisitor);
-        visitorTable.setRowHeight(120);
+        visitorTable.setRowHeight(10000);
         visitorTable.setDefaultRenderer(String.class, new MultiLineCellRenderer());
         JScrollPane visitorScroll = new JScrollPane(visitorTable);
         visitorsPanel.add(visitorScroll);

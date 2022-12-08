@@ -12,9 +12,9 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class BarOwnerGUI extends JFrame {
-    JFrame frame;
-    JButton enrollButton;
-    Facility facility;
+    private JFrame frame;
+    private JButton enrollButton;
+    private Facility facility;
 
     public BarOwnerGUI(Facility facility){
         this.facility = facility;
