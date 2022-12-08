@@ -1,10 +1,12 @@
 package Registrar;
 
 import Facility.Facility;
+import Services.MultiLineCellRenderer;
 import Visitor.Visitor;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,11 +28,6 @@ public class RegistrarGUI extends JFrame{
         this.visitors = new HashMap<>();
 
         frame = new JFrame("Registrar"); //Creates frame
-        visitorsPanel = new JPanel();
-        facilitiesPanel = new JPanel();
-
-        visitorsPanel.setLayout(new FlowLayout());
-        facilitiesPanel.setLayout(new FlowLayout());
 
         updateFrame();
     }
@@ -44,6 +41,8 @@ public class RegistrarGUI extends JFrame{
         updateFrame();
     }
     public void updateFrame(){
+        frame.remove(gridPanel);
+
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(1,2));
 
@@ -59,6 +58,17 @@ public class RegistrarGUI extends JFrame{
         facilitiesPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Facilities", TitledBorder.LEFT,
                 TitledBorder.TOP));
+
+        DefaultTableModel dmVisitor = new DefaultTableModel() {
+            public Class getColumnClass(int columnIndex) {
+                return String.class;
+            }
+        };
+        DefaultTableModel dmFacility = new DefaultTableModel() {
+            public Class getColumnClass(int columnIndex) {
+                return String.class;
+            }
+        };
         String visitorsColumns[] = {
              "Key",
              "Value"
@@ -67,11 +77,15 @@ public class RegistrarGUI extends JFrame{
         int i = 0;
         for (var entry : visitors.entrySet()) {
             visitorsData[i][0] = entry.getKey();
-            visitorsData[i][1] = entry.getValue().toString();
+            visitorsData[i][1] = entry.getValue().toGUIString();
             i++;
         }
-        JTable visitorTable = new JTable(visitorsData,visitorsColumns);
-        visitorsPanel.add(new JScrollPane(visitorTable));
+        dmVisitor.setDataVector(visitorsData,visitorsColumns);
+        JTable visitorTable = new JTable(dmVisitor);
+        visitorTable.setRowHeight(120);
+        visitorTable.setDefaultRenderer(String.class, new MultiLineCellRenderer());
+        JScrollPane visitorScroll = new JScrollPane(visitorTable);
+        visitorsPanel.add(visitorScroll);
 
         String facilityColumns[] = {
                 "key",
@@ -81,12 +95,16 @@ public class RegistrarGUI extends JFrame{
         i=0;
         for (var entry : facilities.entrySet()) {
             facilitiesData[i][0] = entry.getKey();
-            facilitiesData[i][1] = entry.getValue().toString();
+            facilitiesData[i][1] = entry.getValue().toGUIString();
             i++;
         }
-        JTable facilityTable = new JTable(facilitiesData,facilityColumns);
-        facilityTable.setRowHeight(100);
-        facilitiesPanel.add(new JScrollPane(facilityTable));
+        dmFacility.setDataVector(facilitiesData,facilityColumns);
+        JTable facilityTable = new JTable(dmFacility);
+        facilityTable.setRowHeight(500);
+        facilityTable.setDefaultRenderer(String.class, new MultiLineCellRenderer());
+        JScrollPane facilityScroll = new JScrollPane(facilityTable);
+        facilitiesPanel.add(facilityScroll);
+
 
         gridPanel.add(visitorsPanel);
         gridPanel.add(facilitiesPanel);

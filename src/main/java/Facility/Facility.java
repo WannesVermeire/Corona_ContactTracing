@@ -141,4 +141,23 @@ public class Facility implements Serializable {
                 ", nymArray=" + nymarray + "}";
     }
 
+    public String toGUIString() {
+        String nymarray = "";
+        if(nymArray!=null)
+            for (byte[] arr : nymArray)
+                nymarray+= Arrays.toString(arr)+",";
+        String keyarr = "";
+        if(keyArray!=null)
+            for (SecretKey arr : keyArray)
+                keyarr+= arr.toString()+",";
+
+        return "facility{" + "\n" +
+                "id='" + id + '\'' + "\n" +
+                ", name='" + name + '\'' + "\n" +
+                ", address='" + address + '\'' + "\n" +
+                ", phoneNr='" + phoneNr + '\'' + "\n" +
+                ", keyArray=" + keyarr + "\n" +
+                ", nymArray=" + nymarray + "}";
+    }
+
 }

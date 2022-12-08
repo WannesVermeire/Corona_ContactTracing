@@ -154,13 +154,24 @@ public class Visitor implements Serializable {
 
     @Override
     public String toString() {
+        return "Visitor{" +
+                "name='" + name + '\'' +
+                ", phoneNr='" + phoneNr + '\'' +
+                ", visits=" + visits +
+                ", tokens=" + tokens +
+                ", usedTokens=" + Arrays.toString(usedTokens) +
+                ", keyPair=" + keyPair +
+                '}';
+    }
+
+    public String toGUIString() {
         return "Visitor{" + '\n' +
                 "name='" + name + '\'' + '\n' +
                 ", phoneNr='" + phoneNr + '\'' + '\n' +
                 ", visits=" + visits + '\n' +
                 ", tokens=" + tokens + '\n' +
                 ", usedTokens=" + Arrays.toString(usedTokens) + '\n' +
-                ", keyPair=" + keyPair + '\n' +
+                ", keyPair=" + keyPair +
                 '}';
     }
 }
