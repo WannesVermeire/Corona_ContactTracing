@@ -44,6 +44,9 @@ public class Visitor implements Serializable {
     public PublicKey getPublicKey () {
         return keyPair.getPublic();
     }
+    public Map<String, Visit> getVisits(){
+        return visits;
+    }
 
 
     /************************************* 1.2 USER ENROLLMENT *************************************/
@@ -97,8 +100,6 @@ public class Visitor implements Serializable {
     public void addVisit(Visit visit) {
         visits.put(visit.getCF(), visit);
     }
-
-
     public ArrayList<byte[]> getAndRemoveToken(int today) {
         ArrayList<byte[]> currentTokens = tokens.getAndRemoveSignatureToken(today);
 
@@ -136,13 +137,6 @@ public class Visitor implements Serializable {
 
 
     /******************************** 3. REGISTERING AN INFECTED USER *******************************/
-    public Map<String, Visit> getVisits(){
-        return visits;
-    }
-
-
-
-    /******************************** 3. REGISTERING AN INFECTED USER *******************************/
     public void exportVisits() {
         try {
             FileWriter myWriter = new FileWriter("src/main/java/Visitor/visitLogs.txt");
@@ -166,6 +160,17 @@ public class Visitor implements Serializable {
                 ", visits=" + visits +
                 ", tokens=" + tokens +
                 ", usedTokens=" + Arrays.toString(usedTokens) +
+                ", keyPair=" + keyPair +
+                '}';
+    }
+
+    public String toGUIString() {
+        return "Visitor{" + '\n' +
+                "name='" + name + '\'' + '\n' +
+                ", phoneNr='" + phoneNr + '\'' + '\n' +
+                ", visits=" + visits + '\n' +
+                ", tokens=" + tokens + '\n' +
+                ", usedTokens=" + Arrays.toString(usedTokens) + '\n' +
                 ", keyPair=" + keyPair +
                 '}';
     }

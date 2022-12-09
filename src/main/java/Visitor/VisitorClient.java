@@ -60,6 +60,9 @@ public class VisitorClient {
             // Create a capsule and send it to the MixingProxy to verify
             // Capsule = timestamp, T_user_x_dayi, hash(Ri,num_CF_dayi) (hash uit de QR-code dus)
             int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
+            visit.setTokenPair(tokenPair);
+
             ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(visit.getH()));
             Visualiser visualiser = new Visualiser(signedConfirmation.get(1));
 
@@ -68,25 +71,7 @@ public class VisitorClient {
 
 
         /******************************** 3. REGISTERING INFECTED USER **********************************/
-        try {
-            // Write visits to file
-            visitor.exportVisits();
-
-
-            // fire to localhost port 2100
-            Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
-            // search for RegistrarService
-            MatchingServiceInterface msi = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
-
-            // Visitor gets infected and goes to a doctor
-            Doctor doctor = new Doctor("Eeraerts Toon");
-
-            // Doctor follows the procedure for when a visitor gets infected
-            ArrayList<List<byte[]>> signedLogs = doctor.getSignedLogs(visitor);
-
-            //Doctor sends the data to the matching service
-//            msi.forwardSickPatientData(signedLogs, doctor.getPublicKey());
-        } catch (Exception e) { e.printStackTrace(); }
+        visitor.exportVisits();
         /******************************** 3. REGISTERING INFECTED USER **********************************/
 
     }

@@ -19,10 +19,12 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
     private final int INCUBATION_DAYS = 10;
     private SecretKey s;
     private RegistrarDB registrarDB;
+    private RegistrarGUI registrarGUI;
 
     public EnrollmentInterfaceImpl(SecretKey s, RegistrarDB registrarDB) throws RemoteException {
         this.s = s;
         this.registrarDB = registrarDB;
+        this.registrarGUI = new RegistrarGUI(registrarDB);
     }
 
     public int getINCUBATION_DAYS() { return INCUBATION_DAYS; }
@@ -43,6 +45,8 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
             facility = new Facility(CFcontent[0], CFcontent[1], CFcontent[2], CFcontent[3], publicKey);
             registrarDB.addFacility(facility);
             System.out.println("Registrar added tot database: "+facility);
+
+            registrarGUI.updateFacilities();
         }
         else {
             System.out.println("The provided CF was not from a reliable source.");
@@ -108,6 +112,8 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         if (registrarDB.visitorExists(phoneNr) == false) {
             Visitor visitor = new Visitor(name, phoneNr);
             registrarDB.addVisitor(visitor);
+
+            registrarGUI.updateVisitors();
             return true;
         }
         else {
@@ -157,4 +163,11 @@ public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements Enro
         return monthSignedTokenList;
     }
     /************************************* 1.2 USER ENROLLMENT *************************************/
+
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+    public List<byte[]> getAllNym() {
+        return registrarDB.getAllNym();
+    }
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
 }

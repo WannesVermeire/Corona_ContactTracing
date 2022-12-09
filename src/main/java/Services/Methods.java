@@ -118,12 +118,12 @@ public class Methods {
 
     // Returns a byte array which represents the encoded string
     public static byte[] stringToBytes(String data) {
-        return data.getBytes(StandardCharsets.UTF_8);
+        return data.getBytes(StandardCharsets.ISO_8859_1);
     }
 
     // Returns a string resulting from decoding the byte array
     public static String bytesToString(byte[] data) {
-        return new String(data, StandardCharsets.UTF_8);
+        return new String(data, StandardCharsets.ISO_8859_1);
     }
 
     // Returns a string resulting from formatting the LocalDateTime object

@@ -4,7 +4,10 @@ import Interfaces.MatchingServiceInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static Services.Methods.*;
 
@@ -39,15 +42,11 @@ public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject 
     public void addTimeStamps(String randomToken, String[] timeStamp) {
         matchingServiceDB.addTimeStamps(randomToken, timeStamp);
     }
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+    public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) {
+        matchingServiceDB.addSignedLogs(signedLogs, publicKey);
+    }
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
 
-//    @Override
-//    public void forwardSickPatientData(String[] signedLogs, PublicKey pubKey){
-//        for(int i = 0; i <signedLogs.length; i++){
-//            ArrayList<byte[]> pair = new ArrayList<>();
-//            pair.add(stringToBytes(signedLogs[i*2]));
-//            pair.add(stringToBytes(signedLogs[i*2+1]));
-//            System.out.println(pair);
-//            if(checkSignature(pair,pubKey)) System.out.println("Great succes");
-//        }
-//    }
+
 }

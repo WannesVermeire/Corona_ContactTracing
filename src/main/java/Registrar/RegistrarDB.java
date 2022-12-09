@@ -27,6 +27,19 @@ public class RegistrarDB {
         keyPair = getKeyPair();
     }
 
+    public Map<String, Facility> getFacilities() {
+        return facilities;
+    }
+    public Map<String, Visitor> getVisitors() {
+        return visitors;
+    }
+    public PublicKey getPublicKey () {
+        return keyPair.getPublic();
+    }
+    public PrivateKey getPrivate () {
+        return keyPair.getPrivate();
+    }
+
     /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     public Facility findFacilityById(String id) {
         for (Facility f : facilities.values())
@@ -49,11 +62,17 @@ public class RegistrarDB {
     }
     /************************************* 1.2 USER ENROLLMENT *************************************/
 
-    public PublicKey getPublicKey () {
-        return keyPair.getPublic();
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+    public List<byte[]> getAllNym() {
+        List<byte[]> allNym = new ArrayList<>();
+        for (Facility facility : facilities.values()) {
+            List<byte[]> facilityNym = facility.getNymArray();
+            System.out.println("lalala: "+facilityNym);
+//            allNym.addAll(facility.getNymArray());
+        }
+        return allNym;
     }
-    public PrivateKey getPrivate () {
-        return keyPair.getPrivate();
-    }
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
 
 }

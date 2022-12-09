@@ -26,4 +26,9 @@ public interface EnrollmentInterface extends Remote {
     PublicKey getPublicKey() throws RemoteException;
 
 //    void visitFacility_scan(Visitor v, String qr_scanned);
+
+
+    public List<byte[]> getAllNym() throws RemoteException;
+
+
 }

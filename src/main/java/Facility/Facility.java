@@ -64,6 +64,9 @@ public class Facility implements Serializable {
     public List<SecretKey> getKeyArray() {
         return keyArray;
     }
+    public List<byte[]> getNymArray() {
+        return nymArray;
+    }
 
     /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     public void setKeyArray(List<SecretKey> keyArray) {
@@ -138,6 +141,25 @@ public class Facility implements Serializable {
                 ", address='" + address + '\'' +
                 ", phoneNr='" + phoneNr + '\'' +
                 ", keyArray=" + keyarr +
+                ", nymArray=" + nymarray + "}";
+    }
+
+    public String toGUIString() {
+        String nymarray = "";
+        if(nymArray!=null)
+            for (byte[] arr : nymArray)
+                nymarray+= Arrays.toString(arr)+",";
+        String keyarr = "";
+        if(keyArray!=null)
+            for (SecretKey arr : keyArray)
+                keyarr+= arr.toString()+",";
+
+        return "facility{" + "\n" +
+                "id='" + id + '\'' + "\n" +
+                ", name='" + name + '\'' + "\n" +
+                ", address='" + address + '\'' + "\n" +
+                ", phoneNr='" + phoneNr + '\'' + "\n" +
+                ", keyArray=" + keyarr + "\n" +
                 ", nymArray=" + nymarray + "}";
     }
 

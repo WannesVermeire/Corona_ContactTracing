@@ -1,18 +1,24 @@
 package MatchingService;
 
+import Visitor.Visit;
+
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static Services.Methods.bytesToString;
-import static Services.Methods.stringToDate;
+import static Services.Methods.*;
 
 public class MatchingServiceDB {
     Map<String, String> capsuleMap = new HashMap<>();
     Map<String, String[]> timeStamps = new HashMap<>();
+    List<Visit> userLogs = new ArrayList<>();
+    List<byte[]> facilityNyms = new ArrayList<>();
 
     public MatchingServiceDB() {}
 
+    // todo pfffffff
     public void addCapsule(byte[] token, String capsule) {
         capsuleMap.put(bytesToString(token), capsule);
     }
@@ -57,4 +63,27 @@ public class MatchingServiceDB {
             timeStamps.put(randomToken, timeStamp);
         }
     }
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+    // Checks signature and unpacks the data if correct
+    public void addSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) {
+        for (List<byte[]> log : signedLogs) {
+            ArrayList<byte[]> logPair = new ArrayList<>(log);
+            if (checkSignature(logPair, publicKey)) {
+                byte[] data = logPair.get(0);
+                String dataString = bytesToString(data);
+                Visit visit = new Visit(dataString);
+                System.out.println("Log signature correct:" + visit);
+            }
+        }
+    }
+    public void addNym(List<byte[]> nyms) {
+        facilityNyms.addAll(nyms);
+        System.out.println("Nyms goed ontvangen door de matching service: "+facilityNyms);
+    }
+
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+
+
 }
