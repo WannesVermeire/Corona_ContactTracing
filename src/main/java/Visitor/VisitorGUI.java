@@ -5,6 +5,8 @@ import Interfaces.MixingProxyInterface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
@@ -17,6 +19,7 @@ import static Services.Methods.stringToHash;
 public class VisitorGUI extends JFrame {
     private JFrame frame;
     private JButton enrollButton;
+    private JComboBox selectFacility;
     private JButton visitButton;
     private JButton writeToFileButton;
     private Visitor visitor;
@@ -24,12 +27,12 @@ public class VisitorGUI extends JFrame {
     private int incubation = 0;
     private PublicKey publicKeyRegistrar = null;
 
-    public VisitorGUI(Visitor visitor) {
+    public VisitorGUI(Visitor visitor) throws RemoteException, NotBoundException {
         this.visitor = visitor;
 
-        frame = new JFrame("Visitor");
+        frame = new JFrame("Visitor - " + visitor.getName());
         enrollButton = new JButton("Enroll");
-        visitButton = new JButton("Visit the facility");
+        visitButton = new JButton("Visit " + selectFacility.getSelectedItem());
         writeToFileButton = new JButton("Write logs to file");
 
 
@@ -91,10 +94,18 @@ public class VisitorGUI extends JFrame {
         });
 
 
+        // fire to localhost port 2100
+        Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
+        // search for RegistrarService
+        RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
+
+        selectFacility = new JComboBox(impl.getAllFacilityNames());
+
         frame.setLayout(new FlowLayout());
         frame.add(enrollButton);
         frame.add(visitButton);
         frame.add(writeToFileButton);
+        frame.add(selectFacility);
         frame.setSize(250, 100);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

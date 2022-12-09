@@ -23,6 +23,7 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         this.matchingServiceDB = matchingServiceDB;
     }
     public void connectToMixingProxy() throws NotBoundException, RemoteException {
+        System.out.println("Connecting Matchingservice to MixingProxy");
         Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
         this.mixingProxy = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
     }
@@ -53,9 +54,9 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
     public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException {
-        connectToMixingProxy();
-        mixingProxy.flushCache();
-        System.out.println("Cache is flushed");
+//        connectToMixingProxy();
+//        mixingProxy.flushCache();
+//        System.out.println("Cache is flushed");
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/

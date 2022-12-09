@@ -34,6 +34,9 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
         return registrarDB.getPublicKey();
     }
 
+    @Override
+    public String[] getAllFacilityNames() throws RemoteException {
+    }
 
     /************************************* 1.1 FACILITY ENROLLMENT *************************************/
     // Verify signature on CF and add to database if correct
