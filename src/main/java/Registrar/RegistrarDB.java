@@ -64,12 +64,14 @@ public class RegistrarDB {
 
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    public List<byte[]> getAllNym() {
+    public List<byte[]> getAllNym(List<String> CFList) {
         List<byte[]> allNym = new ArrayList<>();
         for (Facility facility : facilities.values()) {
-            List<byte[]> facilityNym = facility.getNymArray();
-            System.out.println("lalala: "+facilityNym);
-//            allNym.addAll(facility.getNymArray());
+            if (CFList.contains(facility.getCF())) {
+                List<byte[]> facilityNym = facility.getNymArray();
+                System.out.println("Nym array van facility: "+facilityNym);
+                allNym.addAll(facility.getNymArray());
+            }
         }
         return allNym;
     }

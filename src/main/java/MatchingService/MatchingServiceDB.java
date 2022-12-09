@@ -3,10 +3,7 @@ package MatchingService;
 import Visitor.Visit;
 
 import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static Services.Methods.*;
 
@@ -73,13 +70,21 @@ public class MatchingServiceDB {
                 byte[] data = logPair.get(0);
                 String dataString = bytesToString(data);
                 Visit visit = new Visit(dataString);
-                System.out.println("Log signature correct:" + visit);
+                userLogs.add(visit);
+                System.out.println("MatchingService: Log signature correct:" + visit);
             }
         }
     }
     public void addNym(List<byte[]> nyms) {
         facilityNyms.addAll(nyms);
         System.out.println("Nyms goed ontvangen door de matching service: "+facilityNyms);
+    }
+    public List<String> getCFFromSignedLogs() {
+        List<String> CFList = new ArrayList<>();
+        for (Visit visit : userLogs) {
+            CFList.add(visit.getCF());
+        }
+        return CFList;
     }
 
 
