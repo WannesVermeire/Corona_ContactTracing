@@ -60,6 +60,4 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-
-
 }

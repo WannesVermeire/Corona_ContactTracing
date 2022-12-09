@@ -107,7 +107,7 @@ public class VisitorGUI extends JFrame {
                     ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
                     visit.setTokenPair(tokenPair);
 
-                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToHash(visit.getH()));
+                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit, publicKeyRegistrar);
                     Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
                 }
 
@@ -135,7 +135,7 @@ public class VisitorGUI extends JFrame {
         frame.add(writeToFileButton);
         frame.add(visitButton);
         frame.add(selectFacility);
-        frame.setSize(250, 100);
+        frame.setSize(250, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
