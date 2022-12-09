@@ -1,5 +1,6 @@
 package Interfaces;
 
+import MixingProxy.Entry;
 import Visitor.Visit;
 
 import java.rmi.NotBoundException;
@@ -15,11 +16,14 @@ public interface MatchingServiceInterface extends Remote {
     void addCapsule(String token, Visit capsule) throws RemoteException;
     Visit getCapsule(String token) throws RemoteException;
     void clearDB(int INCUBATION_DAYS) throws RemoteException;
-
     void addTimeStamps(String randomToken, String[] timeStamp) throws RemoteException;
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
     void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException;
     /******************************** 3. REGISTERING INFECTED USER **********************************/
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+    List<Entry> getInfectedEntries() throws RemoteException;
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
 }

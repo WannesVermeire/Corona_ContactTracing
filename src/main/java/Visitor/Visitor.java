@@ -1,5 +1,6 @@
 package Visitor;
 
+import MixingProxy.Entry;
 import Services.Methods;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
@@ -22,12 +23,11 @@ public class Visitor implements Serializable {
 
     private String name;
     private String phoneNr;
-
     private Map<String, Visit> visits; // key = CF
-
-    MonthSignedTokenList tokens;
-    ArrayList<byte[]>[] usedTokens;
+    private MonthSignedTokenList tokens;
+    private ArrayList<byte[]>[] usedTokens;
     private KeyPair keyPair;
+    private List<Entry> infectedEntries;
 
     public Visitor(String name, String phone) {
         this.name = name;
@@ -151,8 +151,39 @@ public class Visitor implements Serializable {
             System.out.println("Visitor successfully wrote logs to the file.");
         } catch (IOException e) {e.printStackTrace();}
     }
-
     /******************************** 3. REGISTERING AN INFECTED USER *******************************/
+
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+    public void setInfectedEntries(List<Entry> allEntries) {
+        infectedEntries = allEntries;
+        System.out.println("Infected entries goed ontvangen in de visitor: "+allEntries);
+    }
+    // Visitor is possible infected if one of the hashes can be found in his own visits list
+    // And if the time windows overlap
+    public void checkIfInfected() {
+        for (Entry entry : infectedEntries) {
+            String hash = hashToString(entry.getHash());
+            // Search for a visit with the same hash
+            for (Visit visit : visits.values()) {
+                if (visit.getH().equals(hash)) {
+                    // Same hash => both visited the same facility
+                    // Check if the timestamps overlap
+                    LocalDateTime time = stringToTimeStamp(visit.getScanTime());
+                    if (time.isAfter(entry.getBeginTimeWindow()) && time.isBefore(entry.getEndTimeWindow())) {
+                        System.out.println("!!! Risico op besmetting !!!");
+                        //Todo zou cool zijn als we dit in de GUI krijgen
+                        notifyReceived();
+                    }
+
+                }
+            }
+        }
+    }
+    public void notifyReceived() {
+        // todo: zie docs
+    }
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
 
     @Override

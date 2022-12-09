@@ -2,6 +2,7 @@ package MatchingService;
 
 import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
+import MixingProxy.Entry;
 import Visitor.Visit;
 
 import java.rmi.NotBoundException;
@@ -62,4 +63,13 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
+
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+    public List<Entry> getInfectedEntries() {
+        return matchingServiceDB.getAllEntries();
+    }
+
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 }

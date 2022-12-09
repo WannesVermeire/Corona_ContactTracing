@@ -1,5 +1,6 @@
 package Visitor;
 
+import Interfaces.MatchingServiceInterface;
 import Interfaces.RegistrarInterface;
 import Interfaces.MixingProxyInterface;
 
@@ -26,6 +27,7 @@ public class VisitorGUI extends JFrame {
     private JButton visitButton;
     private JButton writeToFileButton;
     private JButton refreshButton;
+    private JButton checkInfectedButton;
     private JButton flushButton;
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
@@ -41,6 +43,7 @@ public class VisitorGUI extends JFrame {
         refreshButton = new JButton("REFRESH");
         enrollButton = new JButton("Enroll");
         visitButton = new JButton("Visit selected facility");
+        checkInfectedButton = new JButton("Check if infected");
         flushButton = new JButton("Flush Mixing cache to matching service (nee die knop moet hier nie staan)");
         writeToFileButton = new JButton("Write logs to file");
 
@@ -119,8 +122,27 @@ public class VisitorGUI extends JFrame {
             /******************************** 3. REGISTERING INFECTED USER **********************************/
         });
 
+        checkInfectedButton.addActionListener(a -> {
+            /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+            try {
+                // fire to localhost port 2300
+                Registry myRegistry = LocateRegistry.getRegistry("localhost", 2300);
+                // search for RegistrarService
+                MatchingServiceInterface impl = (MatchingServiceInterface) myRegistry.lookup("MatchingService");
+
+                // Receive infected entries
+                visitor.setInfectedEntries(impl.getInfectedEntries());
+                visitor.checkIfInfected();
+
+
+            } catch (Exception e) { e.printStackTrace(); }
+
+
+            /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+        });
+
         flushButton.addActionListener(a -> {
-            /*********************************** 2. VISITING A FACILITY *************************************/
+            /******************************** 3. REGISTERING INFECTED USER **********************************/
             try {
                 // fire to localhost port 2200
                 Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
@@ -131,8 +153,11 @@ public class VisitorGUI extends JFrame {
 
 
             } catch (Exception e) { e.printStackTrace(); }
-            /*********************************** 2. VISITING A FACILITY *************************************/
+            /******************************** 3. REGISTERING INFECTED USER **********************************/
         });
+
+
+
 
 
         // fire to localhost port 2100
@@ -145,9 +170,10 @@ public class VisitorGUI extends JFrame {
         frame.setLayout(new FlowLayout());
         frame.add(refreshButton);
         frame.add(enrollButton);
-        frame.add(writeToFileButton);
         frame.add(visitButton);
         frame.add(selectFacility);
+        frame.add(writeToFileButton);
+        frame.add(checkInfectedButton);
         frame.add(flushButton);
         frame.setSize(250, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

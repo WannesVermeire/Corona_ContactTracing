@@ -172,8 +172,15 @@ public class MatchingServiceDB {
         }
         System.out.println("Alle entries na aanduiden van geïnformeerde visitors: "+allEntries);
     }
-
     /******************************** 3. REGISTERING INFECTED USER **********************************/
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+    public List<Entry> getAllEntries() {
+        return allEntries;
+    }
+
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
 
 }

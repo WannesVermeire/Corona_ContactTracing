@@ -1,9 +1,10 @@
 package MixingProxy;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class Entry {
+public class Entry implements Serializable {
     private byte[] token; // links the user
     private byte[] hash; // links the facility
     private boolean critical;
