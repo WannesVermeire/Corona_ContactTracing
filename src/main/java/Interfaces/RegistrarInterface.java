@@ -28,7 +28,7 @@ public interface RegistrarInterface extends Remote {
 //    void visitFacility_scan(Visitor v, String qr_scanned);
 
 
-    public List<byte[]> getAllNym() throws RemoteException;
+    List<byte[]> getAllNym(List<String> CFList) throws RemoteException;
 
 
 }

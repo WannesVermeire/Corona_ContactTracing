@@ -1,19 +1,12 @@
 package Doctor;
 
 import Interfaces.MatchingServiceInterface;
-import Interfaces.MixingProxyInterface;
-import Interfaces.RegistrarInterface;
-import Visitor.Visitor;
 
-import javax.print.Doc;
 import javax.swing.*;
 import java.awt.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.Calendar;
 
-import static Services.Methods.stringToHash;
 
 public class DoctorGUI {
     private JFrame frame;
@@ -30,9 +23,7 @@ public class DoctorGUI {
 
         /******************************** 3. REGISTERING INFECTED USER **********************************/
 
-        readLogsButton.addActionListener(a -> {
-            doctor.importVisits();
-        });
+        readLogsButton.addActionListener(a -> doctor.importVisits());
 
         sendLogsButton.addActionListener(a -> {
             try {
@@ -52,11 +43,9 @@ public class DoctorGUI {
 
         /******************************** 3. REGISTERING INFECTED USER **********************************/
 
-
-
-
         frame.setLayout(new FlowLayout());
         frame.add(readLogsButton);
+        frame.add(sendLogsButton);
         frame.setSize(250, 100);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

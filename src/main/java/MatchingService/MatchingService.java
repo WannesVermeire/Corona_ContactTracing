@@ -23,10 +23,6 @@ public class MatchingService {
         }
         catch (Exception e) { e.printStackTrace(); }
         System.out.println("MatchingService is running");
-
-
-
-
     }
 
     // Aparte methode om te kunnen oproepen in globalMain
@@ -34,13 +30,13 @@ public class MatchingService {
         /******************************** 3. REGISTERING INFECTED USER **********************************/
         // Try to connect to a different server ourselves
         try {
-            TimeUnit.SECONDS.sleep(10); // wachten tot alle voorgaande stappen voltooid zijn
+
             // fire to localhost port 2100
             Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
             // search for RegistrarService
             RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
-            // Download all nym from the registrar
-            matchingServiceDB.addNym(impl.getAllNym());
+            // Download all nyms from the registrar matching the given CF's
+            matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
 
         } catch (Exception e) { e.printStackTrace(); }
         /******************************** 3. REGISTERING INFECTED USER **********************************/
