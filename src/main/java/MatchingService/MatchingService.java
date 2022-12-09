@@ -18,14 +18,13 @@ public class MatchingService {
 
         // Own server we are hosting
         try {
+
+
             Registry registry = LocateRegistry.createRegistry(2300);
             registry.rebind("MatchingService", new MatchingServiceInterfaceImpl(matchingServiceDB));
         }
         catch (Exception e) { e.printStackTrace(); }
         System.out.println("MatchingService is running");
-
-
-
 
     }
 

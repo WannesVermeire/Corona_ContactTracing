@@ -4,16 +4,13 @@ import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
 import Visitor.Visitor;
 
-import javax.crypto.SecretKey;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static Services.Methods.*;
 
@@ -23,13 +20,16 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     private MixingProxyDB mixingProxyDB;
 
     public MixingProxyInterfaceImpl() throws RemoteException, NotBoundException {
+        this.mixingProxyDB = new MixingProxyDB();
+        connectToMatchingService();
+    }
+
+    public void connectToMatchingService() throws RemoteException, NotBoundException {
         // matchingRegistry is a reference (stub) for the registry that is running on port 2300 a.k.a. the MatchingService
         Registry matchingRegistry = LocateRegistry.getRegistry("localhost", 2300);
         // Obtain the stub for the remote object with name "MatchingService" a.k.a. the MatchingServiceInterfaceImplementation
         this.impl = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
-        this.mixingProxyDB = new MixingProxyDB();
     }
-
 
 
     @Override

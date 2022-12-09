@@ -1,8 +1,12 @@
 package MatchingService;
 
 import Interfaces.MatchingServiceInterface;
+import Interfaces.MixingProxyInterface;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -13,9 +17,14 @@ import static Services.Methods.*;
 
 public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements MatchingServiceInterface {
     private MatchingServiceDB matchingServiceDB;
+    private MixingProxyInterface mixingProxy;
 
-    public MatchingServiceInterfaceImpl(MatchingServiceDB matchingServiceDB) throws RemoteException {
+    public MatchingServiceInterfaceImpl(MatchingServiceDB matchingServiceDB) throws RemoteException, NotBoundException {
         this.matchingServiceDB = matchingServiceDB;
+    }
+    public void connectToMixingProxy() throws NotBoundException, RemoteException {
+        Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+        this.mixingProxy = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
     }
     @Override
     public boolean containsToken(byte[] token)  {
@@ -43,7 +52,10 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         matchingServiceDB.addTimeStamps(randomToken, timeStamp);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) {
+    public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException {
+        connectToMixingProxy();
+        mixingProxy.flushCache();
+        System.out.println("Cache is flushed");
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/

@@ -3,6 +3,7 @@ package Interfaces;
 import Doctor.Doctor;
 import Registrar.RegistrarDB;
 
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.security.PublicKey;
@@ -19,7 +20,7 @@ public interface MatchingServiceInterface extends Remote {
     void addTimeStamps(String randomToken, String[] timeStamp) throws RemoteException;
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException;
+    void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException;
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
 }
