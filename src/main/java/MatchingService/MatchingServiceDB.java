@@ -123,9 +123,24 @@ public class MatchingServiceDB {
         for (Visit visit : toRemove) userLogs.remove(visit);
     }
     // An entry combines all the info from
-//    public void generateEntries() {
-//        for (Visit visit : visits.values)
-//    }
+    public void generateEntries() {
+        for (var var : capsuleMap.entrySet()) {
+            String token = var.getKey();
+
+            // Get lower en upperbound for timeInterval
+            String[] timeStampStrings = timeStamps.get(token);
+            LocalDateTime[] timeStampList = new LocalDateTime[timeStampStrings.length];
+            for (int i = 0; i < timeStampStrings.length; i++) {
+                timeStampList[i] = stringToTimeStamp(timeStampStrings[i]);
+            }
+
+
+
+
+
+
+        }
+    }
 
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
