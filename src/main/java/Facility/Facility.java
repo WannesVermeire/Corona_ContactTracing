@@ -104,7 +104,7 @@ public class Facility implements Serializable {
             byte[] hash = hash(dataString);
 
             // Create content of QR code
-            String hashString = bytesToString(hash);
+            String hashString = hashToString(hash);
             String[] data2 = {Ri, CF, hashString};
             String barcodeText = joinStrings(data2);
 

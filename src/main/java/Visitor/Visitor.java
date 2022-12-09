@@ -88,6 +88,7 @@ public class Visitor implements Serializable {
 
             Visit visit = new Visit(R_i, CF, H, currentTime);
             addVisit(visit);
+        System.out.println("Na toevoegen visits: "+visits);
             return visit;
     }
     public static String readQRCode(String file) throws IOException, NotFoundException {
@@ -98,7 +99,7 @@ public class Visitor implements Serializable {
         return (new MultiFormatReader().decode(binaryBitmap)).getText();
     }
     public void addVisit(Visit visit) {
-        visits.put(visit.getCF(), visit);
+        visits.put(visit.getScanTime(), visit);
     }
     public ArrayList<byte[]> getAndRemoveToken(int today) {
         ArrayList<byte[]> currentTokens = tokens.getAndRemoveSignatureToken(today);
@@ -139,10 +140,11 @@ public class Visitor implements Serializable {
     /******************************** 3. REGISTERING AN INFECTED USER *******************************/
     public void exportVisits() {
         try {
+            System.out.println("Export visits: "+visits);
             FileWriter myWriter = new FileWriter("src/main/java/Visitor/visitLogs.txt");
             for (Visit v : visits.values()) {
                 String visit = v.getLogString();
-                myWriter.write(visit);
+                myWriter.write(visit+"\n");
             }
             myWriter.close();
             System.out.println("Visitor successfully wrote logs to the file.");
@@ -169,7 +171,7 @@ public class Visitor implements Serializable {
                 "name='" + name + '\'' + '\n' +
                 ", phoneNr='" + phoneNr + '\'' + '\n' +
                 ", visits=" + visits + '\n' +
-                ", tokens=" + tokens + '\n' +
+                ", tokens= " + tokens + '\n' +
                 ", usedTokens=" + Arrays.toString(usedTokens) + '\n' +
                 ", keyPair=" + keyPair +
                 '}';

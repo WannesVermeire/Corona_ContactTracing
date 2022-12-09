@@ -51,14 +51,14 @@ public class Visit implements Serializable {
         tokenPair = new ArrayList<>();
         tokenPair.add(tokenData);
         tokenPair.add(tokenSignature);
-        H = data[4];
+        H = data[3];
         timeOfScan = data[4]; //todo index 5 werkt niet???
 
 
     }
     public String getLogString() {
-        String tokenData = bytesToString(tokenPair.get(0));
-        String tokenSignature = bytesToString(tokenPair.get(1));
+        String tokenData = hashToString(tokenPair.get(0));
+        String tokenSignature = hashToString(tokenPair.get(1));
         String[] data = new String[]{R_i, tokenData, tokenSignature, H, timeOfScan};
         return joinStrings(data);
     }

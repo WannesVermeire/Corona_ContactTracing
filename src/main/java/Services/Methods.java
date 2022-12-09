@@ -118,12 +118,32 @@ public class Methods {
 
     // Returns a byte array which represents the encoded string
     public static byte[] stringToBytes(String data) {
-        return data.getBytes(StandardCharsets.ISO_8859_1);
+        return data.getBytes(StandardCharsets.UTF_8);
     }
 
     // Returns a string resulting from decoding the byte array
     public static String bytesToString(byte[] data) {
-        return new String(data, StandardCharsets.ISO_8859_1);
+        return new String(data, StandardCharsets.UTF_8);
+    }
+
+    // Returns human-readable representation of hash byte array
+    public static String hashToString(byte[] data) {
+        return Arrays.toString(data);
+    }
+
+    // Converts human-readable representation back to byte array
+    // Only for use in combination with function above
+    public static byte[] stringToHash(String data) {
+        String[] array = data.split(", ");
+        array[0] = array[0].replace("[","");
+        array[array.length-1] = array[array.length-1].replace("]","");
+
+        byte[] bytes = new byte[array.length];
+        for (int i = 0; i < array.length; i++) {
+            int getal = Integer.parseInt(array[i]);
+            bytes[i] = (byte) getal;
+        }
+        return bytes;
     }
 
     // Returns a string resulting from formatting the LocalDateTime object

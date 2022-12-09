@@ -9,14 +9,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import static Services.Methods.stringToBytes;
+import static Services.Methods.stringToHash;
 
 public class VisitorGUI extends JFrame {
     private JFrame frame;
     private JButton enrollButton;
     private JButton visitButton;
+    private JButton writeToFileButton;
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
     private int incubation = 0;
@@ -28,6 +31,8 @@ public class VisitorGUI extends JFrame {
         frame = new JFrame("Visitor");
         enrollButton = new JButton("Enroll");
         visitButton = new JButton("Visit the facility");
+        writeToFileButton = new JButton("Write logs to file");
+
 
         enrollButton.addActionListener(a -> {
             /************************************** 1.2 USER ENROLLMENT *************************************/
@@ -60,7 +65,7 @@ public class VisitorGUI extends JFrame {
             /*********************************** 2. VISITING A FACILITY *************************************/
             try {
                 // visitor scans a QR code
-                Visit visit = visitor.scanQR();
+                Visit visit = visitor.scanQR(); // Also saves Visit in Visitor
 
                 // fire to localhost port 2200
                 Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
@@ -73,16 +78,25 @@ public class VisitorGUI extends JFrame {
                 ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
                 visit.setTokenPair(tokenPair);
 
-                ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToBytes(visit.getH()));
-                Visualiser visualiser = new Visualiser(signedConfirmation.get(1));
+                ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToHash(visit.getH()));
+                System.out.println("SignedConfirmation: "+ Arrays.toString(signedConfirmation.get(0)));
+                Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
 
             } catch (Exception e) { e.printStackTrace(); }
             /*********************************** 2. VISITING A FACILITY *************************************/
         });
 
+        writeToFileButton.addActionListener(a -> {
+            /******************************** 3. REGISTERING INFECTED USER **********************************/
+            visitor.exportVisits();
+            /******************************** 3. REGISTERING INFECTED USER **********************************/
+        });
+
+
         frame.setLayout(new FlowLayout());
         frame.add(enrollButton);
         frame.add(visitButton);
+        frame.add(writeToFileButton);
         frame.setSize(250, 100);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
