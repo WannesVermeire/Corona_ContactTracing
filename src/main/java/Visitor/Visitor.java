@@ -64,7 +64,7 @@ public class Visitor implements Serializable {
             // Read QR
             // TODO For now: just dummy procedure where it selects current day
             Calendar current_dateTime = Calendar.getInstance();
-            String filename = "QRCodes_facilityName" + facilityName +"/QRCode_day" + current_dateTime.get(Calendar.DAY_OF_MONTH) + ".jpg";
+            String filename = "QRCodes_" + facilityName +"/QRCode_day" + current_dateTime.get(Calendar.DAY_OF_MONTH) + ".jpg";
             String[] qr = Methods.separateString(readQRCode(filename));
 
             String R_i = qr[0]; // random number

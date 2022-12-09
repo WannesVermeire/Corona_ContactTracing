@@ -77,10 +77,13 @@ public class RegistrarDB {
     }
 
     public String[] getAllFacilityNames() {
+        String [] names = new String[facilities.size()];
+        int i = 0;
         for(Facility facility : facilities.values()) {
-
+            names[i] = facility.getName();
+            i++;
         }
-        return null;
+        return names;
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
