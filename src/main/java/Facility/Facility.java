@@ -10,7 +10,11 @@ import javax.crypto.SecretKey;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -92,7 +96,7 @@ public class Facility implements Serializable {
             randoms[i] = Ri;
         }
     }
-    public void calculateQRCodes() {
+    public void calculateQRCodes() throws IOException {
         String CF = getCF();
         for (int i=0; i<nymArray.size(); i++) {
             String Ri = Integer.toString(randoms[i]);
@@ -109,13 +113,20 @@ public class Facility implements Serializable {
             String barcodeText = joinStrings(data2);
 
             // Create QR code
-            String filename = "QRCodes/QRCode_day"+(i+1)+".jpg";
+            String directory =  "QRCodes_" + this.name;
+
+            // Create directory for QR codes
+            if(!Files.exists(Paths.get(directory))) {
+                Files.createDirectory(Path.of(directory));
+            }
+
+            String filename = "/QRCode_day"+(i+1)+".jpg";
             try {
                 QRCodeWriter barcodeWriter = new QRCodeWriter();
                 BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
 
                 BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-                File outputfile = new File(filename);
+                File outputfile = new File(directory + filename);
                 ImageIO.write(bufferedImage, "jpg", outputfile);
 
             }

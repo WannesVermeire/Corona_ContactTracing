@@ -33,4 +33,5 @@ public interface RegistrarInterface extends Remote {
     Map<LocalDate, byte[]> getAllNym(List<String> CFList) throws RemoteException;
 
 
+    String[] getAllFacilityNames() throws RemoteException;
 }

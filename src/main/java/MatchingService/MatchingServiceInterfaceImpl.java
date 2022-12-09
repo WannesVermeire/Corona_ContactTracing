@@ -23,6 +23,7 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         this.matchingServiceDB = matchingServiceDB;
     }
     public void connectToMixingProxy() throws NotBoundException, RemoteException {
+        System.out.println("Connecting Matchingservice to MixingProxy");
         Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
         this.mixingProxy = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
     }
