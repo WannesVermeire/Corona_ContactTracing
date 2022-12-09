@@ -1,5 +1,7 @@
 package MixingProxy;
 
+import Visitor.Visit;
+
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -11,6 +13,7 @@ public class MixingProxyDB {
     private static KeyPair keyPair;
     private static Map<String, String> localCacheCapsule = new HashMap<String, String>(); //
     private static Map<String, String[]> localCacheTimeStamps = new HashMap<>();
+    private static Map<String, Visit> allCapsules = new HashMap<>(); // key = hash in String format //todo zo zou ik het willen
     public MixingProxyDB() {
         keyPair = getKeyPair();
     }
@@ -75,6 +78,13 @@ public class MixingProxyDB {
             localCacheTimeStamps.put(tokenWithHash, new String[]{timeStamp});
         }
     }
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
+    public void addCapsule(Visit visit) {
+        allCapsules.put(visit.getH(), visit);
+    }
+
+    /******************************** 3. REGISTERING INFECTED USER **********************************/
 
     public String[] getTimeStamp(String randomToken) {
         return localCacheTimeStamps.get(randomToken);

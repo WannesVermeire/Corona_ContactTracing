@@ -10,10 +10,11 @@ import java.util.*;
 import static Services.Methods.*;
 
 public class MatchingServiceDB {
-    Map<String, String> capsuleMap = new HashMap<>();
-    Map<String, String[]> timeStamps = new HashMap<>();
-    List<Visit> userLogs = new ArrayList<>();
-    Map<LocalDate, byte[]> facilityNyms = new HashMap<>();
+    private Map<String, String> capsuleMap = new HashMap<>(); // key = token, data: is Visit
+    private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
+    private List<Visit> userLogs = new ArrayList<>();
+    private Map<LocalDate, byte[]> facilityNyms = new HashMap<>();
+
 
     public MatchingServiceDB() {}
 
@@ -102,7 +103,7 @@ public class MatchingServiceDB {
             byte[] nym = facilityNyms.get(date);
 
             // Check if our own hash is the same is the one provided in the log
-            String R_i = visit.getR_i();;
+            String R_i = visit.getR_i();
             String nymString = bytesToString(nym);
             String[] data = new String[] {R_i, nymString};
             String dataString = joinStrings(data);
@@ -111,6 +112,7 @@ public class MatchingServiceDB {
 
             if (Arrays.equals(ownHash, givenHash))
                 System.out.println("Hash van de visitor correct geverifieerd: de plaats werd echt bezocht");
+                // todo alle entries met die hash aanduiden als critical
             else {
                 System.out.println("!!! Data (van de visitor) ingestuurd door de doctor is niet betrouwbaar !!!");
                 toRemove.add(visit);
@@ -119,6 +121,10 @@ public class MatchingServiceDB {
 
         for (Visit visit : toRemove) userLogs.remove(visit);
     }
+//    public void generateEntries() {
+//
+//        for (Visit visit : visits.values)
+//    }
 
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/

@@ -77,7 +77,7 @@ public class VisitorGUI extends JFrame {
                 ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
                 visit.setTokenPair(tokenPair);
 
-                ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToHash(visit.getH()));
+                ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit, publicKeyRegistrar);
                 Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
 
             } catch (Exception e) { e.printStackTrace(); }

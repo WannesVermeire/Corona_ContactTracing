@@ -2,7 +2,7 @@ package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
-import Visitor.Visitor;
+import Visitor.Visit;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -31,17 +31,16 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         this.impl = (MatchingServiceInterface) matchingRegistry.lookup("MatchingService");
     }
 
-
     @Override
     // If all checks on the capsule data are correct we return a confirmation: sign(token)
-    public ArrayList<byte[]> verifyAndSendConfirmation(Visitor visitor, PublicKey publicKey, String scanTime, ArrayList<byte[]> tokenPair, byte[] hashValue) throws Exception {
-        // 3 checks: signature, day, not yet used
-        byte[] token = tokenPair.get(0);
+    public ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception {
+         // 3 checks: signature, day, not yet used
+        byte[] token = visit.getTokenPair().get(0);
 
-        if(!checkSignature(tokenPair, publicKey))
+        if(!checkSignature(visit.getTokenPair(), publicKey))
             throw new SignatureException("Invalid signature");
 
-        if(!verifyTokenDay(scanTime, token))
+        if(!verifyTokenDay(visit.getScanTime(), token))
             throw new Exception("Date of token is not correct");
 
         if(impl.containsToken(token) || mixingProxyDB.containsCapsule(token))
@@ -50,17 +49,19 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         System.out.println("Capsule is valid!");
 
         // Save capsule
-        String[] capsuleArr = new String[] {hashToString(token), scanTime, hashToString(hashValue)};
+        String[] capsuleArr = new String[] {hashToString(token), visit.getScanTime(), visit.getH()};
         String capsule = joinStrings(capsuleArr);
         mixingProxyDB.cacheCapsule(token, capsule);
 
         // Create confirmation
+        updateTimeStamp(hashToString(token), visit.getH(), visit.getScanTime());
 
+        // Save this capsule
+        mixingProxyDB.addCapsule(visit);
 
-        updateTimeStamp(hashToString(token), hashToString(hashValue), scanTime);
-
-        return getSignature(hashValue, mixingProxyDB.getSecretKey());
+        return getSignature(stringToHash(visit.getH()), mixingProxyDB.getSecretKey());
     }
+
     private boolean verifyTokenDay(String scanTime, byte[] bytes) {
         int currentDay = stringToTimeStamp(scanTime).getDayOfMonth();
         String tokenDay_String = separateString(bytesToString(bytes))[1];

@@ -32,6 +32,9 @@ public class Visit implements Serializable {
     public String getScanTime() {
         return timeOfScan;
     }
+    public ArrayList<byte[]> getTokenPair() {
+        return tokenPair;
+    }
     public void setTokenPair(ArrayList<byte[]> tokenPair) {
         this.tokenPair = tokenPair;
     }
