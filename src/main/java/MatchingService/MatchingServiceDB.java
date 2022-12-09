@@ -93,6 +93,7 @@ public class MatchingServiceDB {
     }
     // Per dag: hash(R_i, nym) =? hash(R_i, nym)
     public void verifyLogs() {
+        List<Visit> toRemove = new ArrayList<>();
         for (Visit visit : userLogs) {
             // Find the date of the log
             LocalDateTime dateTime = stringToTimeStamp(visit.getScanTime());
@@ -108,9 +109,15 @@ public class MatchingServiceDB {
             byte[] ownHash = hash(dataString);
             byte[] givenHash = stringToHash(visit.getH());
 
-            if (!Arrays.equals(ownHash, givenHash))
+            if (Arrays.equals(ownHash, givenHash))
+                System.out.println("Hash van de visitor correct geverifieerd: de plaats werd echt bezocht");
+            else {
                 System.out.println("!!! Data (van de visitor) ingestuurd door de doctor is niet betrouwbaar !!!");
+                toRemove.add(visit);
+            }
         }
+
+        for (Visit visit : toRemove) userLogs.remove(visit);
     }
 
 
