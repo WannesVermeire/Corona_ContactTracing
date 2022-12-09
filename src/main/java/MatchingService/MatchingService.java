@@ -38,6 +38,8 @@ public class MatchingService {
             matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
             matchingServiceDB.verifyLogs();
             matchingServiceDB.generateEntries();
+            matchingServiceDB.markInfectedCapsules();
+            matchingServiceDB.markInfectedTokens();
 
         } catch (Exception e) { e.printStackTrace(); }
         /******************************** 3. REGISTERING INFECTED USER **********************************/

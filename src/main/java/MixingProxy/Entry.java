@@ -23,6 +23,25 @@ public class Entry {
         this.endTimeWindow = endTimeWindow;
     }
 
+    public byte[] getToken() {
+        return token;
+    }
+    public byte[] getHash() {
+        return hash;
+    }
+    public boolean isCritical() {
+        return critical;
+    }
+    public boolean isInformed() {
+        return informed;
+    }
+    public LocalDateTime getBeginTimeWindow() {
+        return beginTimeWindow;
+    }
+    public LocalDateTime getEndTimeWindow() {
+        return endTimeWindow;
+    }
+
     public void setCritical(boolean critical) {
         this.critical = critical;
     }

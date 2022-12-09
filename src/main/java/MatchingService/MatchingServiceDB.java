@@ -18,7 +18,7 @@ public class MatchingServiceDB {
 
     private List<Visit> userLogs = new ArrayList<>();
     private Map<LocalDate, byte[]> facilityNyms = new HashMap<>();
-    private Map<String, Entry> allEntries = new HashMap<>(); // key = hash in String format
+    private List<Entry> allEntries = new ArrayList<>();
 
 
     public MatchingServiceDB() {}
@@ -111,7 +111,6 @@ public class MatchingServiceDB {
 
             if (Arrays.equals(ownHash, givenHash))
                 System.out.println("Hash van de visitor correct geverifieerd: de plaats werd echt bezocht");
-                // todo alle entries met die hash aanduiden als critical
             else {
                 System.out.println("!!! Data (van de visitor) ingestuurd door de doctor is niet betrouwbaar !!!");
                 toRemove.add(visit);
@@ -143,13 +142,36 @@ public class MatchingServiceDB {
             byte[] tokenBytes = stringToHash(token);
             byte[] hash = stringToHash(visit.getH());
             Entry entry = new Entry(tokenBytes, hash, min, max);
-            allEntries.put(token, entry);
+            allEntries.add(entry);
         }
         System.out.println("Alle entries generated in the Matching Service: "+allEntries);
         capsuleMap.clear();
         timeStamps.clear();
     }
-
+    // Mark all infected entries based on hashes in user logs
+    public void markInfectedCapsules() {
+        for (Visit visit : userLogs) {
+            byte[] hash = stringToHash(visit.getH());
+            for (Entry entry : allEntries) {
+                if (Arrays.equals(hash, entry.getHash())) {
+                    entry.setCritical(true);
+                }
+            }
+        }
+        System.out.println("Alle entries na aanduiden van geïnfecteerde facilities: "+allEntries);
+    }
+    // Mark the notifier of this infection as already informed
+    public void markInfectedTokens() {
+        for (Visit visit : userLogs) {
+            byte[] token = visit.getTokenPair().get(0);
+            for (Entry entry : allEntries) {
+                if (Arrays.equals(token, entry.getToken())) {
+                    entry.setInformed(true);
+                }
+            }
+        }
+        System.out.println("Alle entries na aanduiden van geïnformeerde visitors: "+allEntries);
+    }
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
