@@ -2,6 +2,7 @@ package MatchingService;
 
 import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
+import Visitor.Visit;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -32,13 +33,14 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         return matchingServiceDB.hasCapsule(token);
     }
     @Override
-    public void addCapsule(byte[] token, String capsule) throws RemoteException {
-        matchingServiceDB.addCapsule(token, capsule);
-    }    @Override
-    public void addCapsule(String token, String capsule) throws RemoteException {
+    public void addCapsule(byte[] token, Visit capsule) throws RemoteException {
         matchingServiceDB.addCapsule(token, capsule);
     }
-    public String getCapsule(String token) throws RemoteException {
+    @Override
+    public void addCapsule(String token, Visit capsule) throws RemoteException {
+        matchingServiceDB.addCapsule(token, capsule);
+    }
+    public Visit getCapsule(String token) throws RemoteException {
         return matchingServiceDB.getCapsule(token);
     }
 

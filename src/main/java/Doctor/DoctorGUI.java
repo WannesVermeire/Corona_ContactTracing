@@ -39,8 +39,6 @@ public class DoctorGUI {
             } catch (Exception e) { e.printStackTrace(); }
         });
 
-
-
         /******************************** 3. REGISTERING INFECTED USER **********************************/
 
         frame.setLayout(new FlowLayout());

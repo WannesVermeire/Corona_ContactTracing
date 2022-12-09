@@ -10,7 +10,7 @@ import java.util.*;
 import static Services.Methods.*;
 
 public class MatchingServiceDB {
-    private Map<String, String> capsuleMap = new HashMap<>(); // key = token, data: is Visit
+    private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
     private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
     private List<Visit> userLogs = new ArrayList<>();
     private Map<LocalDate, byte[]> facilityNyms = new HashMap<>();
@@ -22,14 +22,15 @@ public class MatchingServiceDB {
     public void addCapsule(byte[] token, String capsule) {
         capsuleMap.put(bytesToString(token), capsule);
     }
-    public void addCapsule(String token, String capsule) {
+    public void addCapsule(String token, Visit capsule) {
+        System.out.println("Capsule goed ontvangen in matching service: "+capsule);
         capsuleMap.put(token, capsule);
     }
     public boolean hasCapsule(byte [] token) {
         return capsuleMap.containsKey(bytesToString(token));
     }
 
-    public String getCapsule(String token) {
+    public Visit getCapsule(String token) {
         return capsuleMap.get(token);
     }
 
@@ -121,8 +122,8 @@ public class MatchingServiceDB {
 
         for (Visit visit : toRemove) userLogs.remove(visit);
     }
+    // An entry combines all the info from
 //    public void generateEntries() {
-//
 //        for (Visit visit : visits.values)
 //    }
 

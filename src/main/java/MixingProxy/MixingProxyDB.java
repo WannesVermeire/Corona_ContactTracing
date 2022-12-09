@@ -11,87 +11,84 @@ import static Services.Methods.*;
 
 public class MixingProxyDB {
     private static KeyPair keyPair;
-    private static Map<String, String> localCacheCapsule = new HashMap<String, String>(); //
-    private static Map<String, String[]> localCacheTimeStamps = new HashMap<>();
-    private static Map<String, Visit> allCapsules = new HashMap<>(); // key = hash in String format //todo zo zou ik het willen
+    private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
+    private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
+
     public MixingProxyDB() {
         keyPair = getKeyPair();
     }
-
     public PublicKey getPublicKey() {
         return keyPair.getPublic();
     }
-    public PrivateKey getSecretKey() { return keyPair.getPrivate(); }
+    public PrivateKey getSecretKey() {
+        return keyPair.getPrivate();
+    }
+
+
 
     public ArrayList<byte[]> signCapsule(String capsule) {
         return getSignature(stringToBytes(capsule), keyPair.getPrivate());
     }
-
-    public void cacheCapsule(byte[] token, String capsule) {
-        localCacheCapsule.put(bytesToString(token), capsule);
+    public void addCapsule(String token, Visit capsule) {
+        capsuleMap.put(token, capsule);
+    }
+    public void addCapsule(Visit visit) {
+        String token = hashToString(visit.getTokenPair().get(0));
+        capsuleMap.put(token, visit);
     }
     public boolean containsCapsule(byte [] token) {
-        return localCacheCapsule.containsKey(bytesToString(token));
+        return capsuleMap.containsKey(bytesToString(token));
     }
-
     public boolean isEmptyCapsules() {
-        return localCacheCapsule.isEmpty();
+        return capsuleMap.isEmpty();
     }
     public boolean isEmptyTimeStamps() {
-        return localCacheTimeStamps.isEmpty();
+        return timeStamps.isEmpty();
     }
-
     public String getRandomTokenCapsule() {
-        List<String> keys = new ArrayList<>(localCacheCapsule.keySet());
+        List<String> keys = new ArrayList<>(capsuleMap.keySet());
         int randomIndex = new Random().nextInt(keys.size());
         String randomKey = keys.get(randomIndex);
         return randomKey;
     }
-
     public String getRandomTokenTime() {
-        List<String> keys = new ArrayList<>(localCacheTimeStamps.keySet());
+        List<String> keys = new ArrayList<>(timeStamps.keySet());
         int randomIndex = new Random().nextInt(keys.size());
         String randomKey = keys.get(randomIndex);
         return randomKey;
     }
-
-    public String getCapsule(String token) {
-        return localCacheCapsule.get(token);
+    public Visit getCapsule(String token) {
+        return capsuleMap.get(token);
     }
-
     public void removeToken(String token) {
-        localCacheCapsule.remove(token);
+        capsuleMap.remove(token);
+    }
+    public String[] getTimeStamp(String randomToken) {
+        return timeStamps.get(randomToken);
+    }
+    public void removeTimeStamp(String randomToken) {
+        timeStamps.remove(randomToken);
     }
 
-    public void updateTimeStamp(String tokenWithHash, String timeStamp) {
-        if(localCacheTimeStamps.containsKey(tokenWithHash)) {
-            String[] current = localCacheTimeStamps.get(tokenWithHash);
+
+
+    public void updateTimeStamp(String token, String timeStamp) {
+        if(timeStamps.containsKey(token)) {
+            String[] current = timeStamps.get(token);
             String[] replacement = new String[current.length+1];
             for(int i = 0; i < current.length; i++) {
                 replacement[i] = current[i];
             }
             replacement[current.length] = timeStamp;
-            localCacheTimeStamps.remove(tokenWithHash);
-            localCacheTimeStamps.put(tokenWithHash, replacement);
+            timeStamps.remove(token);
+            timeStamps.put(token, replacement);
         }
         else {
-            localCacheTimeStamps.put(tokenWithHash, new String[]{timeStamp});
+            timeStamps.put(token, new String[]{timeStamp});
         }
     }
 
-    /******************************** 3. REGISTERING INFECTED USER **********************************/
-    public void addCapsule(Visit visit) {
-        allCapsules.put(visit.getH(), visit);
-    }
 
-    /******************************** 3. REGISTERING INFECTED USER **********************************/
 
-    public String[] getTimeStamp(String randomToken) {
-        return localCacheTimeStamps.get(randomToken);
-    }
-
-    public void removeTimeStamp(String randomToken) {
-        localCacheCapsule.remove(randomToken);
-    }
 
 }

@@ -25,7 +25,7 @@ public class GlobalMain {
         DoctorGUI doctor1 = new DoctorGUI(new Doctor("Toon Eeraerts"));
 
 
-        TimeUnit.SECONDS.sleep(30); // wachten tot alle voorgaande stappen voltooid zijn
+        TimeUnit.SECONDS.sleep(60); // wachten tot alle voorgaande stappen voltooid zijn
         MatchingService.getNyms();
 
 

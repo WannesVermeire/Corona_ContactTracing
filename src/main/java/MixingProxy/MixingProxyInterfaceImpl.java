@@ -46,12 +46,10 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         if(impl.containsToken(token) || mixingProxyDB.containsCapsule(token))
             throw new Exception("Token is already used");
 
-        System.out.println("Capsule is valid!");
+        System.out.println("Mixing Proxy: Capsule is valid!");
 
         // Save capsule
-        String[] capsuleArr = new String[] {hashToString(token), visit.getScanTime(), visit.getH()};
-        String capsule = joinStrings(capsuleArr);
-        mixingProxyDB.cacheCapsule(token, capsule);
+        mixingProxyDB.addCapsule(hashToString(token), visit);
 
         // Create confirmation
         updateTimeStamp(hashToString(token), visit.getH(), visit.getScanTime());
@@ -74,6 +72,7 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     }
 
     @Override
+    // Stuur alles door naar de MatchingService
     public void flushCache() throws RemoteException {
         while(!mixingProxyDB.isEmptyCapsules()) {
             String randomToken = mixingProxyDB.getRandomTokenCapsule();
