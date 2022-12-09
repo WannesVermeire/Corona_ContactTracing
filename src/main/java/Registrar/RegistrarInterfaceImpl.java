@@ -167,7 +167,7 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
 
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    public List<byte[]> getAllNym(List<String> CFList) {
+    public Map<LocalDate, byte[]> getAllNym(List<String> CFList) {
         return registrarDB.getAllNym(CFList);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/

@@ -6,6 +6,7 @@ import Visitor.Visitor;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,13 +65,19 @@ public class RegistrarDB {
 
 
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    public List<byte[]> getAllNym(List<String> CFList) {
-        List<byte[]> allNym = new ArrayList<>();
+    public Map<LocalDate, byte[]> getAllNym(List<String> CFList) {
+        Map<LocalDate, byte[]> allNym = new HashMap<>();
         for (Facility facility : facilities.values()) {
             if (CFList.contains(facility.getCF())) {
                 List<byte[]> facilityNym = facility.getNymArray();
-                System.out.println("Nym array van facility: "+facilityNym);
-                allNym.addAll(facility.getNymArray());
+                for (int i = 0; i<facilityNym.size(); i++) {
+                    // The index represents the day of the month
+                    // - First day of month
+                    LocalDate firstDay = LocalDate.now().withDayOfMonth(1);
+                    // - add index number of days
+                    LocalDate date = firstDay.plusDays(i);
+                    allNym.put(date, facilityNym.get(i));
+                }
             }
         }
         return allNym;

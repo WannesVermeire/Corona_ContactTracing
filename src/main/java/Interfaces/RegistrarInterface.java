@@ -6,8 +6,10 @@ import javax.crypto.SecretKey;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.security.PublicKey;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public interface RegistrarInterface extends Remote {
 
@@ -28,7 +30,7 @@ public interface RegistrarInterface extends Remote {
 //    void visitFacility_scan(Visitor v, String qr_scanned);
 
 
-    List<byte[]> getAllNym(List<String> CFList) throws RemoteException;
+    Map<LocalDate, byte[]> getAllNym(List<String> CFList) throws RemoteException;
 
 
 }

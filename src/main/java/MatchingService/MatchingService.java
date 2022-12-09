@@ -30,13 +30,13 @@ public class MatchingService {
         /******************************** 3. REGISTERING INFECTED USER **********************************/
         // Try to connect to a different server ourselves
         try {
-
             // fire to localhost port 2100
             Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
             // search for RegistrarService
             RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
             // Download all nyms from the registrar matching the given CF's
             matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
+            matchingServiceDB.verifyLogs();
 
         } catch (Exception e) { e.printStackTrace(); }
         /******************************** 3. REGISTERING INFECTED USER **********************************/

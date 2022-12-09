@@ -3,6 +3,8 @@ package MatchingService;
 import Visitor.Visit;
 
 import java.security.PublicKey;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static Services.Methods.*;
@@ -11,7 +13,7 @@ public class MatchingServiceDB {
     Map<String, String> capsuleMap = new HashMap<>();
     Map<String, String[]> timeStamps = new HashMap<>();
     List<Visit> userLogs = new ArrayList<>();
-    List<byte[]> facilityNyms = new ArrayList<>();
+    Map<LocalDate, byte[]> facilityNyms = new HashMap<>();
 
     public MatchingServiceDB() {}
 
@@ -75,9 +77,12 @@ public class MatchingServiceDB {
             }
         }
     }
-    public void addNym(List<byte[]> nyms) {
-        facilityNyms.addAll(nyms);
-        System.out.println("Nyms goed ontvangen door de matching service: "+facilityNyms);
+    // Store all nyms in a map accessible by date
+    public void addNym(Map<LocalDate, byte[]> nyms) {
+        for (Map.Entry entry : nyms.entrySet()) {
+            facilityNyms.put((LocalDate) entry.getKey(), (byte[]) entry.getValue());
+        }
+        System.out.println("Nyms goed ontvangen door de matching service: "+ facilityNyms);
     }
     public List<String> getCFFromSignedLogs() {
         List<String> CFList = new ArrayList<>();
@@ -85,6 +90,27 @@ public class MatchingServiceDB {
             CFList.add(visit.getCF());
         }
         return CFList;
+    }
+    // Per dag: hash(R_i, nym) =? hash(R_i, nym)
+    public void verifyLogs() {
+        for (Visit visit : userLogs) {
+            // Find the date of the log
+            LocalDateTime dateTime = stringToTimeStamp(visit.getScanTime());
+            LocalDate date = dateTime.toLocalDate();
+            // Get the according nym
+            byte[] nym = facilityNyms.get(date);
+
+            // Check if our own hash is the same is the one provided in the log
+            String R_i = visit.getR_i();;
+            String nymString = bytesToString(nym);
+            String[] data = new String[] {R_i, nymString};
+            String dataString = joinStrings(data);
+            byte[] ownHash = hash(dataString);
+            byte[] givenHash = stringToHash(visit.getH());
+
+            if (!Arrays.equals(ownHash, givenHash))
+                System.out.println("!!! Data (van de visitor) ingestuurd door de doctor is niet betrouwbaar !!!");
+        }
     }
 
 
