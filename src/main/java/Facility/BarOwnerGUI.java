@@ -10,6 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class BarOwnerGUI extends JFrame {
     private JFrame frame;
@@ -19,7 +20,7 @@ public class BarOwnerGUI extends JFrame {
     public BarOwnerGUI(Facility facility)  throws NotFoundException, IOException {
         this.facility = facility;
 
-        frame = new JFrame("BarOwner");
+        frame = new JFrame("BarOwner - " + facility.getName());
         enrollButton = new JButton("Enroll");
 
         enrollButton.addActionListener(a -> {
@@ -53,7 +54,8 @@ public class BarOwnerGUI extends JFrame {
         });
         frame.setLayout(new FlowLayout());
         frame.add(enrollButton);
-        frame.setSize(250,100);
+        frame.add(new JLabel(new ImageIcon("QRCodes_" + facility.getName() + "/QRCode_day" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ".jpg")));
+        frame.setSize(250,400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
