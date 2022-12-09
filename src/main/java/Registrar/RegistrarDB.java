@@ -75,6 +75,13 @@ public class RegistrarDB {
         }
         return allNym;
     }
+
+    public String[] getAllFacilityNames() {
+        for(Facility facility : facilities.values()) {
+
+        }
+        return null;
+    }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
 }

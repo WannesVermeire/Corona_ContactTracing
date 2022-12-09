@@ -1,9 +1,11 @@
 package Facility;
 
 import Interfaces.RegistrarInterface;
+import com.google.zxing.NotFoundException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
@@ -14,7 +16,7 @@ public class BarOwnerGUI extends JFrame {
     private JButton enrollButton;
     private Facility facility;
 
-    public BarOwnerGUI(Facility facility){
+    public BarOwnerGUI(Facility facility)  throws NotFoundException, IOException {
         this.facility = facility;
 
         frame = new JFrame("BarOwner");
@@ -43,7 +45,11 @@ public class BarOwnerGUI extends JFrame {
             } catch (Exception e) { e.printStackTrace(); }
 
             facility.generateRandoms();
-            facility.calculateQRCodes();
+            try {
+                facility.calculateQRCodes();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         frame.setLayout(new FlowLayout());
         frame.add(enrollButton);

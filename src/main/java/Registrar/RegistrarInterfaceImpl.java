@@ -36,6 +36,7 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
 
     @Override
     public String[] getAllFacilityNames() throws RemoteException {
+        return registrarDB.getAllFacilityNames();
     }
 
     /************************************* 1.1 FACILITY ENROLLMENT *************************************/

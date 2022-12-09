@@ -66,22 +66,25 @@ public class VisitorGUI extends JFrame {
         visitButton.addActionListener(a -> {
             /*********************************** 2. VISITING A FACILITY *************************************/
             try {
-                // visitor scans a QR code
-                Visit visit = visitor.scanQR(); // Also saves Visit in Visitor
+                if(selectFacility != null) {
 
-                // fire to localhost port 2200
-                Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
-                // search for MixingProxyService
-                MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
+                    // visitor scans a QR code
+                    Visit visit = visitor.scanQR((String) selectFacility.getSelectedItem()); // Also saves Visit in Visitor
 
-                // Create a capsule and send it to the MixingProxy to verify
-                // Capsule = timestamp, T_user_x_dayi, hash(Ri,num_CF_dayi) (hash uit de QR-code dus)
-                int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-                ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
-                visit.setTokenPair(tokenPair);
+                    // fire to localhost port 2200
+                    Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+                    // search for MixingProxyService
+                    MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
 
-                ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToHash(visit.getH()));
-                Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
+                    // Create a capsule and send it to the MixingProxy to verify
+                    // Capsule = timestamp, T_user_x_dayi, hash(Ri,num_CF_dayi) (hash uit de QR-code dus)
+                    int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                    ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
+                    visit.setTokenPair(tokenPair);
+
+                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToHash(visit.getH()));
+                    Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
+                }
 
             } catch (Exception e) { e.printStackTrace(); }
             /*********************************** 2. VISITING A FACILITY *************************************/

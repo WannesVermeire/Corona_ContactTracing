@@ -7,16 +7,20 @@ import MixingProxy.MixingProxy;
 import Registrar.Registrar;
 import Visitor.Visitor;
 import Visitor.VisitorGUI;
+import com.google.zxing.NotFoundException;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.concurrent.TimeUnit;
 
 public class GlobalMain {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, NotBoundException, RemoteException, IOException, NotFoundException {
         Registrar.main(args);
         MatchingService.main(args);
         MixingProxy.main(args);
 
-        BarOwnerGUI barOwner1 = new BarOwnerGUI(new Facility("Hamann", "Vantegemstraat 3, 9230 Wetteren", "+32 9 333 77 77"));
+        BarOwnerGUI barOwner1 = new BarOwnerGUI(new Facility("Hamann2", "Vantegemstraat 3, 9230 Wetteren", "+32 9 333 77 77"));
         VisitorGUI visitor1 = new VisitorGUI(new Visitor("Wannes", "+32 456 30 81 66"));
         DoctorGUI doctor1 = new DoctorGUI(new Doctor("Toon Eeraerts"));
 

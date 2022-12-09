@@ -60,11 +60,11 @@ public class Visitor implements Serializable {
 
 
     /*********************************** 2. VISITING A FACILITY *************************************/
-    public Visit scanQR()  throws NotFoundException, IOException {
+    public Visit scanQR(String facilityName)  throws NotFoundException, IOException {
             // Read QR
             // TODO For now: just dummy procedure where it selects current day
             Calendar current_dateTime = Calendar.getInstance();
-            String filename = "QRCodes/QRCode_day" + current_dateTime.get(Calendar.DAY_OF_MONTH) + ".jpg";
+            String filename = "QRCodes_facilityName" + facilityName +"/QRCode_day" + current_dateTime.get(Calendar.DAY_OF_MONTH) + ".jpg";
             String[] qr = Methods.separateString(readQRCode(filename));
 
             String R_i = qr[0]; // random number
@@ -88,7 +88,8 @@ public class Visitor implements Serializable {
 
             Visit visit = new Visit(R_i, CF, H, currentTime);
             addVisit(visit);
-        System.out.println("Na toevoegen visits: "+visits);
+            System.out.println("Na toevoegen visits: "+visits);
+
             return visit;
     }
     public static String readQRCode(String file) throws IOException, NotFoundException {
