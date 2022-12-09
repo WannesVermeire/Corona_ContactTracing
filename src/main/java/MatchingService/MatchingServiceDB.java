@@ -23,8 +23,7 @@ public class MatchingServiceDB {
 
     public MatchingServiceDB() {}
 
-    // todo pfffffff
-    public void addCapsule(byte[] token, String capsule) {
+    public void addCapsule(byte[] token, Visit capsule) {
         capsuleMap.put(bytesToString(token), capsule);
     }
     public void addCapsule(String token, Visit capsule) {

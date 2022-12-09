@@ -32,12 +32,10 @@ public class VisitorGUI extends JFrame {
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
     private int incubation = 0;
-    private PublicKey publicKeyRegistrar = null;
 
     public VisitorGUI(Visitor visitor) throws RemoteException, NotBoundException {
         this.visitor = visitor;
 
-        String selector = " ___";
         frame = new JFrame("Visitor - " + visitor.getName());
 
         refreshButton = new JButton("REFRESH");
@@ -80,8 +78,6 @@ public class VisitorGUI extends JFrame {
                 visitor.setTokens(impl.getSignedTokens(visitor.getPhoneNr()));
                 System.out.println("Visitor data after receiving tokens: " + visitor);
 
-                // Key needed in 2. Visiting a facility
-                publicKeyRegistrar = impl.getPublicKey();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -101,6 +97,10 @@ public class VisitorGUI extends JFrame {
                     Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
                     // search for MixingProxyService
                     MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
+                    // fire to localhost port 2100
+                    Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
+                    // search for RegistrarService
+                    RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
 
                     // Create a capsule and send it to the MixingProxy to verify
                     // Capsule = timestamp, T_user_x_dayi, hash(Ri,num_CF_dayi) (hash uit de QR-code dus)
@@ -108,7 +108,7 @@ public class VisitorGUI extends JFrame {
                     ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
                     visit.setTokenPair(tokenPair);
 
-                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit, publicKeyRegistrar);
+                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit,  impl.getPublicKey());
                     Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
                 }
 
