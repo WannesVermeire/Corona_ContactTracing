@@ -1,0 +1,18 @@
+
+?
+java:S3010"$Remove this assignment of "keyPair".(¥’èşøÿÿÿÿ
+9
+java:S2119+"Save and re-use this "Random".(“¾üüÿÿÿÿ
+9
+java:S21192"Save and re-use this "Random".(“¾üüÿÿÿÿ
+o
+java:S3012D"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(´€ÓŸ
+o
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ò°µ™
+†
+java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(ìÿ‘´
+w
+java:S1488,"aImmediately return this expression instead of assigning it to the temporary variable "randomKey".(²ÊŠ‹
+w
+java:S14883"aImmediately return this expression instead of assigning it to the temporary variable "randomKey".(²ÊŠ‹
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Í÷¤¡şÿÿÿÿ

@@ -1,0 +1,10 @@
+
+A
+java:S2160"+Override the "equals" method in this class.(×û¯ã
+I
+java:S1948"3Make "matchingServiceDB" transient or serializable.(ËÈÏ
+]	java:S125,"<This block of commented-out lines of code should be removed.(øäÊıÿÿÿÿ8ÊóŒ·Î0
+J
+java:S1128	"-Remove this unused import 'Services.Methods'.(¥ù¡Ï8ş¿Ñ¹Î0
+r	java:S117!"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ô¡ş„úÿÿÿÿ8¶ÕéÍ0
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ø‘¶ãûÿÿÿÿ
