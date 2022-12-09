@@ -50,16 +50,16 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         System.out.println("Capsule is valid!");
 
         // Save capsule
-        String[] capsuleArr = new String[] {bytesToString(token), scanTime, bytesToString(hashValue)};
+        String[] capsuleArr = new String[] {hashToString(token), scanTime, hashToString(hashValue)};
         String capsule = joinStrings(capsuleArr);
         mixingProxyDB.cacheCapsule(token, capsule);
 
         // Create confirmation
 
 
-        updateTimeStamp(bytesToString(token), bytesToString(hashValue), scanTime);
+        updateTimeStamp(hashToString(token), hashToString(hashValue), scanTime);
 
-        return getSignature(token, mixingProxyDB.getSecretKey());
+        return getSignature(hashValue, mixingProxyDB.getSecretKey());
     }
     private boolean verifyTokenDay(String scanTime, byte[] bytes) {
         int currentDay = stringToTimeStamp(scanTime).getDayOfMonth();

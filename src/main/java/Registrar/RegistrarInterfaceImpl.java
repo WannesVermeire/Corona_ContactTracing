@@ -2,7 +2,7 @@ package Registrar;
 
 
 import Facility.Facility;
-import Interfaces.EnrollmentInterface;
+import Interfaces.RegistrarInterface;
 import Visitor.MonthSignedTokenList;
 import Visitor.Visitor;
 
@@ -15,13 +15,13 @@ import java.time.LocalDate;
 import java.util.*;
 
 //Interface which facilities and visitors can use to enroll in the registrar
-public class EnrollmentInterfaceImpl extends UnicastRemoteObject implements EnrollmentInterface {
+public class RegistrarInterfaceImpl extends UnicastRemoteObject implements RegistrarInterface {
     private final int INCUBATION_DAYS = 10;
     private SecretKey s;
     private RegistrarDB registrarDB;
     private RegistrarGUI registrarGUI;
 
-    public EnrollmentInterfaceImpl(SecretKey s, RegistrarDB registrarDB) throws RemoteException {
+    public RegistrarInterfaceImpl(SecretKey s, RegistrarDB registrarDB) throws RemoteException {
         this.s = s;
         this.registrarDB = registrarDB;
         this.registrarGUI = new RegistrarGUI(registrarDB);

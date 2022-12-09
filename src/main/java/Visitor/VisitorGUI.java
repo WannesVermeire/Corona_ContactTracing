@@ -1,6 +1,6 @@
 package Visitor;
 
-import Interfaces.EnrollmentInterface;
+import Interfaces.RegistrarInterface;
 import Interfaces.MixingProxyInterface;
 
 import javax.swing.*;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static Services.Methods.stringToBytes;
 import static Services.Methods.stringToHash;
 
 public class VisitorGUI extends JFrame {
@@ -40,7 +39,7 @@ public class VisitorGUI extends JFrame {
                 // fire to localhost port 2100
                 Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
                 // search for RegistrarService
-                EnrollmentInterface impl = (EnrollmentInterface) myRegistry.lookup("RegistrarService");
+                RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
 
                 incubation = impl.getINCUBATION_DAYS();
 
@@ -79,7 +78,6 @@ public class VisitorGUI extends JFrame {
                 visit.setTokenPair(tokenPair);
 
                 ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visitor, publicKeyRegistrar, visit.getScanTime(), visitor.getAndRemoveToken(today), stringToHash(visit.getH()));
-                System.out.println("SignedConfirmation: "+ Arrays.toString(signedConfirmation.get(0)));
                 Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
 
             } catch (Exception e) { e.printStackTrace(); }

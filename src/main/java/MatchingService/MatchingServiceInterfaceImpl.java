@@ -11,10 +11,10 @@ import java.util.List;
 
 import static Services.Methods.*;
 
-public class MatchingServiceInterfaceImplementation extends UnicastRemoteObject implements MatchingServiceInterface {
+public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements MatchingServiceInterface {
     private MatchingServiceDB matchingServiceDB;
 
-    public MatchingServiceInterfaceImplementation(MatchingServiceDB matchingServiceDB) throws RemoteException {
+    public MatchingServiceInterfaceImpl(MatchingServiceDB matchingServiceDB) throws RemoteException {
         this.matchingServiceDB = matchingServiceDB;
     }
     @Override

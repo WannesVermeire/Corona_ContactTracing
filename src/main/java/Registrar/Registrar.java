@@ -24,7 +24,7 @@ public class Registrar {
             // create on port 2100
             Registry registry = LocateRegistry.createRegistry(2100);
             // create a new service named RegistrarService
-            registry.rebind("RegistrarService", new EnrollmentInterfaceImpl(s, registrarDB));
+            registry.rebind("RegistrarService", new RegistrarInterfaceImpl(s, registrarDB));
 
         }
         catch (Exception e) { e.printStackTrace(); }

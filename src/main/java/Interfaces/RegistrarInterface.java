@@ -9,7 +9,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface EnrollmentInterface extends Remote {
+public interface RegistrarInterface extends Remote {
 
     void registerFacility(String CF, ArrayList<byte[]> signaturePair, PublicKey publicKey) throws RemoteException;
 

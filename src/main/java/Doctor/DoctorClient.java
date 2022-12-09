@@ -1,13 +1,10 @@
 package Doctor;
 
 
-import Interfaces.EnrollmentInterface;
 import Interfaces.MatchingServiceInterface;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.security.PublicKey;
-import java.util.ArrayList;
 
 public class DoctorClient {
     public static void main(String[] args) {

@@ -1,11 +1,9 @@
 package Facility;
 
-import Interfaces.EnrollmentInterface;
+import Interfaces.RegistrarInterface;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
@@ -28,7 +26,7 @@ public class BarOwnerGUI extends JFrame {
                 // fire to localhost port 2100
                 Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
                 // search for RegistrarService
-                EnrollmentInterface impl = (EnrollmentInterface) myRegistry.lookup("RegistrarService");
+                RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
 
                 /************************************* 1.1 FACILITY ENROLLMENT *************************************/
                 String CF = facility.getCF();
