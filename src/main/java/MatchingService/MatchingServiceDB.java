@@ -1,6 +1,8 @@
 package MatchingService;
 
+import MixingProxy.Entry;
 import Visitor.Visit;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.security.PublicKey;
 import java.time.LocalDate;
@@ -10,10 +12,13 @@ import java.util.*;
 import static Services.Methods.*;
 
 public class MatchingServiceDB {
+    // capsuleMap en timeStamps zijn tussenstap voor omzetting naar Entries
     private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
     private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
+
     private List<Visit> userLogs = new ArrayList<>();
     private Map<LocalDate, byte[]> facilityNyms = new HashMap<>();
+    private Map<String, Entry> allEntries = new HashMap<>(); // key = hash in String format
 
 
     public MatchingServiceDB() {}
@@ -29,11 +34,9 @@ public class MatchingServiceDB {
     public boolean hasCapsule(byte [] token) {
         return capsuleMap.containsKey(bytesToString(token));
     }
-
     public Visit getCapsule(String token) {
         return capsuleMap.get(token);
     }
-
     public void flushDB(int today, int INCUBATION_DAYS) {
         ArrayList<String> toRemove = new ArrayList<>();
         for(String date : capsuleMap.keySet()) {
@@ -47,21 +50,16 @@ public class MatchingServiceDB {
 
     }
 
-    public void addTimeStamps(String randomToken, String[] timeStamp) {
-        if(timeStamps.containsKey(randomToken)) {
-            String[] presentStamps = timeStamps.get(randomToken);
-            String[] newStamps = new String[presentStamps.length+ timeStamp.length];
-            for(int i = 0; i < presentStamps.length; i++) {
-                newStamps[i] = presentStamps[i];
-            }
-            for(int i = 0; i < timeStamp.length; i++) {
-                newStamps[presentStamps.length+ i] = timeStamp[i];
-            }
-            timeStamps.remove(randomToken);
-            timeStamps.put(randomToken, newStamps);
+    public void addTimeStamps(String token, String[] timeStampList) {
+        System.out.println("Timestamps goed ontvangen in matching service: "+Arrays.toString(timeStampList));
+        if(timeStamps.containsKey(token)) {
+            String[] oldTimeStamps = timeStamps.get(token);
+            String[] newTimeStamps = ArrayUtils.addAll(oldTimeStamps, timeStampList);
+            timeStamps.remove(token);
+            timeStamps.put(token, newTimeStamps);
         }
         else {
-            timeStamps.put(randomToken, timeStamp);
+            timeStamps.put(token, timeStampList);
         }
     }
 
@@ -126,6 +124,7 @@ public class MatchingServiceDB {
     public void generateEntries() {
         for (var var : capsuleMap.entrySet()) {
             String token = var.getKey();
+            Visit visit = var.getValue();
 
             // Get lower en upperbound for timeInterval
             String[] timeStampStrings = timeStamps.get(token);
@@ -133,13 +132,22 @@ public class MatchingServiceDB {
             for (int i = 0; i < timeStampStrings.length; i++) {
                 timeStampList[i] = stringToTimeStamp(timeStampStrings[i]);
             }
+            LocalDateTime min = LocalDateTime.MAX;
+            LocalDateTime max = LocalDateTime.MIN;
+            for (LocalDateTime time : timeStampList) {
+                if (time.isBefore(min)) min = time;
+                if (time.isAfter(max)) max = time;
+            }
 
-
-
-
-
-
+            // Save Entry
+            byte[] tokenBytes = stringToHash(token);
+            byte[] hash = stringToHash(visit.getH());
+            Entry entry = new Entry(tokenBytes, hash, min, max);
+            allEntries.put(token, entry);
         }
+        System.out.println("Alle entries generated in the Matching Service: "+allEntries);
+        capsuleMap.clear();
+        timeStamps.clear();
     }
 
 

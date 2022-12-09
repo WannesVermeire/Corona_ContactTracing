@@ -11,6 +11,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static Services.Methods.*;
 
@@ -52,7 +53,7 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         mixingProxyDB.addCapsule(hashToString(token), visit);
 
         // Create confirmation
-        updateTimeStamp(hashToString(token), visit.getH(), visit.getScanTime());
+        updateTimeStamp(hashToString(token), visit.getScanTime());
 
         // Save this capsule
         mixingProxyDB.addCapsule(visit);
@@ -74,6 +75,7 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     @Override
     // Stuur alles door naar de MatchingService
     public void flushCache() throws RemoteException {
+        System.out.println("Begin flushen");
         while(!mixingProxyDB.isEmptyCapsules()) {
             String randomToken = mixingProxyDB.getRandomTokenCapsule();
             impl.addCapsule(randomToken, mixingProxyDB.getCapsule(randomToken));
@@ -87,7 +89,7 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     }
 
     @Override
-    public void updateTimeStamp(String token, String hashValue, String timeStamp) throws RemoteException {
-        mixingProxyDB.updateTimeStamp(joinStrings(new String[]{token, hashValue}), timeStamp);
+    public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
+        mixingProxyDB.updateTimeStamp(token, timeStamp);
     }
 }

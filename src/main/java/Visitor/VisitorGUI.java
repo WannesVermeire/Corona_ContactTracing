@@ -26,14 +26,12 @@ public class VisitorGUI extends JFrame {
     private JButton visitButton;
     private JButton writeToFileButton;
     private JButton refreshButton;
+    private JButton flushButton;
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
     private int incubation = 0;
     private PublicKey publicKeyRegistrar = null;
 
-    public static void main(String[] args) throws NotBoundException, RemoteException {
-        VisitorGUI vistor = new VisitorGUI(new Visitor("Wout", "+32 69696696"));
-    }
     public VisitorGUI(Visitor visitor) throws RemoteException, NotBoundException {
         this.visitor = visitor;
 
@@ -43,7 +41,7 @@ public class VisitorGUI extends JFrame {
         refreshButton = new JButton("REFRESH");
         enrollButton = new JButton("Enroll");
         visitButton = new JButton("Visit selected facility");
-        visitButton = new JButton("Visit ");
+        flushButton = new JButton("Flush Mixing cache to matching service (nee die knop moet hier nie staan)");
         writeToFileButton = new JButton("Write logs to file");
 
         refreshButton.addActionListener(a -> {
@@ -121,6 +119,21 @@ public class VisitorGUI extends JFrame {
             /******************************** 3. REGISTERING INFECTED USER **********************************/
         });
 
+        flushButton.addActionListener(a -> {
+            /*********************************** 2. VISITING A FACILITY *************************************/
+            try {
+                // fire to localhost port 2200
+                Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+                // search for MixingProxyService
+                MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
+
+                mpi.flushCache();
+
+
+            } catch (Exception e) { e.printStackTrace(); }
+            /*********************************** 2. VISITING A FACILITY *************************************/
+        });
+
 
         // fire to localhost port 2100
         Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
@@ -135,6 +148,7 @@ public class VisitorGUI extends JFrame {
         frame.add(writeToFileButton);
         frame.add(visitButton);
         frame.add(selectFacility);
+        frame.add(flushButton);
         frame.setSize(250, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

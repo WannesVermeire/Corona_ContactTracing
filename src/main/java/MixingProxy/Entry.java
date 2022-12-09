@@ -16,6 +16,13 @@ public class Entry {
         this.hash = hash;
     }
 
+    public Entry(byte[] token, byte[] hash, LocalDateTime beginTimeWindow, LocalDateTime endTimeWindow) {
+        this.token = token;
+        this.hash = hash;
+        this.beginTimeWindow = beginTimeWindow;
+        this.endTimeWindow = endTimeWindow;
+    }
+
     public void setCritical(boolean critical) {
         this.critical = critical;
     }

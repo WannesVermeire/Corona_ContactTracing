@@ -37,6 +37,7 @@ public class MatchingService {
             // Download all nyms from the registrar matching the given CF's
             matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
             matchingServiceDB.verifyLogs();
+            matchingServiceDB.generateEntries();
 
         } catch (Exception e) { e.printStackTrace(); }
         /******************************** 3. REGISTERING INFECTED USER **********************************/

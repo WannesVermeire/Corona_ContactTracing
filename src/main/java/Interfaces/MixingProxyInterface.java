@@ -12,5 +12,5 @@ public interface MixingProxyInterface extends Remote {
     ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception;
     PublicKey getPublicKey() throws RemoteException;
     void flushCache() throws RemoteException;
-    void updateTimeStamp(String token, String hashValue, String timeStamp) throws RemoteException;
+    void updateTimeStamp(String token, String timeStamp) throws RemoteException;
 }

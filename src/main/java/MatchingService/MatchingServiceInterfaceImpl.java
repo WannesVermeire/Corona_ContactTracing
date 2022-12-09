@@ -51,8 +51,8 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
     }
 
     @Override
-    public void addTimeStamps(String randomToken, String[] timeStamp) {
-        matchingServiceDB.addTimeStamps(randomToken, timeStamp);
+    public void addTimeStamps(String token, String[] timeStamp) {
+        matchingServiceDB.addTimeStamps(token, timeStamp);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
     public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException {

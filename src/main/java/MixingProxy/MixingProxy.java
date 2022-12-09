@@ -15,6 +15,7 @@ public class MixingProxy {
             Registry mixingRegistry = LocateRegistry.createRegistry(2200);
             // create a new service named MixingProxyService
             mixingRegistry.rebind("MixingProxyService", new MixingProxyInterfaceImpl());
+
         }
         catch (Exception e) { e.printStackTrace(); }
         System.out.println("Mixing Proxy is ready");
