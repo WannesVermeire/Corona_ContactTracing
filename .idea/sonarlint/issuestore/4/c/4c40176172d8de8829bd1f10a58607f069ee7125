@@ -1,5 +1,0 @@
-
-k
-java:S1450"PRemove the "s" field and declare it as a local variable in the relevant methods.(Ê–…¬ÿÿÿÿÿ
-S	java:S106 "9Replace this use of System.out or System.err by a logger.(ŠÙÊõúÿÿÿÿ
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ä½ù
