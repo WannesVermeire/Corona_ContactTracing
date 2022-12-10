@@ -37,6 +37,7 @@ public class MixingProxyGUI extends JFrame{
     private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
 
     public MixingProxyGUI() throws NotBoundException, RemoteException {
+
         this.mixingProxyDB = new MixingProxyDB();
         this.impl = connectToMatchingService();
         this.capsuleMap = new HashMap<>();
