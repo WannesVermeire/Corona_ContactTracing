@@ -13,9 +13,10 @@ public class MixingProxy {
         try {
             //Launch mixing proxy on port 2200
             Registry mixingRegistry = LocateRegistry.createRegistry(2200);
+
             // create a new service named MixingProxyService
             mixingRegistry.rebind("MixingProxyService", new MixingProxyInterfaceImpl());
-
+            new MixingProxyDB();
         }
         catch (Exception e) { e.printStackTrace(); }
         System.out.println("Mixing Proxy is ready");

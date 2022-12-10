@@ -1,6 +1,7 @@
 package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
+import Interfaces.MixingProxyInterface;
 import Services.MultiLineCellRenderer;
 import Visitor.Visit;
 import org.springframework.cglib.proxy.Mixin;
@@ -30,18 +31,20 @@ public class MixingProxyGUI extends JFrame{
     JFrame frame;
     JButton flushButton; //flushes the queue
     JPanel queue;
-
-    MixingProxyDB mixingProxyDB;
+    private MixingProxyInterface mix;
+    private MixingProxyDB mixingProxyDB;
     private MatchingServiceInterface impl;
     private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
     private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
 
-    public MixingProxyGUI() throws NotBoundException, RemoteException {
+    public MixingProxyGUI() throws Exception {
 
-        this.mixingProxyDB = new MixingProxyDB();
+        this.mix = connectToMixingProxy();
         this.impl = connectToMatchingService();
         this.capsuleMap = new HashMap<>();
         this.timeStamps = new HashMap<>();
+        this.mixingProxyDB = mix.getMixingProxyDB();
+
 
         frame = new JFrame("Mixing Proxy");
         flushButton = new JButton("Flush");

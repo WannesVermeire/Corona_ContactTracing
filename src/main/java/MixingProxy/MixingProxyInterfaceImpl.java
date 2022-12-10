@@ -20,11 +20,16 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     private MatchingServiceInterface impl;
     private MixingProxyDB mixingProxyDB;
 
+
     public MixingProxyInterfaceImpl() throws RemoteException, NotBoundException {
         this.mixingProxyDB = new MixingProxyDB();
         impl = connectToMatchingService();
+
     }
 
+    public MixingProxyDB getMixingProxyDB() {
+        return mixingProxyDB;
+    }
 
     @Override
     // If all checks on the capsule data are correct we return a confirmation: sign(token)
