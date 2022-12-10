@@ -100,6 +100,8 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
             }
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }

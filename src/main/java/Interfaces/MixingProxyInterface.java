@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface MixingProxyInterface extends Remote {
 
-    ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception;
+    ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception, RemoteException;
     PublicKey getPublicKey() throws RemoteException;
     void flushCache() throws RemoteException;
     void updateTimeStamp(String token, String timeStamp) throws RemoteException;

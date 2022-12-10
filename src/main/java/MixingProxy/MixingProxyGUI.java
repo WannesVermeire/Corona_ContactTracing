@@ -2,6 +2,7 @@ package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
+import Interfaces.RegistrarInterface;
 import Services.MultiLineCellRenderer;
 import Visitor.Visit;
 import org.springframework.cglib.proxy.Mixin;
@@ -19,6 +20,7 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static Services.Methods.*;
@@ -105,7 +107,7 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
 
     // If all checks on the capsule data are correct we return a confirmation: sign(token)
     @Override
-    public ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception {
+    public ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception, RemoteException {
         // 3 checks: signature, day, not yet used
         byte[] token = visit.getTokenPair().get(0);
 
@@ -168,5 +170,21 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
     public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
         mixingProxyDB.updateTimeStamp(token, timeStamp);
         updateFrame();
+    }
+
+    @Override
+    public void notifyNonInformed(List<Entry> nonInformed) throws RemoteException {
+        try {
+            System.out.println("These people were not yet informed");
+            RegistrarInterface registrar = connectToRegistrar();
+            for(Entry entry : nonInformed) {
+                System.out.println("TelNr: " + registrar.getTelNrUser(entry.getToken()));
+            }
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
