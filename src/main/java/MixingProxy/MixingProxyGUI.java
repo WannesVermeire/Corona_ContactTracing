@@ -119,6 +119,8 @@ public class MixingProxyGUI extends JFrame {
         // Save this capsule
         mixingProxyDB.addCapsule(visit);
 
+        updateFrame();
+
         return getSignature(stringToHash(visit.getH()), mixingProxyDB.getSecretKey());
     }
 
@@ -152,5 +154,6 @@ public class MixingProxyGUI extends JFrame {
 
     public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
         mixingProxyDB.updateTimeStamp(token, timeStamp);
+        updateFrame();
     }
 }
