@@ -176,7 +176,8 @@ public class Visitor implements Serializable {
                     // Same hash => both visited the same facility
                     // Check if the timestamps overlap
                     LocalDateTime startTime = stringToTimeStamp(visit.getScanTime());
-                    if (startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow()) || false || false) {
+                    LocalDateTime endTime = stringToTimeStamp(visit.getExitTime());
+                    if ((startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow())) || (endTime.isAfter(entry.getBeginTimeWindow()) && endTime.isBefore(entry.getEndTimeWindow())) || (startTime.isBefore(entry.getBeginTimeWindow()) && endTime.isAfter(entry.getEndTimeWindow()))) {
                         //Todo zou cool zijn als we dit in de GUI krijgen
                         System.out.println("!!! Risico op besmetting !!!");
                         notifyReceived();
@@ -218,6 +219,19 @@ public class Visitor implements Serializable {
         try {
             MixingProxyInterface mpi = connectToMixingProxy();
             mpi.updateTimeStamp(token, timestamp);
+
+            Visit currentVisit = null;
+            for(Visit visit : visits.values()) {
+                System.out.println(token);
+                System.out.println(bytesToString(visit.getTokenPair().get(0)));
+                if(token.equals(bytesToString(visit.getTokenPair().get(0)))) {
+                    currentVisit = visit;
+                    break;
+                }
+            }
+            assert currentVisit != null: "Did not find visit for token";
+
+            currentVisit.updateTimeStamp(token, timestamp);
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
         } catch (RemoteException e) {

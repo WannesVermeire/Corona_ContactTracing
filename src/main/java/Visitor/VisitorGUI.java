@@ -136,27 +136,13 @@ public class VisitorGUI extends JFrame {
         flushButton.addActionListener(a -> {
             /******************************** 3. REGISTERING INFECTED USER **********************************/
             try {
-                // fire to localhost port 2200
-                Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
-                // search for MixingProxyService
-                MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
-
+                MixingProxyInterface mpi = connectToMixingProxy();
                 mpi.flushCache();
-
-
             } catch (Exception e) { e.printStackTrace(); }
             /******************************** 3. REGISTERING INFECTED USER **********************************/
         });
 
-
-
-
-
-        // fire to localhost port 2100
-        Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
-        // search for RegistrarService
-        RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
-
+        RegistrarInterface impl = connectToRegistrar();
         selectFacility = new JComboBox(impl.getAllFacilityNames());
 
         frame.setLayout(new FlowLayout());
