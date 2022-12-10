@@ -141,6 +141,29 @@ public class Visitor implements Serializable {
             visits.remove(date);
         }
     }
+
+
+    public void updateTimeStamp(String token, String timestamp) {
+        try {
+            MixingProxyInterface mpi = connectToMixingProxy();
+            mpi.updateTimeStamp(token, timestamp);
+
+            Visit currentVisit = null;
+            for(Visit visit : visits.values()) {
+                if(token.equals(bytesToString(visit.getTokenPair().get(0)))) {
+                    currentVisit = visit;
+                    break;
+                }
+            }
+            assert currentVisit != null: "Did not find visit for token";
+
+            currentVisit.updateTimeStamp(token, timestamp);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /*********************************** 2. VISITING A FACILITY *************************************/
 
 
@@ -215,27 +238,4 @@ public class Visitor implements Serializable {
                 '}';
     }
 
-    public void updateTimeStamp(String token, String timestamp) {
-        try {
-            MixingProxyInterface mpi = connectToMixingProxy();
-            mpi.updateTimeStamp(token, timestamp);
-
-            Visit currentVisit = null;
-            for(Visit visit : visits.values()) {
-                System.out.println(token);
-                System.out.println(bytesToString(visit.getTokenPair().get(0)));
-                if(token.equals(bytesToString(visit.getTokenPair().get(0)))) {
-                    currentVisit = visit;
-                    break;
-                }
-            }
-            assert currentVisit != null: "Did not find visit for token";
-
-            currentVisit.updateTimeStamp(token, timestamp);
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
