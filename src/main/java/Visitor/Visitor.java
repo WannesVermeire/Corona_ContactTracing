@@ -123,6 +123,9 @@ public class Visitor implements Serializable {
     public ArrayList<byte[]>[] getUsedTokens(){
         return usedTokens;
     }
+    public ArrayList<byte[]> getLastUsedToken() {
+        return usedTokens[usedTokens.length-1];
+    }
     public void removeExpiredVisits(int INCUBATION_DAYS) {
         int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         ArrayList<String> toRemove = new ArrayList<>();
@@ -208,4 +211,5 @@ public class Visitor implements Serializable {
                 ", keyPair=" + keyPair +
                 '}';
     }
+
 }

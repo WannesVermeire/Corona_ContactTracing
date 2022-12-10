@@ -12,13 +12,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import static Services.Methods.stringToHash;
+import static Services.Methods.*;
 
 public class VisitorGUI extends JFrame {
     private JFrame frame;
@@ -28,6 +29,7 @@ public class VisitorGUI extends JFrame {
     private JButton writeToFileButton;
     private JButton refreshButton;
     private JButton checkInfectedButton;
+    private JButton updateTimeStamp;
     private JButton flushButton;
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
@@ -44,6 +46,7 @@ public class VisitorGUI extends JFrame {
         checkInfectedButton = new JButton("Check if infected");
         flushButton = new JButton("Flush Mixing cache to matching service (nee die knop moet hier nie staan)");
         writeToFileButton = new JButton("Write logs to file");
+        updateTimeStamp = new JButton("Update TimeStamp");
 
         refreshButton.addActionListener(a -> {
             if (a.getSource() == refreshButton) {
@@ -56,6 +59,26 @@ public class VisitorGUI extends JFrame {
                 } catch (NotBoundException e) {
                     throw new RuntimeException(e);
                 }
+            }
+        });
+
+        updateTimeStamp.addActionListener(a -> {
+            // fire to localhost port 2100
+            Registry myRegistry = null;
+            try {
+                // fire to localhost port 2200
+                Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+                // search for MixingProxyService
+                MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
+
+                ArrayList<byte[]> tokens  = visitor.getLastUsedToken();
+                String timestamp = timeStampToString(LocalDateTime.now());
+                mpi.updateTimeStamp(bytesToString(tokens.get(0)), timestamp);
+                System.out.println("update timestamp: " + timestamp);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            } catch (NotBoundException e) {
+                throw new RuntimeException(e);
             }
         });
 
@@ -173,6 +196,7 @@ public class VisitorGUI extends JFrame {
         frame.add(visitButton);
         frame.add(selectFacility);
         frame.add(writeToFileButton);
+        frame.add(updateTimeStamp);
         frame.add(checkInfectedButton);
         frame.add(flushButton);
         frame.setSize(250, 200);
