@@ -3,7 +3,6 @@ import Doctor.DoctorGUI;
 import Facility.BarOwnerGUI;
 import Facility.Facility;
 import MatchingService.MatchingService;
-import MixingProxy.MixingProxy;
 import MixingProxy.MixingProxyGUI;
 import Registrar.Registrar;
 import Visitor.Visitor;
