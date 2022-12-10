@@ -18,7 +18,6 @@ import static Services.Methods.*;
 
 public class VisitorGUI extends JFrame {
     private JFrame frame;
-    private JButton enrollButton;
     private JComboBox selectFacility;
     private JButton visitButton;
     private JButton writeToFileButton;
@@ -36,7 +35,6 @@ public class VisitorGUI extends JFrame {
         frame = new JFrame("Visitor - " + visitor.getName());
 
         refreshButton = new JButton("REFRESH");
-        enrollButton = new JButton("Enroll");
         visitButton = new JButton("Visit selected facility");
         checkInfectedButton = new JButton("Check if infected");
         flushButton = new JButton("Flush Mixing cache to matching service (nee die knop moet hier nie staan)");
@@ -64,27 +62,27 @@ public class VisitorGUI extends JFrame {
             System.out.println("update timestamp: " + timestamp);
         });
 
-        enrollButton.addActionListener(a -> {
-            /************************************** 1.2 USER ENROLLMENT *************************************/
-            try {
-                RegistrarInterface registrar = connectToRegistrar();
+        /************************************** 1.2 USER ENROLLMENT *************************************/
+        try {
+            RegistrarInterface registrar = connectToRegistrar();
 
-                incubation = registrar.getINCUBATION_DAYS();
+            incubation = registrar.getINCUBATION_DAYS();
 
-                // Register visitor to the registrar
-                boolean registrationSuccessful = registrar.registerVisitor(visitor.getName(), visitor.getPhoneNr());
-                if (registrationSuccessful) System.out.println("Visitor data after enrollment: " + visitor);
-                else System.out.println("Something went wrong during enrollment of: " + visitor);
+            // Register visitor to the registrar
+            boolean registrationSuccessful = registrar.registerVisitor(visitor.getName(), visitor.getPhoneNr());
+            if (registrationSuccessful) System.out.println("Visitor data after enrollment: " + visitor);
+            else System.out.println("Something went wrong during enrollment of: " + visitor);
 
-                // Get a set of signed tokens
-                visitor.setTokens(registrar.getSignedTokens(visitor.getPhoneNr()));
-                System.out.println("Visitor data after receiving tokens: " + visitor);
+            // Get a set of signed tokens
+            visitor.setTokens(registrar.getSignedTokens(visitor.getPhoneNr()));
+            System.out.println("Visitor data after receiving tokens: " + visitor);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            /************************************* 1.2 USER ENROLLMENT **************************************/
-        });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /************************************* 1.2 USER ENROLLMENT **************************************/
+
 
         visitButton.addActionListener(a -> {
             /*********************************** 2. VISITING A FACILITY *************************************/
@@ -147,7 +145,6 @@ public class VisitorGUI extends JFrame {
 
         frame.setLayout(new FlowLayout());
         frame.add(refreshButton);
-        frame.add(enrollButton);
         frame.add(visitButton);
         frame.add(selectFacility);
         frame.add(writeToFileButton);

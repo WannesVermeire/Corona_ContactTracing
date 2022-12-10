@@ -1,6 +1,7 @@
 package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
+import Services.MultiLineCellRenderer;
 import Visitor.Visit;
 import org.springframework.cglib.proxy.Mixin;
 
@@ -11,9 +12,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +24,7 @@ import static Services.Methods.*;
 import static Services.Methods.stringToDate;
 
 
-public class MixingProxyGUI extends JFrame {
+public class MixingProxyGUI extends JFrame{
 
     //Interface shows queue at each time
     JFrame frame;
@@ -34,6 +37,7 @@ public class MixingProxyGUI extends JFrame {
     private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
 
     public MixingProxyGUI() throws NotBoundException, RemoteException {
+
         this.mixingProxyDB = new MixingProxyDB();
         this.impl = connectToMatchingService();
         this.capsuleMap = new HashMap<>();
@@ -63,7 +67,7 @@ public class MixingProxyGUI extends JFrame {
                 return String.class;
             }
         };
-        String queueColumns[] = {
+        String[] queueColumns = {
                 "Position",
                 "Key",
                 "Capsule"
@@ -74,12 +78,19 @@ public class MixingProxyGUI extends JFrame {
             queueData[i][0] = String.valueOf(i);
             queueData[i][1] = entry.getKey();
             String[] timeStampsValue = timeStamps.get(entry.getKey());
-            queueData[i][2] = entry.getValue().toGUIString() + timeStampsValue;
+            queueData[i][2] = entry.getValue().toGUIString() + Arrays.toString(timeStampsValue);
+            i++;
         }
+        dmQueue.setDataVector(queueData, queueColumns);
+        JTable queueTable = new JTable(dmQueue);
+        queueTable.setDefaultRenderer(String.class, new MultiLineCellRenderer());
+        JScrollPane queueScroll = new JScrollPane(queueTable);
+        queue.add(queueScroll);
 
-        frame.setLayout(new BorderLayout());
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(),BoxLayout.PAGE_AXIS));
         frame.add(queue);
         frame.add(flushButton);
+        flushButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         frame.setSize(1900,800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true); //Makes frame visible
@@ -109,6 +120,8 @@ public class MixingProxyGUI extends JFrame {
 
         // Save this capsule
         mixingProxyDB.addCapsule(visit);
+
+        updateFrame();
 
         return getSignature(stringToHash(visit.getH()), mixingProxyDB.getSecretKey());
     }
@@ -143,5 +156,6 @@ public class MixingProxyGUI extends JFrame {
 
     public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
         mixingProxyDB.updateTimeStamp(token, timeStamp);
+        updateFrame();
     }
 }
