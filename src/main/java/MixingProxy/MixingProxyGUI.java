@@ -25,13 +25,12 @@ import static Services.Methods.*;
 import static Services.Methods.stringToDate;
 
 
-public class MixingProxyGUI extends JFrame{
+public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyInterface{
 
     //Interface shows queue at each time
     JFrame frame;
     JButton flushButton; //flushes the queue
     JPanel queue;
-    private MixingProxyInterface mix;
     private MixingProxyDB mixingProxyDB;
     private MatchingServiceInterface impl;
     private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
@@ -39,18 +38,22 @@ public class MixingProxyGUI extends JFrame{
 
     public MixingProxyGUI() throws Exception {
 
-        this.mix = connectToMixingProxy();
         this.impl = connectToMatchingService();
         this.capsuleMap = new HashMap<>();
         this.timeStamps = new HashMap<>();
-        this.mixingProxyDB = mix.getMixingProxyDB();
+        this.mixingProxyDB = new MixingProxyDB();
 
 
         frame = new JFrame("Mixing Proxy");
         flushButton = new JButton("Flush");
         queue = new JPanel();
         flushButton.addActionListener(a -> {
-            //Flush the queue
+            try {
+                flushCache();//Flush the queue
+                updateFrame();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         });
         updateFrame();
     }
@@ -86,6 +89,7 @@ public class MixingProxyGUI extends JFrame{
         }
         dmQueue.setDataVector(queueData, queueColumns);
         JTable queueTable = new JTable(dmQueue);
+        queueTable.setRowHeight(150);
         queueTable.setDefaultRenderer(String.class, new MultiLineCellRenderer());
         JScrollPane queueScroll = new JScrollPane(queueTable);
         queue.add(queueScroll);
@@ -100,6 +104,7 @@ public class MixingProxyGUI extends JFrame{
     }
 
     // If all checks on the capsule data are correct we return a confirmation: sign(token)
+    @Override
     public ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception {
         // 3 checks: signature, day, not yet used
         byte[] token = visit.getTokenPair().get(0);
@@ -136,12 +141,14 @@ public class MixingProxyGUI extends JFrame{
         return currentDay == tokenDay;
     }
 
+    @Override
     public PublicKey getPublicKey() {
         return mixingProxyDB.getPublicKey();
     }
 
 
     // Stuur alles door naar de MatchingService
+    @Override
     public void flushCache() throws RemoteException {
         System.out.println("Begin flushen");
         while(!mixingProxyDB.isEmptyCapsules()) {
@@ -157,6 +164,7 @@ public class MixingProxyGUI extends JFrame{
     }
 
 
+    @Override
     public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
         mixingProxyDB.updateTimeStamp(token, timeStamp);
         updateFrame();

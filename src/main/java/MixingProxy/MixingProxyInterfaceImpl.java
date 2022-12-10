@@ -27,10 +27,6 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
 
     }
 
-    public MixingProxyDB getMixingProxyDB() {
-        return mixingProxyDB;
-    }
-
     @Override
     // If all checks on the capsule data are correct we return a confirmation: sign(token)
     public ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception {
