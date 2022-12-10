@@ -58,17 +58,10 @@ public class VisitorGUI extends JFrame {
         });
 
         updateTimeStamp.addActionListener(a -> {
-            try {;
-                MixingProxyInterface mpi = connectToMixingProxy();
-                ArrayList<byte[]> tokens  = visitor.getLastUsedToken();
-                String timestamp = timeStampToString(LocalDateTime.now());
-                mpi.updateTimeStamp(bytesToString(tokens.get(0)), timestamp);
-                System.out.println("update timestamp: " + timestamp);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            } catch (NotBoundException e) {
-                throw new RuntimeException(e);
-            }
+            ArrayList<byte[]> tokens  = visitor.getLastUsedToken();
+            String timestamp = timeStampToString(LocalDateTime.now());
+            visitor.updateTimeStamp(bytesToString(tokens.get(0)), timestamp);
+            System.out.println("update timestamp: " + timestamp);
         });
 
         enrollButton.addActionListener(a -> {

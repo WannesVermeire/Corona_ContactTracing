@@ -11,13 +11,13 @@ public class Visit implements Serializable {
     private String CF;
     private ArrayList<byte[]> tokenPair;
     private String H;
-    private String timeOfScan;
+    private String[] timelogs;
 
     public Visit(String R_i, String CF, String H, String timeOfScan) {
         this.R_i = R_i;
         this.CF = CF;
         this.H = H;
-        this.timeOfScan = timeOfScan;
+        this.timelogs = new String[]{timeOfScan};
     }
 
     public String getR_i() {
@@ -30,7 +30,10 @@ public class Visit implements Serializable {
         return H;
     }
     public String getScanTime() {
-        return timeOfScan;
+        return timelogs[0];
+    }
+    public String getExitTime() {
+        return timelogs[timelogs.length-1];
     }
     public ArrayList<byte[]> getTokenPair() {
         return tokenPair;
@@ -55,14 +58,18 @@ public class Visit implements Serializable {
         tokenPair.add(tokenSignature);
         String nothing = data[7]; // for dubble comma
         H = data[8];
-        timeOfScan = data[9];
+        timelogs = new String[data.length-8];
+        for(int i =9; i< data.length; i++) {
+            timelogs[i-9] = data[i];
+        }
 
 
     }
     public String getLogString() {
         String tokenData = hashToString(tokenPair.get(0));
         String tokenSignature = hashToString(tokenPair.get(1));
-        String[] data = new String[]{R_i, CF, tokenData, tokenSignature, H, timeOfScan};
+        String[] data = new String[]{R_i, CF, tokenData, tokenSignature, H, String.valueOf(timelogs)};
+        System.out.println("Gejoinde string: " + joinStrings(data));
         return joinStrings(data);
     }
 
@@ -73,7 +80,7 @@ public class Visit implements Serializable {
                 ", CF='" + CF + '\'' +
                 ", tokenPair=" + tokenPair +
                 ", H='" + H + '\'' +
-                ", timeOfScan='" + timeOfScan + '\'' +
+                ", timeOfScan='" + timelogs + '\'' +
                 '}';
     }
     

@@ -1,5 +1,6 @@
 package Visitor;
 
+import Interfaces.MixingProxyInterface;
 import MixingProxy.Entry;
 import Services.Methods;
 import com.google.zxing.BinaryBitmap;
@@ -13,6 +14,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.security.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -211,4 +214,14 @@ public class Visitor implements Serializable {
                 '}';
     }
 
+    public void updateTimeStamp(String token, String timestamp) {
+        try {
+            MixingProxyInterface mpi = connectToMixingProxy();
+            mpi.updateTimeStamp(token, timestamp);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
