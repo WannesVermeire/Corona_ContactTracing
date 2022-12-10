@@ -103,7 +103,7 @@ public class VisitorGUI extends JFrame {
                     visit.setTokenPair(tokenPair);
 
                     ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit,  registrar.getPublicKey());
-                    Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
+                    new Visualiser(signedConfirmation.get(0),visitor.getName());
                 }
 
             } catch (Exception e) { e.printStackTrace(); }

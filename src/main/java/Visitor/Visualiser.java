@@ -6,21 +6,24 @@ import java.time.LocalDateTime;
 
 import static Services.Methods.timeStampToString;
 
-public class Visualiser extends JPanel {
+public class Visualiser extends JFrame {
 
     static int [] getallen;
 
-    public Visualiser(byte[] data) {
+    public Visualiser(byte[] data, String name) {
         // Convert to all positive numbers
         getallen = new int[data.length];
         for (int i = 0; i < data.length; i++) {
             getallen[i]=data[i]+128;
         }
+        LocalDateTime now = LocalDateTime.now();
+        setTitle(name + " | Datum: "+timeStampToString(now));
+        setSize(400,400);
+        setVisible(true);
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+
+    public void paint(Graphics g) {
         g.setColor(new Color(getallen[0],getallen[1],getallen[2]));
         g.fillRect(50,50, 100, 100);
         g.setColor(new Color(getallen[3],getallen[4],getallen[5]));
