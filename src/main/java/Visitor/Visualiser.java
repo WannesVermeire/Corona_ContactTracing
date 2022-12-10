@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import static Services.Methods.timeStampToString;
 
-public class Visualiser extends JFrame {
+public class Visualiser extends JPanel {
 
     static int [] getallen;
 
@@ -16,14 +16,11 @@ public class Visualiser extends JFrame {
         for (int i = 0; i < data.length; i++) {
             getallen[i]=data[i]+128;
         }
-
-        LocalDateTime now = LocalDateTime.now();
-        setTitle("Datum: "+timeStampToString(now));
-        setSize(400,400);
-        setVisible(true);
     }
 
-    public void paint(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g.setColor(new Color(getallen[0],getallen[1],getallen[2]));
         g.fillRect(50,50, 100, 100);
         g.setColor(new Color(getallen[3],getallen[4],getallen[5]));

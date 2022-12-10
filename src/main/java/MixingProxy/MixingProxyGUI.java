@@ -5,6 +5,8 @@ import Visitor.Visit;
 import org.springframework.cglib.proxy.Mixin;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.rmi.NotBoundException;
@@ -12,6 +14,8 @@ import java.rmi.RemoteException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static Services.Methods.*;
 import static Services.Methods.stringToDate;
@@ -26,10 +30,15 @@ public class MixingProxyGUI extends JFrame {
 
     MixingProxyDB mixingProxyDB;
     private MatchingServiceInterface impl;
+    private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
+    private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
 
     public MixingProxyGUI() throws NotBoundException, RemoteException {
         this.mixingProxyDB = new MixingProxyDB();
         this.impl = connectToMatchingService();
+        this.capsuleMap = new HashMap<>();
+        this.timeStamps = new HashMap<>();
+
         frame = new JFrame("Mixing Proxy");
         flushButton = new JButton("Flush");
         queue = new JPanel();
@@ -40,7 +49,33 @@ public class MixingProxyGUI extends JFrame {
     }
 
     public void updateFrame(){
+        this.capsuleMap = mixingProxyDB.getCapsuleMap();
+        this.timeStamps = mixingProxyDB.getTimeStamps();
+
         frame.remove(queue);
+        queue = new JPanel();
+        queue.setLayout(new BorderLayout());
+        queue.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Queue", TitledBorder.LEFT,
+                TitledBorder.TOP));
+        DefaultTableModel dmQueue = new DefaultTableModel() {
+            public Class getColumnClass(int columnIndex) {
+                return String.class;
+            }
+        };
+        String queueColumns[] = {
+                "Position",
+                "Key",
+                "Capsule"
+        };
+        String[][] queueData = new String[capsuleMap.size()][3];
+        int i = 0;
+        for(var entry : capsuleMap.entrySet()){
+            queueData[i][0] = String.valueOf(i);
+            queueData[i][1] = entry.getKey();
+            String[] timeStampsValue = timeStamps.get(entry.getKey());
+            queueData[i][2] = entry.getValue().toGUIString() + timeStampsValue;
+        }
 
         frame.setLayout(new BorderLayout());
         frame.add(queue);

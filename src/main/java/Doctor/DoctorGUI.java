@@ -17,7 +17,7 @@ public class DoctorGUI {
     public DoctorGUI(Doctor doctor) {
         this.doctor = doctor;
 
-        frame = new JFrame("Doctor");
+        frame = new JFrame("Doctor " + doctor.getName());
         readLogsButton = new JButton("Read logs from file");
         sendLogsButton = new JButton("Send signed logs to the server");
 

@@ -15,7 +15,7 @@ import java.util.Map;
 public class RegistrarGUI extends JFrame{
     //Interface shows current content of the database (visitors + facilities) at each time
     JFrame frame;
-    JPanel gridPanel = new JPanel();
+    JPanel gridPanel;
     JPanel visitorsPanel;
     JPanel facilitiesPanel;
     RegistrarDB database;
@@ -28,6 +28,7 @@ public class RegistrarGUI extends JFrame{
         this.visitors = new HashMap<>();
 
         frame = new JFrame("Registrar"); //Creates frame
+        gridPanel = new JPanel();
 
         updateFrame();
     }

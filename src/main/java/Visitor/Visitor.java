@@ -172,8 +172,8 @@ public class Visitor implements Serializable {
                 if (visit.getH().equals(hash)) {
                     // Same hash => both visited the same facility
                     // Check if the timestamps overlap
-                    LocalDateTime time = stringToTimeStamp(visit.getScanTime());
-                    if (time.isAfter(entry.getBeginTimeWindow()) && time.isBefore(entry.getEndTimeWindow()) || false) {
+                    LocalDateTime startTime = stringToTimeStamp(visit.getScanTime());
+                    if (startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow()) || false || false) {
                         //Todo zou cool zijn als we dit in de GUI krijgen
                         System.out.println("!!! Risico op besmetting !!!");
                         notifyReceived();

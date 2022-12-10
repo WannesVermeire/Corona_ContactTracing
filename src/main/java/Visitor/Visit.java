@@ -76,4 +76,14 @@ public class Visit implements Serializable {
                 ", timeOfScan='" + timeOfScan + '\'' +
                 '}';
     }
+    
+    public String toGUIString(){
+        return "Visit{" + "\n" +
+                "R_i='" + R_i + '\'' + "\n" +
+                ", CF='" + CF + '\'' + "\n" +
+                ", tokenPair=" + tokenPair + "\n" +
+                ", H='" + H + '\'' + "\n" +
+                ", timeOfScan='" + timelogs + '\'' +
+                '}';
+    }
 }

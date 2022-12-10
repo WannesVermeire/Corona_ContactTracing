@@ -24,6 +24,10 @@ public class Doctor {
         visits = new ArrayList<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public PublicKey getPublicKey(){
         return keyPair.getPublic();
     }

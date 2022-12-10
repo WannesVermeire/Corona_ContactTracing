@@ -24,7 +24,13 @@ public class MixingProxyDB {
         return keyPair.getPrivate();
     }
 
+    public Map<String, Visit> getCapsuleMap() {
+        return capsuleMap;
+    }
 
+    public Map<String, String[]> getTimeStamps() {
+        return timeStamps;
+    }
 
     public ArrayList<byte[]> signCapsule(String capsule) {
         return getSignature(stringToBytes(capsule), keyPair.getPrivate());
