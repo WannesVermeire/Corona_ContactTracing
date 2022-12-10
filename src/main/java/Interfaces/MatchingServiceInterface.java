@@ -30,5 +30,5 @@ public interface MatchingServiceInterface extends Remote {
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
-//    void transferNonInformed() throws RemoteException;
+    void transferNonInformed() throws RemoteException, NotBoundException;
 }

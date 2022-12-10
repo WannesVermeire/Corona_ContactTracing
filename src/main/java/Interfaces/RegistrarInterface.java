@@ -34,4 +34,6 @@ public interface RegistrarInterface extends Remote {
 
 
     String[] getAllFacilityNames() throws RemoteException;
+
+    String getTelNrUser(byte[] token) throws Exception;
 }

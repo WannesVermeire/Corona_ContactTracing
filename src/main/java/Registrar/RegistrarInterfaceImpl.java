@@ -176,4 +176,8 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
         return registrarDB.getAllNym(CFList);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
+    @Override
+    public String getTelNrUser(byte[] token) throws Exception {
+        return registrarDB.getTelNrUser(token);
+    }
 }

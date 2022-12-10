@@ -239,4 +239,12 @@ public class Visitor implements Serializable {
                 '}';
     }
 
+    public boolean containsToken(byte [] token) {
+        for(ArrayList<byte[]> tokenPair :  usedTokens) {
+            if(Arrays.equals(token, tokenPair.get(0))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
