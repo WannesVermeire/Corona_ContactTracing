@@ -70,7 +70,7 @@ public class RegistrarGUI extends JFrame{
                 return String.class;
             }
         };
-        String visitorsColumns[] = {
+        String[] visitorsColumns = {
              "Key",
              "Value"
         };
@@ -88,7 +88,7 @@ public class RegistrarGUI extends JFrame{
         JScrollPane visitorScroll = new JScrollPane(visitorTable);
         visitorsPanel.add(visitorScroll);
 
-        String facilityColumns[] = {
+        String[] facilityColumns = {
                 "key",
                 "value"
         };
