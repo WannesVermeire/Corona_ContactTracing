@@ -65,5 +65,23 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         return matchingServiceDB.getInfectedEntries();
     }
 
+    @Override
+    public void notifyReceived(String hash) throws RemoteException {
+        matchingServiceDB.notifyReceived(hash);
+    }
+
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+
+    @Override
+    public void transferNonInformed() throws RemoteException, NotBoundException {
+        List<Entry> nonInformed = matchingServiceDB.getNonInformedEntries();
+        if(nonInformed.isEmpty()) {
+            System.out.println("Everyone was informed");
+        }
+        else {
+            connectToMixingProxy().notifyNonInformed(nonInformed);
+            System.out.println("Transfered & notified all non-informed tokens to the Mixing Proxy");
+        }
+    }
+
 }

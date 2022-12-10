@@ -92,6 +92,13 @@ public class RegistrarDB {
         }
         return names;
     }
+
+    public String getTelNrUser(byte[] token) throws Exception {
+        for(Visitor visitor : visitors.values()) {
+            if(visitor.containsToken(token)) return visitor.getPhoneNr();
+        }
+        throw new Exception("No user that matches token was found");
+    }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
 }

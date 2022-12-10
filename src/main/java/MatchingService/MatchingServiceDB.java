@@ -181,7 +181,28 @@ public class MatchingServiceDB {
         }
         return infectedEntries;
     }
-    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
+    public void notifyReceived(String hash) {
+        int counter = 0;
+        for (Entry entry : allEntries) {
+            if (Arrays.equals(entry.getHash(), stringToHash(hash))) {
+                entry.setInformed(true);
+                counter++;
+            }
+        }
+        System.out.println(counter + " entrties/tokens marked as informed");
+    }
+
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+    public List<Entry> getNonInformedEntries() {
+        List<Entry> nonInformed = new ArrayList<>();
+        for(Entry entry : allEntries) {
+            if(!entry.isInformed() && entry.isCritical()) {
+                nonInformed.add(entry);
+            }
+        }
+        return nonInformed;
+    }
 
 }

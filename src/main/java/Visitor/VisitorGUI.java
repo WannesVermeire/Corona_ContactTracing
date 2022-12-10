@@ -115,15 +115,7 @@ public class VisitorGUI extends JFrame {
         });
 
 
-
-
-
-
-        // fire to localhost port 2100
-        Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
-        // search for RegistrarService
-        RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
-
+        RegistrarInterface impl = connectToRegistrar();
         selectFacility = new JComboBox(impl.getAllFacilityNames());
 
         frame.setLayout(new FlowLayout());

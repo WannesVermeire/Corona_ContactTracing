@@ -1,11 +1,14 @@
 package Facility;
 
 import Interfaces.RegistrarInterface;
+import Visitor.VisitorGUI;
 import com.google.zxing.NotFoundException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
@@ -18,6 +21,7 @@ public class BarOwnerGUI extends JFrame {
     private JFrame frame;
     private Facility facility;
 
+    private JButton refreshButton;
     public BarOwnerGUI(Facility facility)  throws NotFoundException, IOException {
         this.facility = facility;
 

@@ -1,6 +1,8 @@
 package Visitor;
 
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -68,8 +70,8 @@ public class Visit implements Serializable {
     public String getLogString() {
         String tokenData = hashToString(tokenPair.get(0));
         String tokenSignature = hashToString(tokenPair.get(1));
-        String[] data = new String[]{R_i, CF, tokenData, tokenSignature, H, String.valueOf(timelogs)};
-        System.out.println("Gejoinde string: " + joinStrings(data));
+        String times = joinStrings(timelogs);
+        String[] data = new String[]{R_i, CF, tokenData, tokenSignature, H, times.substring(0, times.length()-1)};
         return joinStrings(data);
     }
 
@@ -92,5 +94,14 @@ public class Visit implements Serializable {
                 ", H='" + H + '\'' + "\n" +
                 ", timeOfScan='" + timelogs + '\'' +
                 '}';
+    }
+
+    public void updateTimeStamp(String token, String timestamp) {
+        String [] old = timelogs;
+        timelogs = new String[old.length +1];
+        for(int i = 0; i<old.length; i++) {
+            timelogs[i] = old[i];
+        }
+        timelogs[old.length] = timestamp;
     }
 }
