@@ -12,6 +12,8 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static Services.Methods.connectToRegistrar;
+
 public class BarOwnerGUI extends JFrame {
     private JFrame frame;
     private JButton enrollButton;
@@ -26,11 +28,7 @@ public class BarOwnerGUI extends JFrame {
         enrollButton.addActionListener(a -> {
             // Connect to Registrar server
             try {
-                // fire to localhost port 2100
-                Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
-                // search for RegistrarService
-                RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
-
+                RegistrarInterface impl = connectToRegistrar();
                 /************************************* 1.1 FACILITY ENROLLMENT *************************************/
                 String CF = facility.getCF();
                 PublicKey publicKey = facility.getPublicKey();

@@ -1,35 +1,58 @@
 package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
-import Interfaces.MixingProxyInterface;
 import Visitor.Visit;
+import org.springframework.cglib.proxy.Mixin;
 
+import javax.swing.*;
+
+import java.awt.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.security.*;
+import java.security.PublicKey;
+import java.security.SignatureException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static Services.Methods.*;
+import static Services.Methods.stringToDate;
 
-public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements MixingProxyInterface {
 
+public class MixingProxyGUI extends JFrame {
+
+    //Interface shows queue at each time
+    JFrame frame;
+    JButton flushButton; //flushes the queue
+    JPanel queue;
+
+    MixingProxyDB mixingProxyDB;
     private MatchingServiceInterface impl;
-    private MixingProxyDB mixingProxyDB;
 
-    public MixingProxyInterfaceImpl() throws RemoteException, NotBoundException {
+    public MixingProxyGUI() throws NotBoundException, RemoteException {
         this.mixingProxyDB = new MixingProxyDB();
-        impl = connectToMatchingService();
+        this.impl = connectToMatchingService();
+        frame = new JFrame("Mixing Proxy");
+        flushButton = new JButton("Flush");
+        queue = new JPanel();
+        flushButton.addActionListener(a -> {
+            //Flush the queue
+        });
+        updateFrame();
     }
 
+    public void updateFrame(){
+        frame.remove(queue);
 
-    @Override
+        frame.setLayout(new BorderLayout());
+        frame.add(queue);
+        frame.add(flushButton);
+        frame.setSize(1900,800);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true); //Makes frame visible
+    }
+
     // If all checks on the capsule data are correct we return a confirmation: sign(token)
     public ArrayList<byte[]> verifyAndSendConfirmation(Visit visit, PublicKey publicKey) throws Exception {
-         // 3 checks: signature, day, not yet used
+        // 3 checks: signature, day, not yet used
         byte[] token = visit.getTokenPair().get(0);
 
         if(!checkSignature(visit.getTokenPair(), publicKey))
@@ -61,12 +84,12 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         int tokenDay = stringToDate(tokenDay_String).getDayOfMonth();
         return currentDay == tokenDay;
     }
-    @Override
+
     public PublicKey getPublicKey() {
         return mixingProxyDB.getPublicKey();
     }
 
-    @Override
+
     // Stuur alles door naar de MatchingService
     public void flushCache() throws RemoteException {
         System.out.println("Begin flushen");
@@ -82,7 +105,7 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
         }
     }
 
-    @Override
+
     public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
         mixingProxyDB.updateTimeStamp(token, timeStamp);
     }

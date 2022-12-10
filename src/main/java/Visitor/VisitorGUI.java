@@ -6,18 +6,13 @@ import Interfaces.MixingProxyInterface;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import static Services.Methods.*;
 
@@ -63,14 +58,8 @@ public class VisitorGUI extends JFrame {
         });
 
         updateTimeStamp.addActionListener(a -> {
-            // fire to localhost port 2100
-            Registry myRegistry = null;
-            try {
-                // fire to localhost port 2200
-                Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
-                // search for MixingProxyService
-                MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
-
+            try {;
+                MixingProxyInterface mpi = connectToMixingProxy();
                 ArrayList<byte[]> tokens  = visitor.getLastUsedToken();
                 String timestamp = timeStampToString(LocalDateTime.now());
                 mpi.updateTimeStamp(bytesToString(tokens.get(0)), timestamp);
@@ -85,20 +74,17 @@ public class VisitorGUI extends JFrame {
         enrollButton.addActionListener(a -> {
             /************************************** 1.2 USER ENROLLMENT *************************************/
             try {
-                // fire to localhost port 2100
-                Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
-                // search for RegistrarService
-                RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
+                RegistrarInterface registrar = connectToRegistrar();
 
-                incubation = impl.getINCUBATION_DAYS();
+                incubation = registrar.getINCUBATION_DAYS();
 
                 // Register visitor to the registrar
-                boolean registrationSuccessful = impl.registerVisitor(visitor.getName(), visitor.getPhoneNr());
+                boolean registrationSuccessful = registrar.registerVisitor(visitor.getName(), visitor.getPhoneNr());
                 if (registrationSuccessful) System.out.println("Visitor data after enrollment: " + visitor);
                 else System.out.println("Something went wrong during enrollment of: " + visitor);
 
                 // Get a set of signed tokens
-                visitor.setTokens(impl.getSignedTokens(visitor.getPhoneNr()));
+                visitor.setTokens(registrar.getSignedTokens(visitor.getPhoneNr()));
                 System.out.println("Visitor data after receiving tokens: " + visitor);
 
             } catch (Exception e) {
@@ -116,14 +102,8 @@ public class VisitorGUI extends JFrame {
                     System.out.println("select: " + (String) selectFacility.getSelectedItem());
                     Visit visit = visitor.scanQR((String) selectFacility.getSelectedItem()); // Also saves Visit in Visitor
 
-                    // fire to localhost port 2200
-                    Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
-                    // search for MixingProxyService
-                    MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
-                    // fire to localhost port 2100
-                    Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
-                    // search for RegistrarService
-                    RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
+                    MixingProxyInterface mpi = connectToMixingProxy();
+                    RegistrarInterface registrar = connectToRegistrar();
 
                     // Create a capsule and send it to the MixingProxy to verify
                     // Capsule = timestamp, T_user_x_dayi, hash(Ri,num_CF_dayi) (hash uit de QR-code dus)
@@ -131,7 +111,7 @@ public class VisitorGUI extends JFrame {
                     ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
                     visit.setTokenPair(tokenPair);
 
-                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit,  impl.getPublicKey());
+                    ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit,  registrar.getPublicKey());
                     Visualiser visualiser = new Visualiser(signedConfirmation.get(0));
                 }
 
@@ -148,13 +128,9 @@ public class VisitorGUI extends JFrame {
         checkInfectedButton.addActionListener(a -> {
             /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
             try {
-                // fire to localhost port 2300
-                Registry myRegistry = LocateRegistry.getRegistry("localhost", 2300);
-                // search for RegistrarService
-                MatchingServiceInterface impl = (MatchingServiceInterface) myRegistry.lookup("MatchingService");
-
+                MatchingServiceInterface matchingService = connectToMatchingService();
                 // Receive infected entries
-                visitor.setInfectedEntries(impl.getInfectedEntries());
+                visitor.setInfectedEntries(matchingService.getInfectedEntries());
                 visitor.checkIfInfected();
 
 
@@ -198,7 +174,6 @@ public class VisitorGUI extends JFrame {
         frame.add(writeToFileButton);
         frame.add(updateTimeStamp);
         frame.add(checkInfectedButton);
-        frame.add(flushButton);
         frame.setSize(250, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

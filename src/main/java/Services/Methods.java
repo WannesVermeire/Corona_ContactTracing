@@ -1,10 +1,18 @@
 package Services;
 
+import Interfaces.MatchingServiceInterface;
+import Interfaces.MixingProxyInterface;
+import Interfaces.RegistrarInterface;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDate;
@@ -170,6 +178,27 @@ public class Methods {
         return LocalDate.parse(date, formatter);
     }
     /*********************************************** CONVERSIONS ***********************************************/
+
+
+  /*********************************************** CONVERSIONS ***********************************************/
+  public static MixingProxyInterface connectToMixingProxy() throws NotBoundException, RemoteException {
+      System.out.println("Connecting Matchingservice to MixingProxy");
+      Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
+      return (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
+  }
+  public static RegistrarInterface connectToRegistrar() throws NotBoundException, RemoteException {
+      // fire to localhost port 2100
+      Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
+      // search for RegistrarService
+      return (RegistrarInterface) myRegistry.lookup("RegistrarService");
+  }
+  public static MatchingServiceInterface connectToMatchingService() throws NotBoundException, RemoteException  {
+      Registry myRegistry = LocateRegistry.getRegistry("localhost", 2300);
+      return (MatchingServiceInterface) myRegistry.lookup("MatchingService");
+  }
+  /*********************************************** CONVERSIONS ***********************************************/
+
+
 
 
 }

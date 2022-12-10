@@ -19,16 +19,11 @@ import static Services.Methods.*;
 
 public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements MatchingServiceInterface {
     private MatchingServiceDB matchingServiceDB;
-    private MixingProxyInterface mixingProxy;
 
     public MatchingServiceInterfaceImpl(MatchingServiceDB matchingServiceDB) throws RemoteException, NotBoundException {
         this.matchingServiceDB = matchingServiceDB;
     }
-    public void connectToMixingProxy() throws NotBoundException, RemoteException {
-        System.out.println("Connecting Matchingservice to MixingProxy");
-        Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
-        this.mixingProxy = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
-    }
+
     @Override
     public boolean containsToken(byte[] token)  {
         return matchingServiceDB.hasCapsule(token);
@@ -57,9 +52,8 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
     public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException {
-//        connectToMixingProxy();
-//        mixingProxy.flushCache();
-//        System.out.println("Cache is flushed");
+        connectToMixingProxy().flushCache();
+        System.out.println("Cache is flushed");
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
@@ -67,9 +61,8 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
     public List<Entry> getInfectedEntries() {
-        return matchingServiceDB.getAllEntries();
+        return matchingServiceDB.getInfectedEntries();
     }
-
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 }

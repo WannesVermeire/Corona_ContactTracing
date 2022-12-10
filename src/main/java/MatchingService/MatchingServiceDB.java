@@ -174,11 +174,13 @@ public class MatchingServiceDB {
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
-    public List<Entry> getAllEntries() {
-        return allEntries;
+    public List<Entry> getInfectedEntries() {
+        List<Entry> infectedEntries = new ArrayList<>();
+        for (Entry entry : allEntries) {
+            if(entry.isCritical()) infectedEntries.add(entry);
+        }
+        return infectedEntries;
     }
-
-
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
 

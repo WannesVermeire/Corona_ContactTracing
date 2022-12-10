@@ -6,6 +6,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.concurrent.TimeUnit;
 
+import static Services.Methods.connectToRegistrar;
+
 /**
  *  Keeps information about visits and supports contact tracing
  *  Does not contain data to uniquely identify users and catering facilities
@@ -30,10 +32,7 @@ public class MatchingService {
         /******************************** 3. REGISTERING INFECTED USER **********************************/
         // Try to connect to a different server ourselves
         try {
-            // fire to localhost port 2100
-            Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
-            // search for RegistrarService
-            RegistrarInterface impl = (RegistrarInterface) myRegistry.lookup("RegistrarService");
+            RegistrarInterface impl = connectToRegistrar();
             // Download all nyms from the registrar matching the given CF's
             matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
             matchingServiceDB.verifyLogs();

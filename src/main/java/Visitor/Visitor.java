@@ -158,9 +158,9 @@ public class Visitor implements Serializable {
 
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
-    public void setInfectedEntries(List<Entry> allEntries) {
-        infectedEntries = allEntries;
-        System.out.println("Infected entries goed ontvangen in de visitor: "+allEntries);
+    public void setInfectedEntries(List<Entry> infectedEntries) {
+        this.infectedEntries = infectedEntries;
+        System.out.println("Infected entries goed ontvangen in de visitor: " + this.infectedEntries);
     }
     // Visitor is possible infected if one of the hashes can be found in his own visits list
     // And if the time windows overlap
@@ -173,12 +173,11 @@ public class Visitor implements Serializable {
                     // Same hash => both visited the same facility
                     // Check if the timestamps overlap
                     LocalDateTime time = stringToTimeStamp(visit.getScanTime());
-                    if (time.isAfter(entry.getBeginTimeWindow()) && time.isBefore(entry.getEndTimeWindow())) {
-                        System.out.println("!!! Risico op besmetting !!!");
+                    if (time.isAfter(entry.getBeginTimeWindow()) && time.isBefore(entry.getEndTimeWindow()) || false) {
                         //Todo zou cool zijn als we dit in de GUI krijgen
+                        System.out.println("!!! Risico op besmetting !!!");
                         notifyReceived();
                     }
-
                 }
             }
         }
