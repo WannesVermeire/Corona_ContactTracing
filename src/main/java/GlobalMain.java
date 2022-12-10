@@ -20,7 +20,6 @@ public class GlobalMain {
         Registrar.main(args);
         MatchingService.main(args);
         MixingProxy.main(args);
-        new MixingProxyGUI();
 
         BarOwnerGUI barOwner1 = new BarOwnerGUI(new Facility("Hamann", "Vantegemstraat 3, 9230 Wetteren", "+32 9 333 77 77"));
         VisitorGUI visitor1 = new VisitorGUI(new Visitor("Wannes", "+32 456 30 81 66"));
