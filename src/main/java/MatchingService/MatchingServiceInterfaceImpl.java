@@ -65,5 +65,16 @@ public class MatchingServiceInterfaceImpl extends UnicastRemoteObject implements
         return matchingServiceDB.getInfectedEntries();
     }
 
+    @Override
+    public void notifyReceived(String hash) throws RemoteException {
+        matchingServiceDB.notifyReceived(hash);
+    }
+
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+
+//    @Override
+//    public void transferNonInformed() throws RemoteException {
+//
+//    }
+
 }

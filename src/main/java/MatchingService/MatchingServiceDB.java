@@ -181,6 +181,14 @@ public class MatchingServiceDB {
         }
         return infectedEntries;
     }
+
+    public void notifyReceived(String hash) {
+        for (Entry entry : allEntries) {
+            if (Arrays.equals(entry.getHash(), stringToHash(hash))) {
+                entry.setInformed(true);
+            }
+        }
+    }
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
 

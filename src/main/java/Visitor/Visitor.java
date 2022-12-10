@@ -190,7 +190,7 @@ public class Visitor implements Serializable {
     }
     // Visitor is possible infected if one of the hashes can be found in his own visits list
     // And if the time windows overlap
-    public void checkIfInfected() {
+    public void checkIfInfected() throws NotBoundException, RemoteException {
         for (Entry entry : infectedEntries) {
             String hash = hashToString(entry.getHash());
             // Search for a visit with the same hash
@@ -203,16 +203,17 @@ public class Visitor implements Serializable {
                     if ((startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow())) || (endTime.isAfter(entry.getBeginTimeWindow()) && endTime.isBefore(entry.getEndTimeWindow())) || (startTime.isBefore(entry.getBeginTimeWindow()) && endTime.isAfter(entry.getEndTimeWindow()))) {
                         //Todo zou cool zijn als we dit in de GUI krijgen
                         System.out.println("!!! Risico op besmetting !!!");
-                        notifyReceived();
+                        notifyReceived(visit.getH());
                     }
                 }
             }
         }
     }
-    public void notifyReceived() {
-        // todo: zie docs
+    public void notifyReceived(String hash) throws NotBoundException, RemoteException {
+        connectToMatchingService().notifyReceived(hash);
     }
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+
 
 
     @Override

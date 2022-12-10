@@ -26,6 +26,9 @@ public interface MatchingServiceInterface extends Remote {
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
     List<Entry> getInfectedEntries() throws RemoteException;
 
+    void notifyReceived(String hash) throws RemoteException;
+
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
+//    void transferNonInformed() throws RemoteException;
 }
