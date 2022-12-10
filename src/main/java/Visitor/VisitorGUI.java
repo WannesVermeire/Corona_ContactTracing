@@ -77,6 +77,7 @@ public class VisitorGUI extends JFrame {
             visitor.setTokens(registrar.getSignedTokens(visitor.getPhoneNr()));
             System.out.println("Visitor data after receiving tokens: " + visitor);
 
+
         } catch (Exception e) {
             e.printStackTrace();
         }

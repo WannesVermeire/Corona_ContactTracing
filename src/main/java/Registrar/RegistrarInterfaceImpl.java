@@ -165,6 +165,7 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {e.printStackTrace();}
 
         visitor.setTokens(monthSignedTokenList);
+        registrarGUI.updateVisitors();
         return monthSignedTokenList;
     }
     /************************************* 1.2 USER ENROLLMENT *************************************/

@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import static Services.Methods.*;
 import static Services.Methods.stringToDate;
 
 
-public class MixingProxyGUI extends JFrame {
+public class MixingProxyGUI extends JFrame{
 
     //Interface shows queue at each time
     JFrame frame;
