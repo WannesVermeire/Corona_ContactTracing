@@ -141,6 +141,29 @@ public class Visitor implements Serializable {
             visits.remove(date);
         }
     }
+
+
+    public void updateTimeStamp(String token, String timestamp) {
+        try {
+            MixingProxyInterface mpi = connectToMixingProxy();
+            mpi.updateTimeStamp(token, timestamp);
+
+            Visit currentVisit = null;
+            for(Visit visit : visits.values()) {
+                if(token.equals(bytesToString(visit.getTokenPair().get(0)))) {
+                    currentVisit = visit;
+                    break;
+                }
+            }
+            assert currentVisit != null: "Did not find visit for token";
+
+            currentVisit.updateTimeStamp(token, timestamp);
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /*********************************** 2. VISITING A FACILITY *************************************/
 
 
@@ -167,7 +190,7 @@ public class Visitor implements Serializable {
     }
     // Visitor is possible infected if one of the hashes can be found in his own visits list
     // And if the time windows overlap
-    public void checkIfInfected() {
+    public void checkIfInfected() throws NotBoundException, RemoteException {
         for (Entry entry : infectedEntries) {
             String hash = hashToString(entry.getHash());
             // Search for a visit with the same hash
@@ -176,19 +199,21 @@ public class Visitor implements Serializable {
                     // Same hash => both visited the same facility
                     // Check if the timestamps overlap
                     LocalDateTime startTime = stringToTimeStamp(visit.getScanTime());
-                    if (startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow()) || false || false) {
+                    LocalDateTime endTime = stringToTimeStamp(visit.getExitTime());
+                    if ((startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow())) || (endTime.isAfter(entry.getBeginTimeWindow()) && endTime.isBefore(entry.getEndTimeWindow())) || (startTime.isBefore(entry.getBeginTimeWindow()) && endTime.isAfter(entry.getEndTimeWindow()))) {
                         //Todo zou cool zijn als we dit in de GUI krijgen
                         System.out.println("!!! Risico op besmetting !!!");
-                        notifyReceived();
+                        notifyReceived(visit.getH());
                     }
                 }
             }
         }
     }
-    public void notifyReceived() {
-        // todo: zie docs
+    public void notifyReceived(String hash) throws NotBoundException, RemoteException {
+        connectToMatchingService().notifyReceived(hash);
     }
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+
 
 
     @Override
@@ -214,14 +239,12 @@ public class Visitor implements Serializable {
                 '}';
     }
 
-    public void updateTimeStamp(String token, String timestamp) {
-        try {
-            MixingProxyInterface mpi = connectToMixingProxy();
-            mpi.updateTimeStamp(token, timestamp);
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+    public boolean containsToken(byte [] token) {
+        for(ArrayList<byte[]> tokenPair :  usedTokens) {
+            if(Arrays.equals(token, tokenPair.get(0))) {
+                return true;
+            }
         }
+        return false;
     }
 }

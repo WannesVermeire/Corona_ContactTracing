@@ -2,6 +2,7 @@ package MixingProxy;
 
 import Interfaces.MatchingServiceInterface;
 import Interfaces.MixingProxyInterface;
+import Interfaces.RegistrarInterface;
 import Visitor.Visit;
 
 import java.rmi.NotBoundException;
@@ -12,6 +13,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static Services.Methods.*;
 
@@ -86,5 +88,21 @@ public class MixingProxyInterfaceImpl extends UnicastRemoteObject implements Mix
     @Override
     public void updateTimeStamp(String token, String timeStamp) throws RemoteException {
         mixingProxyDB.updateTimeStamp(token, timeStamp);
+    }
+
+    @Override
+    public void notifyNonInformed(List<Entry> nonInformed) throws RemoteException {
+        try {
+            System.out.println("These people were not yet informed");
+            RegistrarInterface registrar = connectToRegistrar();
+            for(Entry entry : nonInformed) {
+                System.out.println("TelNr: " + registrar.getTelNrUser(entry.getToken()));
+            }
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
