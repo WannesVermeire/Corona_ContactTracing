@@ -272,6 +272,16 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         return matchingServiceDB.getInfectedEntries();
     }
 
+    @Override
+    public void notifyReceived(String hash) throws RemoteException {
+
+    }
+
+    @Override
+    public void transferNonInformed() throws RemoteException, NotBoundException {
+
+    }
+
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 }
 
