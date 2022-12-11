@@ -31,6 +31,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
     private JScrollPane scroll;
     private JPanel facilityNymPanel; //Nym's from all facilities from the registrar
     private JButton nymJButton;
+    private JButton generateButton;
     private JButton informButton;
     private JPanel entriesPanel; //Entries (Critical/informed -> booleans)
     private JPanel queuePanel; //Zelfde queue als mixingproxy
@@ -49,7 +50,8 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         mainPanel = new JPanel();
         scroll = new JScrollPane();
         facilityNymPanel = new JPanel();
-        nymJButton = new JButton("<html>Get nyms<br />+ verify logs<br />+ generate entries<br />+ mark infected</html>");
+        nymJButton = new JButton("<html>Get nyms<br />+ verify logs<br />+ mark infected</html>");
+        generateButton = new JButton("Generate entries");
         informButton = new JButton("Inform left over visitors");
         entriesPanel = new JPanel();
         queuePanel = new JPanel();
@@ -62,6 +64,11 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         facilityNyms = new HashMap<>();
         allEntries = new ArrayList<>();
 
+        generateButton.addActionListener(a -> {
+            matchingServiceDB.generateEntries();
+            updateFrame();
+        });
+
         nymJButton.addActionListener(a-> {
             /******************************** 3. REGISTERING INFECTED USER **********************************/
             // Try to connect to a different server ourselves
@@ -70,7 +77,6 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
                 // Download all nyms from the registrar matching the given CF's
                 matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
                 matchingServiceDB.verifyLogs();
-                matchingServiceDB.generateEntries();
                 matchingServiceDB.markInfectedCapsules();
                 matchingServiceDB.markInfectedTokens();
                 updateFrame();
@@ -92,8 +98,10 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
     public void updateFrame(){
         JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.PAGE_AXIS));
+        buttons.add(generateButton);
         buttons.add(nymJButton);
         buttons.add(informButton);
+
 
         capsuleMap = matchingServiceDB.getCapsuleMap(); // key = token, data: is Visit
         timeStamps = matchingServiceDB.getTimeStamps(); // key = token, data: array van timestamps
@@ -153,7 +161,8 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
                 "BeginTimeWindow",
                 "EndTimeWindow"
         };
-        String[][] entryData = new String[facilityNyms.size()][6];
+
+        String[][] entryData = new String[allEntries.size()][6];
         i = 0;
         for(Entry e : allEntries){
             entryData[i][0] = hashToString(e.getToken());
@@ -170,6 +179,9 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         entriesTable.setDefaultRenderer(String.class, new MultiLineCellRenderer());
         JScrollPane entriesTableScroll = new JScrollPane(entriesTable);
         entriesPanel.add(entriesTableScroll);
+
+
+
 
         queuePanel = new JPanel();
         queuePanel.setLayout(new BorderLayout());

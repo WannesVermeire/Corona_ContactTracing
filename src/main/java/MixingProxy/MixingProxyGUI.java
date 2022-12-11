@@ -17,6 +17,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -150,6 +151,19 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
     @Override
     public void flushCache() throws RemoteException {
         System.out.println("Begin flushen");
+        // Add 5 hour duration to capsules without leaving time
+        for (var entry : timeStamps.entrySet()) {
+            String[] array = entry.getValue();
+            if (array.length==1) {
+                LocalDateTime time = LocalDateTime.now().plusHours(5);
+                String timeString = timeStampToString(time);
+                String[] newArray = new String[2];
+                newArray[0] = array[0];
+                newArray[1] = timeString;
+                entry.setValue(newArray);
+            }
+        }
+        // Shuffle and flush
         while(!mixingProxyDB.isEmptyCapsules()) {
             String randomToken = mixingProxyDB.getRandomTokenCapsule();
             impl.addCapsule(randomToken, mixingProxyDB.getCapsule(randomToken));
