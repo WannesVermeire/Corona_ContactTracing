@@ -21,26 +21,9 @@ public class MatchingService {
         // Own server we are hosting
         try {
             Registry registry = LocateRegistry.createRegistry(2300);
-            registry.rebind("MatchingService", new MatchingServiceInterfaceImpl(matchingServiceDB));
+            registry.rebind("MatchingService", new MatchingServiceGUI(matchingServiceDB));
         }
         catch (Exception e) { e.printStackTrace(); }
         System.out.println("MatchingService is running");
-    }
-
-    // Aparte methode om te kunnen oproepen in globalMain
-    public static void getNyms() {
-        /******************************** 3. REGISTERING INFECTED USER **********************************/
-        // Try to connect to a different server ourselves
-        try {
-            RegistrarInterface impl = connectToRegistrar();
-            // Download all nyms from the registrar matching the given CF's
-            matchingServiceDB.addNym(impl.getAllNym(matchingServiceDB.getCFFromSignedLogs()));
-            matchingServiceDB.verifyLogs();
-            matchingServiceDB.generateEntries();
-            matchingServiceDB.markInfectedCapsules();
-            matchingServiceDB.markInfectedTokens();
-
-        } catch (Exception e) { e.printStackTrace(); }
-        /******************************** 3. REGISTERING INFECTED USER **********************************/
     }
 }

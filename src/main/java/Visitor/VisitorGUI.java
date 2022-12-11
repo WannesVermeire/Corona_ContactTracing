@@ -21,10 +21,8 @@ public class VisitorGUI extends JFrame {
     private JComboBox selectFacility;
     private JButton visitButton;
     private JButton writeToFileButton;
-    private JButton refreshButton;
     private JButton checkInfectedButton;
     private JButton updateTimeStamp;
-    private JButton flushButton;
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
     private int incubation = 0;
@@ -34,26 +32,11 @@ public class VisitorGUI extends JFrame {
 
         frame = new JFrame("Visitor - " + visitor.getName());
 
-        refreshButton = new JButton("REFRESH");
         visitButton = new JButton("Visit selected facility");
         checkInfectedButton = new JButton("Check if infected");
-        flushButton = new JButton("Flush Mixing cache to matching service (nee die knop moet hier nie staan)");
         writeToFileButton = new JButton("Write logs to file");
         updateTimeStamp = new JButton("Update TimeStamp");
 
-        refreshButton.addActionListener(a -> {
-            if (a.getSource() == refreshButton) {
-
-                frame.dispose();
-                try {
-                    new VisitorGUI(this.visitor);
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                } catch (NotBoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
 
         updateTimeStamp.addActionListener(a -> {
             ArrayList<byte[]> tokens  = visitor.getLastUsedToken();
@@ -131,25 +114,6 @@ public class VisitorGUI extends JFrame {
             /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
         });
 
-        flushButton.addActionListener(a -> {
-            /******************************** 3. REGISTERING INFECTED USER **********************************/
-            try {
-                // fire to localhost port 2200
-                Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
-                // search for MixingProxyService
-                MixingProxyInterface mpi = (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
-
-                mpi.flushCache();
-
-
-            } catch (Exception e) { e.printStackTrace(); }
-            /******************************** 3. REGISTERING INFECTED USER **********************************/
-        });
-
-
-
-
-
         // fire to localhost port 2100
         Registry myRegistry = LocateRegistry.getRegistry("localhost", 2100);
         // search for RegistrarService
@@ -158,7 +122,6 @@ public class VisitorGUI extends JFrame {
         selectFacility = new JComboBox(impl.getAllFacilityNames());
 
         frame.setLayout(new FlowLayout());
-        frame.add(refreshButton);
         frame.add(visitButton);
         frame.add(selectFacility);
         frame.add(writeToFileButton);

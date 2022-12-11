@@ -23,6 +23,26 @@ public class MatchingServiceDB {
 
     public MatchingServiceDB() {}
 
+    public Map<String, Visit> getCapsuleMap() {
+        return capsuleMap;
+    }
+
+    public Map<String, String[]> getTimeStamps() {
+        return timeStamps;
+    }
+
+    public List<Visit> getUserLogs() {
+        return userLogs;
+    }
+
+    public Map<LocalDate, byte[]> getFacilityNyms() {
+        return facilityNyms;
+    }
+
+    public List<Entry> getAllEntries() {
+        return allEntries;
+    }
+
     public void addCapsule(byte[] token, Visit capsule) {
         capsuleMap.put(bytesToString(token), capsule);
     }

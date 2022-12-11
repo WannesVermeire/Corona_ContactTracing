@@ -33,8 +33,8 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
     JPanel queue;
     private MixingProxyDB mixingProxyDB;
     private MatchingServiceInterface impl;
-    private Map<String, Visit> capsuleMap = new HashMap<>(); // key = token, data: is Visit
-    private Map<String, String[]> timeStamps = new HashMap<>(); // key = token, data: array van timestamps
+    private Map<String, Visit> capsuleMap; // key = token, data: is Visit
+    private Map<String, String[]> timeStamps; // key = token, data: array van timestamps
 
     public MixingProxyGUI() throws Exception {
 
