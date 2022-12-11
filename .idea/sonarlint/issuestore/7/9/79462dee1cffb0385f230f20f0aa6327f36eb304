@@ -1,0 +1,8 @@
+
+?
+java:S3010"$Remove this assignment of "keyPair".(¥’èşøÿÿÿÿ
+F
+java:S1128
+"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+f	java:S117D"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸ù®
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ä½ù

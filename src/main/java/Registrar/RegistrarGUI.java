@@ -111,7 +111,8 @@ public class RegistrarGUI extends JFrame{
         gridPanel.add(facilitiesPanel);
         frame.setLayout(new BorderLayout());
         frame.add(gridPanel);
-        frame.setSize(1900,800);
+        frame.setSize(636,400);
+        frame.setLocation(900,0);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true); //Makes frame visible
     }

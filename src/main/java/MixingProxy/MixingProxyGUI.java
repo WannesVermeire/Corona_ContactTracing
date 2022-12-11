@@ -100,7 +100,8 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
         frame.add(queue);
         frame.add(flushButton);
         flushButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        frame.setSize(1900,800);
+        frame.setSize(700,440);
+        frame.setLocation(0,400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true); //Makes frame visible
     }

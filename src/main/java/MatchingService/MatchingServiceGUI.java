@@ -109,7 +109,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         int i = 0;
         for(var entry : facilityNyms.entrySet()){
             facilityNymData[i][0] = String.valueOf(entry.getKey());
-            facilityNymData[i][1] = bytesToString(entry.getValue());
+            facilityNymData[i][1] = hashToString(entry.getValue());
             i++;
         }
         dmfacilityNyms.setDataVector(facilityNymData, facilityNymColumns);
@@ -140,12 +140,12 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         String[][] entryData = new String[facilityNyms.size()][6];
         i = 0;
         for(Entry e : allEntries){
-            entryData[i][0] = bytesToString(e.getToken());
-            entryData[i][1] = bytesToString(e.getHash());
+            entryData[i][0] = hashToString(e.getToken());
+            entryData[i][1] = hashToString(e.getHash());
             entryData[i][2] = String.valueOf(e.isCritical());
             entryData[i][3] = String.valueOf(e.isInformed());
-            entryData[i][4] = String.valueOf(e.getBeginTimeWindow());
-            entryData[i][5] = String.valueOf(e.getEndTimeWindow());
+            entryData[i][4] = timeStampToString(e.getBeginTimeWindow());
+            entryData[i][5] = timeStampToString(e.getEndTimeWindow());
             i++;
         }
         dmEntries.setDataVector(entryData, entryColumns);
@@ -221,7 +221,8 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         frame.add(scroll);
 
-        frame.setSize(1900,800);
+        frame.setSize(836,440);
+        frame.setLocation(700,400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true); //Makes frame visible
 

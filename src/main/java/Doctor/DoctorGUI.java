@@ -44,7 +44,8 @@ public class DoctorGUI {
         frame.setLayout(new FlowLayout());
         frame.add(readLogsButton);
         frame.add(sendLogsButton);
-        frame.setSize(250, 100);
+        frame.setSize(300, 100);
+        frame.setLocation(600,300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

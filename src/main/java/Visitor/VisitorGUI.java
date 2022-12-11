@@ -35,7 +35,7 @@ public class VisitorGUI extends JFrame {
         visitButton = new JButton("Visit selected facility");
         checkInfectedButton = new JButton("Check if infected");
         writeToFileButton = new JButton("Write logs to file");
-        updateTimeStamp = new JButton("Update TimeStamp");
+        updateTimeStamp = new JButton("Leave facility");
 
 
         updateTimeStamp.addActionListener(a -> {
@@ -124,10 +124,11 @@ public class VisitorGUI extends JFrame {
         frame.setLayout(new FlowLayout());
         frame.add(visitButton);
         frame.add(selectFacility);
-        frame.add(writeToFileButton);
         frame.add(updateTimeStamp);
+        frame.add(writeToFileButton);
         frame.add(checkInfectedButton);
-        frame.setSize(250, 200);
+        frame.setSize(300, 150);
+        frame.setLocation(600,150);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

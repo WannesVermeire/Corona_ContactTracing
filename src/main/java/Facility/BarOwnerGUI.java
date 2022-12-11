@@ -25,7 +25,7 @@ public class BarOwnerGUI extends JFrame {
     public BarOwnerGUI(Facility facility)  throws NotFoundException, IOException {
         this.facility = facility;
 
-        frame = new JFrame("BarOwner - " + facility.getName());
+        frame = new JFrame("Bar - " + facility.getName());
 
         // Connect to Registrar server
         try {
@@ -53,7 +53,11 @@ public class BarOwnerGUI extends JFrame {
 
         frame.setLayout(new FlowLayout());
         frame.add(new JLabel(new ImageIcon("QRCodes_" + facility.getName() + "/QRCode_day" + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ".jpg")));
-        frame.setSize(250,400);
+        if (facility.getName().equals("De bruine kroeg"))
+            frame.add(new JLabel(new ImageIcon("Images/bier.jpg")));
+        else if (facility.getName().equals("'t Frietje'"))
+            frame.add(new JLabel(new ImageIcon("Images/friet.jpg")));
+        frame.setSize(300,400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

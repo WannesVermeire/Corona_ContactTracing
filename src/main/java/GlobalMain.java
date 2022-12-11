@@ -21,9 +21,10 @@ public class GlobalMain {
         MatchingService.main(args);
         MixingProxy.main(args);
 
-        new BarOwnerGUI(new Facility("Hamann", "Vantegemstraat 3, 9230 Wetteren", "+32 9 333 77 77"));
+        new BarOwnerGUI(new Facility("'t Frietje'", "Dorpsstraat 3, 9230 Wetteren", "+32 9 343 77 76"));
+        new BarOwnerGUI(new Facility("De bruine kroeg", "Markt 6, 9240 Zele", "+32 52 46 89 58"));
         new VisitorGUI(new Visitor("Wannes", "+32 456 30 81 66"));
-        new VisitorGUI(new Visitor("Wout", "+32 456 30 81 67"));
+        new VisitorGUI(new Visitor("Wout", "+32 451 89 81 67"));
         new DoctorGUI(new Doctor("Toon Eeraerts"));
     }
 }

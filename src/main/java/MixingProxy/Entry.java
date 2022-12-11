@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import static Services.Methods.hashToString;
+
 public class Entry implements Serializable {
     private byte[] token; // links the user
     private byte[] hash; // links the facility
@@ -62,8 +64,8 @@ public class Entry implements Serializable {
     @Override
     public String toString() {
         return "Entry{" +
-                "token=" + Arrays.toString(token) +
-                ", hash=" + Arrays.toString(hash) +
+                "token=" + hashToString(token) +
+                ", hash=" + hashToString(hash) +
                 ", critical=" + critical +
                 ", informed=" + informed +
                 ", beginTimeWindow=" + beginTimeWindow +
