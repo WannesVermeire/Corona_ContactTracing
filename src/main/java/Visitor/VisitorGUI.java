@@ -23,6 +23,7 @@ public class VisitorGUI extends JFrame {
     private JButton writeToFileButton;
     private JButton checkInfectedButton;
     private JButton updateTimeStamp;
+    private JTextArea infectedText;
     private Visitor visitor;
     private int saveDuration = 14; // Days before we delete the capsules from visiting a facility
     private int incubation = 0;
@@ -36,12 +37,12 @@ public class VisitorGUI extends JFrame {
         checkInfectedButton = new JButton("Check if infected");
         writeToFileButton = new JButton("Write logs to file");
         updateTimeStamp = new JButton("Leave facility");
-
+        infectedText = new JTextArea("");
 
         updateTimeStamp.addActionListener(a -> {
             ArrayList<byte[]> tokens  = visitor.getLastUsedToken();
             String timestamp = timeStampToString(LocalDateTime.now());
-            visitor.updateTimeStamp(bytesToString(tokens.get(0)), timestamp);
+            visitor.updateTimeStamp(hashToString(tokens.get(0)), timestamp);
             System.out.println("update timestamp: " + timestamp);
         });
 
@@ -84,6 +85,7 @@ public class VisitorGUI extends JFrame {
                     int today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
                     ArrayList<byte[]> tokenPair = visitor.getAndRemoveToken(today);
                     visit.setTokenPair(tokenPair);
+                    System.out.println("Token gezet: "+visit);
 
                     ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit,  registrar.getPublicKey());
                     new Visualiser(signedConfirmation.get(0),visitor.getName());
@@ -105,8 +107,7 @@ public class VisitorGUI extends JFrame {
                 MatchingServiceInterface matchingService = connectToMatchingService();
                 // Receive infected entries
                 visitor.setInfectedEntries(matchingService.getInfectedEntries());
-                visitor.checkIfInfected();
-
+                infectedText.setText(visitor.checkIfInfected());
 
             } catch (Exception e) { e.printStackTrace(); }
 
@@ -127,6 +128,7 @@ public class VisitorGUI extends JFrame {
         frame.add(updateTimeStamp);
         frame.add(writeToFileButton);
         frame.add(checkInfectedButton);
+        frame.add(infectedText);
         frame.setSize(300, 150);
         frame.setLocation(600,150);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

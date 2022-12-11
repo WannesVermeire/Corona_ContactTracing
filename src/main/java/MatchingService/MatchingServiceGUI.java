@@ -30,6 +30,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
     private JScrollPane scroll;
     private JPanel facilityNymPanel; //Nym's from all facilities from the registrar
     private JButton nymJButton;
+    private JButton informButton;
     private JPanel entriesPanel; //Entries (Critical/informed -> booleans)
     private JPanel queuePanel; //Zelfde queue als mixingproxy
     private JPanel userLogsPanel; //Logs van infectedUser
@@ -48,6 +49,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         scroll = new JScrollPane();
         facilityNymPanel = new JPanel();
         nymJButton = new JButton("Get all pseudonyms");
+        informButton = new JButton("Inform left over visitors");
         entriesPanel = new JPanel();
         queuePanel = new JPanel();
         userLogsPanel = new JPanel();
@@ -76,6 +78,13 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
             /******************************** 3. REGISTERING INFECTED USER **********************************/
         });
 
+        informButton.addActionListener(a-> {
+            /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+            try {transferNonInformed();}
+            catch (Exception e) { e.printStackTrace(); }
+            /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
+        });
+
         updateFrame();
     }
 
@@ -90,6 +99,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.LINE_AXIS));
         mainPanel.add(nymJButton);
+        mainPanel.add(informButton);
 
         facilityNymPanel = new JPanel();
         facilityNymPanel.setLayout(new BorderLayout());
@@ -259,7 +269,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         updateFrame();
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException, NotBoundException {
+    public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException {
         //connectToMixingProxy().flushCache();
         System.out.println("Cache is flushed");
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
@@ -275,19 +285,24 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
 
     @Override
     public void notifyReceived(String hash) throws RemoteException {
+        System.out.println("Matching service: Token ontvangen die ontvangst besmette entry bevestigd.");
         matchingServiceDB.notifyReceived(hash);
+        updateFrame();
     }
 
     @Override
-    public void transferNonInformed() throws RemoteException, NotBoundException {
+    public void transferNonInformed() throws RemoteException {
         List<Entry> nonInformed = matchingServiceDB.getNonInformedEntries();
         if(nonInformed.isEmpty()) {
             System.out.println("Everyone was informed");
         }
         else {
-            connectToMixingProxy().notifyNonInformed(nonInformed);
-            System.out.println("Transfered & notified all non-informed tokens to the Mixing Proxy");
+            try {
+                System.out.println("Transferred all non-informed tokens to the Mixing Proxy");
+                connectToRegistrar().notifyNonInformed(nonInformed);
+            } catch (Exception e) { e.printStackTrace(); }
         }
+        updateFrame();
     }
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/

@@ -5,6 +5,7 @@ import Visitor.Visit;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.security.PublicKey;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -211,6 +212,7 @@ public class MatchingServiceDB {
             }
         }
         System.out.println(counter + " entrties/tokens marked as informed");
+        System.out.println("Entries na informed marking: "+allEntries);
     }
 
 
@@ -220,6 +222,7 @@ public class MatchingServiceDB {
         for(Entry entry : allEntries) {
             if(!entry.isInformed() && entry.isCritical()) {
                 nonInformed.add(entry);
+                entry.setInformed(true);
             }
         }
         return nonInformed;

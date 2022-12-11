@@ -173,19 +173,5 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
         updateFrame();
     }
 
-    @Override
-    public void notifyNonInformed(List<Entry> nonInformed) throws RemoteException {
-        try {
-            System.out.println("These people were not yet informed");
-            RegistrarInterface registrar = connectToRegistrar();
-            for(Entry entry : nonInformed) {
-                System.out.println("TelNr: " + registrar.getTelNrUser(entry.getToken()));
-            }
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
-    }
 }

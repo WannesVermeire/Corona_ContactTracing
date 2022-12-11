@@ -1,5 +1,6 @@
 package Interfaces;
 
+import MixingProxy.Entry;
 import Visitor.MonthSignedTokenList;
 
 import javax.crypto.SecretKey;
@@ -27,13 +28,9 @@ public interface RegistrarInterface extends Remote {
 
     PublicKey getPublicKey() throws RemoteException;
 
-//    void visitFacility_scan(Visitor v, String qr_scanned);
-
-
     Map<LocalDate, byte[]> getAllNym(List<String> CFList) throws RemoteException;
-
 
     String[] getAllFacilityNames() throws RemoteException;
 
-    String getTelNrUser(byte[] token) throws Exception;
+    void notifyNonInformed(List<Entry> nonInformed) throws Exception;
 }

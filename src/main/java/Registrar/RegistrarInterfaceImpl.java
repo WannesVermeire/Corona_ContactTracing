@@ -3,6 +3,7 @@ package Registrar;
 
 import Facility.Facility;
 import Interfaces.RegistrarInterface;
+import MixingProxy.Entry;
 import Visitor.MonthSignedTokenList;
 import Visitor.Visitor;
 
@@ -176,8 +177,12 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
         return registrarDB.getAllNym(CFList);
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
-    @Override
-    public String getTelNrUser(byte[] token) throws Exception {
-        return registrarDB.getTelNrUser(token);
+
+
+    public void notifyNonInformed(List<Entry> nonInformed) throws Exception{
+        System.out.println("These people were not informed yet: ");
+        for(Entry entry : nonInformed) {
+            System.out.println("TelNr: " + registrarDB.getTelNrUser(entry.getToken()));
+        }
     }
 }

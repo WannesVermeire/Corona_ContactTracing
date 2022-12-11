@@ -5,6 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static Services.Methods.*;
 
@@ -53,15 +54,14 @@ public class Visit implements Serializable {
         String CFpart3 = data[3];
         String CFpart4 = data[4];
         CF = joinStrings(new String[]{CFpart1, CFpart2, CFpart3, CFpart4});
-        byte[] tokenData = stringToBytes(data[5]);
-        byte[] tokenSignature = stringToBytes(data[6]);
+        byte[] tokenData = stringToHash(data[6]);
+        byte[] tokenSignature = stringToHash(data[7]);
         tokenPair = new ArrayList<>();
         tokenPair.add(tokenData);
         tokenPair.add(tokenSignature);
-        String nothing = data[7]; // for dubble comma
         H = data[8];
-        timelogs = new String[data.length-8];
-        for(int i =9; i< data.length; i++) {
+        timelogs = new String[data.length-9];
+        for(int i =9; i < data.length; i++) {
             timelogs[i-9] = data[i];
         }
 
@@ -77,22 +77,35 @@ public class Visit implements Serializable {
 
     @Override
     public String toString() {
+        String token = "null";
+        String tokenSignature = "null";
+        if (tokenPair!=null) {
+            token = hashToString(tokenPair.get(0));
+            tokenSignature = hashToString(tokenPair.get(1));
+        }
         return "Visit{" +
                 "R_i='" + R_i + '\'' +
                 ", CF='" + CF + '\'' +
-                ", tokenPair=" + tokenPair +
+                ", token=" + token +
+                ", tokenSignature=" + tokenSignature +
                 ", H='" + H + '\'' +
-                ", timeOfScan='" + timelogs + '\'' +
+                ", scanTimes='" + Arrays.toString(timelogs) + '\'' +
                 '}';
     }
     
-    public String toGUIString(){
+    public String toGUIString(){String token = "null";
+        String tokenSignature = "null";
+        if (tokenPair!=null) {
+            token = hashToString(tokenPair.get(0));
+            tokenSignature = hashToString(tokenPair.get(1));
+        }
         return "Visit{" + "\n" +
                 "R_i='" + R_i + '\'' + "\n" +
                 ", CF='" + CF + '\'' + "\n" +
-                ", tokenPair=" + tokenPair + "\n" +
+                ", token=" + token +
+                ", tokenSignature=" + tokenSignature +
                 ", H='" + H + '\'' + "\n" +
-                ", timeOfScan='" + timelogs + '\'' +
+                ", scanTimes='" + Arrays.toString(timelogs) + '\'' +
                 '}';
     }
 

@@ -7,7 +7,6 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.security.PublicKey;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +24,9 @@ public interface MatchingServiceInterface extends Remote {
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
     List<Entry> getInfectedEntries() throws RemoteException;
-
     void notifyReceived(String hash) throws RemoteException;
-
+    void transferNonInformed() throws RemoteException, NotBoundException;
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
-    void transferNonInformed() throws RemoteException, NotBoundException;
+
 }

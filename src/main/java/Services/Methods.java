@@ -182,7 +182,6 @@ public class Methods {
 
   /*********************************************** CONVERSIONS ***********************************************/
   public static MixingProxyInterface connectToMixingProxy() throws NotBoundException, RemoteException {
-      System.out.println("Connecting Matchingservice to MixingProxy");
       Registry mixingProxyRegistry = LocateRegistry.getRegistry("localhost", 2200);
       return (MixingProxyInterface) mixingProxyRegistry.lookup("MixingProxyService");
   }

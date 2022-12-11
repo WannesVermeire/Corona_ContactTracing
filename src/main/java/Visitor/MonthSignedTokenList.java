@@ -27,6 +27,15 @@ public class MonthSignedTokenList implements Serializable {
         return signaturePair;
     }
 
+    public boolean containsToken(byte[] token) {
+        for (List<byte[]> list : tokens) {
+            for (byte[] t : list) {
+                if (Arrays.equals(t, token)) return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "SignedTokenList{" +

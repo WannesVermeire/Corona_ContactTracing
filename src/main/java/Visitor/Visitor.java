@@ -37,7 +37,7 @@ public class Visitor implements Serializable {
         this.phoneNr = phone;
         visits = new HashMap();
         this.keyPair = getKeyPair();
-        usedTokens =  null;
+        usedTokens = null;
     }
 
     public String getName() { return name; }
@@ -65,7 +65,6 @@ public class Visitor implements Serializable {
     /*********************************** 2. VISITING A FACILITY *************************************/
     public Visit scanQR(String facilityName)  throws NotFoundException, IOException {
             // Read QR
-            // TODO For now: just dummy procedure where it selects current day
             Calendar current_dateTime = Calendar.getInstance();
             String filename = "QRCodes_" + facilityName +"/QRCode_day" + current_dateTime.get(Calendar.DAY_OF_MONTH) + ".jpg";
             String[] qr = Methods.separateString(readQRCode(filename));
@@ -110,7 +109,7 @@ public class Visitor implements Serializable {
 
         // Update usedTokens
         if(usedTokens == null) {
-            usedTokens = new ArrayList[1];
+            usedTokens = new ArrayList [1];
             usedTokens[0] = currentTokens;
         }
         else {
@@ -150,14 +149,16 @@ public class Visitor implements Serializable {
 
             Visit currentVisit = null;
             for(Visit visit : visits.values()) {
-                if(token.equals(bytesToString(visit.getTokenPair().get(0)))) {
+                if(Arrays.equals(stringToHash(token),visit.getTokenPair().get(0))) {
                     currentVisit = visit;
+                    System.out.println("Visit found: "+visit);
                     break;
                 }
             }
-            assert currentVisit != null: "Did not find visit for token";
+            //assert currentVisit != null: "Did not find visit for token";
 
             currentVisit.updateTimeStamp(token, timestamp);
+            System.out.println("Visit na update: "+currentVisit);
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
         } catch (RemoteException e) {
@@ -190,7 +191,8 @@ public class Visitor implements Serializable {
     }
     // Visitor is possible infected if one of the hashes can be found in his own visits list
     // And if the time windows overlap
-    public void checkIfInfected() throws NotBoundException, RemoteException {
+    public String checkIfInfected() throws NotBoundException, RemoteException {
+        boolean infected = false;
         for (Entry entry : infectedEntries) {
             String hash = hashToString(entry.getHash());
             // Search for a visit with the same hash
@@ -201,13 +203,15 @@ public class Visitor implements Serializable {
                     LocalDateTime startTime = stringToTimeStamp(visit.getScanTime());
                     LocalDateTime endTime = stringToTimeStamp(visit.getExitTime());
                     if ((startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow())) || (endTime.isAfter(entry.getBeginTimeWindow()) && endTime.isBefore(entry.getEndTimeWindow())) || (startTime.isBefore(entry.getBeginTimeWindow()) && endTime.isAfter(entry.getEndTimeWindow()))) {
-                        //Todo zou cool zijn als we dit in de GUI krijgen
-                        System.out.println("!!! Risico op besmetting !!!");
+                        infected = true;
                         notifyReceived(visit.getH());
                     }
+                    else infected = false;
                 }
             }
         }
+        if (infected) return "!!! Risico op besmetting !!!";
+        return "Geen verhoogd risico op besmetting";
     }
     public void notifyReceived(String hash) throws NotBoundException, RemoteException {
         connectToMatchingService().notifyReceived(hash);
@@ -239,11 +243,15 @@ public class Visitor implements Serializable {
                 '}';
     }
 
-    public boolean containsToken(byte [] token) {
-        for(ArrayList<byte[]> tokenPair :  usedTokens) {
-            if(Arrays.equals(token, tokenPair.get(0))) {
+    public boolean containsToken(byte[] token) {
+        return tokens.containsToken(token);
+    }
+
+    public boolean containsTokenLocal(byte[] token) {
+        if(usedTokens!=null) return false;
+        for (ArrayList<byte[]> tokenPair : usedTokens) {
+            if (Arrays.equals(token, tokenPair.get(0)))
                 return true;
-            }
         }
         return false;
     }
