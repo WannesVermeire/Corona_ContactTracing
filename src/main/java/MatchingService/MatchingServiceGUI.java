@@ -274,12 +274,19 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
 
     @Override
     public void notifyReceived(String hash) throws RemoteException {
-
+        matchingServiceDB.notifyReceived(hash);
     }
 
     @Override
     public void transferNonInformed() throws RemoteException, NotBoundException {
-
+        List<Entry> nonInformed = matchingServiceDB.getNonInformedEntries();
+        if(nonInformed.isEmpty()) {
+            System.out.println("Everyone was informed");
+        }
+        else {
+            connectToMixingProxy().notifyNonInformed(nonInformed);
+            System.out.println("Transfered & notified all non-informed tokens to the Mixing Proxy");
+        }
     }
 
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
