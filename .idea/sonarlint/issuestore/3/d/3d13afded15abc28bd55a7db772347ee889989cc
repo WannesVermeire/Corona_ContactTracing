@@ -1,11 +1,0 @@
-
-Z	java:S106,"9Replace this use of System.out or System.err by a logger.(­ΐΉΠώÿÿÿÿ8£¥€―Ο0
-I
-java:S1128",Remove this unused import 'Visitor.Visitor'.(νωσ°8¥¥€―Ο0
->
-java:S1068"(Remove this unused "name" private field.(Λ¥Ό
-
-java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(΅€ίσ8¦¥€―Ο0
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¥Οªϊÿÿÿÿ
-b
-java:S2095&"EUse try-with-resources or close this "Scanner" in a "finally" clause.(υ ­Δ8³¥€―Ο0

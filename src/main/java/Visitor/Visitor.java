@@ -126,6 +126,7 @@ public class Visitor implements Serializable {
         return usedTokens;
     }
     public ArrayList<byte[]> getLastUsedToken() {
+        if (usedTokens==null) return null;
         return usedTokens[usedTokens.length-1];
     }
     public void removeExpiredVisits(int INCUBATION_DAYS) {

@@ -50,12 +50,8 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
         flushButton = new JButton("Flush");
         queue = new JPanel();
         flushButton.addActionListener(a -> {
-            try {
-                flushCache();//Flush the queue
-                updateFrame();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            try {flushCache();} //Flush the queue
+            catch (RemoteException e) {throw new RuntimeException(e);}
         });
         updateFrame();
     }
@@ -164,6 +160,7 @@ public class MixingProxyGUI extends UnicastRemoteObject implements MixingProxyIn
             impl.addTimeStamps(randomToken, mixingProxyDB.getTimeStamp(randomToken));
             mixingProxyDB.removeTimeStamp(randomToken);
         }
+        updateFrame();
     }
 
 

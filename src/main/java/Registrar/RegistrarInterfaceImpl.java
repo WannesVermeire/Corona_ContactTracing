@@ -179,10 +179,13 @@ public class RegistrarInterfaceImpl extends UnicastRemoteObject implements Regis
     /******************************** 3. REGISTERING INFECTED USER **********************************/
 
 
+
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
     public void notifyNonInformed(List<Entry> nonInformed) throws Exception{
-        System.out.println("These people were not informed yet: ");
+        System.out.println("Registrar: These people were not informed yet: ");
         for(Entry entry : nonInformed) {
             System.out.println("TelNr: " + registrarDB.getTelNrUser(entry.getToken()));
         }
     }
+    /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 }

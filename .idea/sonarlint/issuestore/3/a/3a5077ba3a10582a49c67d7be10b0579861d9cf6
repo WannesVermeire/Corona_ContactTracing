@@ -1,18 +1,0 @@
-
-@
-java:S2119["Save and re-use this "Random".(šŸ«íøÿÿÿÿ8‚”®ÀÏ0
-
-java:S1319S"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(“¬ïÕ8”®ÀÏ0
-m	java:S117]"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„â¨Ü8Ÿ”®ÀÏ0
-r	java:S117d"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ªö¿îùÿÿÿÿ8Ÿ”®ÀÏ0
-r	java:S117f"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·µÓıÿÿÿÿ8Ÿ”®ÀÏ0
-m	java:S117g"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(äÌ÷›8Ÿ”®ÀÏ0
-:
-java:S1643"Use a StringBuilder instead.(«Õ±¡8ß¦€¯Ï0
-:
-java:S1643“"Use a StringBuilder instead.(’¿ùà8à¦€¯Ï0
-:
-java:S1643¢"Use a StringBuilder instead.(«Õ±¡8à¦€¯Ï0
-:
-java:S1643¦"Use a StringBuilder instead.(’¿ùà8à¦€¯Ï0
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ôâæ¶

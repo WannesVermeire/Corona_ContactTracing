@@ -1,8 +1,4 @@
 
-P
- src/main/java/Doctor/Doctor.java,3\d\3d13afded15abc28bd55a7db772347ee889989cc
-T
-$src/main/java/Facility/Facility.java,3\a\3a5077ba3a10582a49c67d7be10b0579861d9cf6
 Z
 *src/main/java/MixingProxy/MixingProxy.java,e\f\efe8d831facde8967350c5ae33433f72198cb0ff
 a
@@ -13,8 +9,6 @@ U
 %src/main/java/Visitor/Visualiser.java,e\2\e2b8353d7c0e65bc9e949d51f92be556743654fc
 M
 src/main/java/GlobalMain.java,0\b\0b68aa678f65e0c416f39088d06ceb0698018a85
-S
-#src/main/java/Doctor/DoctorGUI.java,5\f\5f1730b7d680994c52e433b051beef981269452f
 V
 &src/main/java/Registrar/Registrar.java,4\c\4c40176172d8de8829bd1f10a58607f069ee7125
 Y

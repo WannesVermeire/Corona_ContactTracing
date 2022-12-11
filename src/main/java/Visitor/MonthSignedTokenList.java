@@ -35,12 +35,19 @@ public class MonthSignedTokenList implements Serializable {
         }
         return false;
     }
-
     @Override
     public String toString() {
+        String sign = "null";
+        if (signatures!=null) {
+            sign = "List of "+signatures.length+" smaller lists, containing "+signatures[0].size()+" individual signatures";
+        }
+        String token = "null";
+        if (signatures!=null) {
+            token = "List of "+tokens.length+" smaller lists, containing "+tokens[0].size()+" individual tokens";
+        }
         return "SignedTokenList{" +
-                "signatures=" + Arrays.toString(signatures) +
-                ", tokens=" + Arrays.toString(tokens) +
+                "tokens=" + token +
+                ", signatures=" + sign +
                 '}';
     }
 }

@@ -20,6 +20,7 @@ import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static Services.Methods.*;
 
@@ -48,7 +49,7 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         mainPanel = new JPanel();
         scroll = new JScrollPane();
         facilityNymPanel = new JPanel();
-        nymJButton = new JButton("Get all pseudonyms");
+        nymJButton = new JButton("<html>Get nyms<br />+ verify logs<br />+ generate entries<br />+ mark infected</html>");
         informButton = new JButton("Inform left over visitors");
         entriesPanel = new JPanel();
         queuePanel = new JPanel();
@@ -89,6 +90,11 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
     }
 
     public void updateFrame(){
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.PAGE_AXIS));
+        buttons.add(nymJButton);
+        buttons.add(informButton);
+
         capsuleMap = matchingServiceDB.getCapsuleMap(); // key = token, data: is Visit
         timeStamps = matchingServiceDB.getTimeStamps(); // key = token, data: array van timestamps
         userLogs = matchingServiceDB.getUserLogs();
@@ -98,8 +104,8 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
         frame.remove(scroll);
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.LINE_AXIS));
-        mainPanel.add(nymJButton);
-        mainPanel.add(informButton);
+        mainPanel.add(buttons);
+
 
         facilityNymPanel = new JPanel();
         facilityNymPanel.setLayout(new BorderLayout());
@@ -270,8 +276,8 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
     }
     /******************************** 3. REGISTERING INFECTED USER **********************************/
     public void receiveSignedLogs(ArrayList<List<byte[]>> signedLogs, PublicKey publicKey) throws RemoteException {
-        //connectToMixingProxy().flushCache();
-        System.out.println("Cache is flushed");
+        try{connectToMixingProxy().flushCache();}
+        catch (Exception e) { e.printStackTrace(); }
         matchingServiceDB.addSignedLogs(signedLogs, publicKey);
         updateFrame();
     }

@@ -37,6 +37,7 @@ public class VisitorGUI extends JFrame {
         checkInfectedButton = new JButton("Check if infected");
         writeToFileButton = new JButton("Write logs to file");
         updateTimeStamp = new JButton("Leave facility");
+        updateTimeStamp.setVisible(false);
         infectedText = new JTextArea("");
 
         updateTimeStamp.addActionListener(a -> {
@@ -89,6 +90,7 @@ public class VisitorGUI extends JFrame {
 
                     ArrayList<byte[]> signedConfirmation = mpi.verifyAndSendConfirmation(visit,  registrar.getPublicKey());
                     new Visualiser(signedConfirmation.get(0),visitor.getName());
+                    updateTimeStamp.setVisible(true);
                 }
 
             } catch (Exception e) { e.printStackTrace(); }

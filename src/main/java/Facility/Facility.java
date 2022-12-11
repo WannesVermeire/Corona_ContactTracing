@@ -156,22 +156,30 @@ public class Facility implements Serializable {
     }
 
     public String toGUIString() {
-        String nymarray = "";
-        if(nymArray!=null)
-            for (byte[] arr : nymArray)
-                nymarray+= Arrays.toString(arr)+",";
-        String keyarr = "";
-        if(keyArray!=null)
-            for (SecretKey arr : keyArray)
-                keyarr+= arr.toString()+",";
+//        String nymarray = "";
+//        if(nymArray!=null)
+//            for (byte[] arr : nymArray)
+//                nymarray+= Arrays.toString(arr)+",";
+//        String keyarr = "";
+//        if(keyArray!=null)
+//            for (SecretKey arr : keyArray)
+//                keyarr+= arr.toString()+",";
+        String nym = "null";
+        if (nymArray!=null) {
+            nym = "List of "+nymArray.size()+" nyms. First item: "+nymArray.get(0);
+        }
+        String key = "null";
+        if (keyArray!=null) {
+            nym = "List of "+keyArray.size()+" keys. First item: "+nymArray.get(0);
+        }
 
         return "facility{" + "\n" +
                 "id='" + id + '\'' + "\n" +
                 ", name='" + name + '\'' + "\n" +
                 ", address='" + address + '\'' + "\n" +
                 ", phoneNr='" + phoneNr + '\'' + "\n" +
-                ", keyArray=" + keyarr + "\n" +
-                ", nymArray=" + nymarray + "}";
+                ", keyArray=" + key + "\n" +
+                ", nymArray=" + nym + "}";
     }
 
 }
