@@ -203,10 +203,10 @@ public class MatchingServiceDB {
         return infectedEntries;
     }
 
-    public void notifyReceived(String hash) {
+    public void notifyReceived(String token) {
         int counter = 0;
         for (Entry entry : allEntries) {
-            if (Arrays.equals(entry.getHash(), stringToHash(hash))) {
+            if (Arrays.equals(entry.getToken(), stringToHash(token))) {
                 entry.setInformed(true);
                 counter++;
             }

@@ -98,6 +98,7 @@ public class VisitorGUI extends JFrame {
         writeToFileButton.addActionListener(a -> {
             /******************************** 3. REGISTERING INFECTED USER **********************************/
             visitor.exportVisits();
+            infectedText.setText("ZIEK");
             /******************************** 3. REGISTERING INFECTED USER **********************************/
         });
 

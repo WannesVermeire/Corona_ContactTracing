@@ -284,9 +284,9 @@ public class MatchingServiceGUI extends UnicastRemoteObject implements MatchingS
     }
 
     @Override
-    public void notifyReceived(String hash) throws RemoteException {
+    public void notifyReceived(String token) throws RemoteException {
         System.out.println("Matching service: Token ontvangen die ontvangst besmette entry bevestigd.");
-        matchingServiceDB.notifyReceived(hash);
+        matchingServiceDB.notifyReceived(token);
         updateFrame();
     }
 

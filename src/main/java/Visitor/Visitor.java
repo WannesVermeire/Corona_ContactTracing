@@ -202,19 +202,21 @@ public class Visitor implements Serializable {
                     // Check if the timestamps overlap
                     LocalDateTime startTime = stringToTimeStamp(visit.getScanTime());
                     LocalDateTime endTime = stringToTimeStamp(visit.getExitTime());
-                    if ((startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow())) || (endTime.isAfter(entry.getBeginTimeWindow()) && endTime.isBefore(entry.getEndTimeWindow())) || (startTime.isBefore(entry.getBeginTimeWindow()) && endTime.isAfter(entry.getEndTimeWindow()))) {
+                    if ((startTime.isAfter(entry.getBeginTimeWindow()) && startTime.isBefore(entry.getEndTimeWindow()))
+                            || (endTime.isAfter(entry.getBeginTimeWindow()) && endTime.isBefore(entry.getEndTimeWindow()))
+                            || (startTime.isBefore(entry.getBeginTimeWindow()) && endTime.isAfter(entry.getEndTimeWindow()))) {
                         infected = true;
-                        notifyReceived(visit.getH());
+                        notifyReceived(visit.getTokenPair().get(0));
                     }
-                    else infected = false;
                 }
             }
         }
         if (infected) return "!!! Risico op besmetting !!!";
         return "Geen verhoogd risico op besmetting";
     }
-    public void notifyReceived(String hash) throws NotBoundException, RemoteException {
-        connectToMatchingService().notifyReceived(hash);
+    public void notifyReceived(byte[] token) throws NotBoundException, RemoteException {
+        String tokenString = hashToString(token);
+        connectToMatchingService().notifyReceived(tokenString);
     }
     /**************************** 4. INFORMING POSSIBLY INFECTED USERS ******************************/
 
